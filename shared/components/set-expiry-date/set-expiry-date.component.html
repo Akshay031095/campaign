@@ -1,0 +1,107 @@
+<form [formGroup]="expiryCampaignForm">
+    <div class="set-parameters steps-frame mb-3" [ngClass]="{'default-steps-frame-padding': config?.hideStepCounts}">
+        <div class="row" *ngIf="!config?.hideStepCounts">
+            <div class="col-md-12">
+                <div class="tick-box">
+                    <ng-container>
+                        <div
+                            [ngClass]="((expiryCampaignForm.get('expiry_date').value && expiryCampaignForm.get('send_expiry_alert').value == true && expiryCampaignForm.get('set_days_alert').value) || (expiryCampaignForm.get('expiry_date').value && expiryCampaignForm.get('send_expiry_alert').value == false)) ? 'tick-mark' : 'step-count'">
+                            <span
+                                *ngIf="!((expiryCampaignForm.get('expiry_date').value && expiryCampaignForm.get('send_expiry_alert').value == true && expiryCampaignForm.get('set_days_alert').value) || (expiryCampaignForm.get('expiry_date').value && expiryCampaignForm.get('send_expiry_alert').value == false))">
+                                {{selectorData?.appSetExpiry?.stepCount}} </span>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <label class="label-text">{{"campaigns.ibd.expiry-date" | translate }}</label>
+                <div class="date-time-zone custom-datetime-picker" [ngClass]="{
+                'date-selected': expiryCampaignForm.get('expiry_date').value,
+                'disabled' : isDatePickerDisabled,
+                'textarea-hasError':showErrors('expiry_date', 'required', 'expiryCampaignForm')}" [ngStyle]="{
+                'margin-bottom': showErrors(
+                  'expiry_date',
+                  'required',
+                  'expiryCampaignForm'
+                )
+                  ? '5px'
+                  : 'auto'
+              }">
+                    <app-datepicker [restrictActiveDateTime]="true" [config]="datePickerConfig"
+                        [showDefaultDate]="datePickerObj"
+                        (dateInOutObj)="receiveDate($event, 'expiry_date')"></app-datepicker>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="isEdit">
+            <div class="col-md-3 mt-3">
+                <label class="label-text position-relative">{{'common.campaign-status' | translate}}</label>
+                <div class="radion-grp ">
+                    <mat-radio-group aria-label="Select an option" (change)="changeStatus($event)" formControlName="is_active">
+                    <mat-radio-button [value]="'1'" class="mr-3">{{'common.active' | translate}}</mat-radio-button>
+                    <mat-radio-button [value]="'0'">{{'common.inactive' | translate}}</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </div>
+        <div class="expire_alert_checkbox mt-4 mb-4">
+            <mat-checkbox class="d-block list-checkbox" formControlName="send_expiry_alert"
+                (change)="setExpiryAlert($event)">
+                <span>{{'set-expiry-alert-(optional)' | translate}}</span>
+            </mat-checkbox>
+        </div>
+        <div class="row" *ngIf="expiryCampaignForm.get('send_expiry_alert').value == 1">
+            <div class="col-md-6">
+                <label>{{'set-number-of-days' | translate}}</label>
+                <input appNumberOnly type="text" class="form-control custom-placement-rtl" placeholder="Enter Number of days"
+                    formControlName="set_days_alert" />
+                <div class="d-block position-relative">
+                    <span class="error"
+                        *ngIf="showErrors('set_days_alert','required', 'expiryCampaignForm')"><small><img
+                                src="../../../assets/images/error.svg"></small>{{'error-number-of-days' | translate}}
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label>{{'set-alert-on-email' | translate}}</label>
+                <input type="text" class="form-control custom-placement-rtl"
+                    (input)="emailOrNumberRequired = invalidEmailId = maxEmailIdError = false;"
+                    placeholder="Enter Comma Separated Email ID(s)" formControlName="alert_email" />
+                <div class="d-block position-relative"
+                    *ngIf="emailOrNumberRequired || invalidEmailId || maxEmailIdError">
+                    <span class="error" *ngIf="emailOrNumberRequired">
+                        <small><img src="../../../assets/images/error.svg"></small>
+                        {{'campaign.email-pl-enter-email-id' | translate}}
+                    </span>
+                    <span class="error" *ngIf="invalidEmailId">
+                        <small><img src="../../../assets/images/error.svg"></small>
+                        {{'campaign.email-invalid-email-id' | translate}}
+                    </span>
+                    <span class="error" *ngIf="maxEmailIdError"><small><img
+                                src="../../../assets/images/error.svg"></small>{{'campaign.email-email-id-limits' |
+                        translate}}</span>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label>{{'set-alert-on-number' | translate}}</label>
+                <input appNumberOnlyWithComma type="text" class="form-control custom-placement-rtl"
+                    placeholder="Enter Comma Separated Mobile Number (s)" formControlName="alert_number"
+                    (input)="emailOrNumberRequired = invalidAlertNumbers = maxNumberError = false;" />
+                <div class="d-block position-relative"
+                    *ngIf="emailOrNumberRequired || invalidAlertNumbers || maxNumberError">
+                    <span class="error" *ngIf="emailOrNumberRequired"><small><img
+                                src="../../../assets/images/error.svg"></small>{{'campaign.test-sms-pl-type-cont-num' |
+                        translate}}</span>
+                    <span class="error" *ngIf="invalidAlertNumbers"><small><img
+                                src="../../../assets/images/error.svg"></small>{{'campaign.test-sms-invalid-entry' |
+                        translate}}</span>
+                    <span class="error" *ngIf="maxNumberError"><small><img
+                                src="../../../assets/images/error.svg"></small>{{'campaign.test-sms-max-limit-message' |
+                        translate}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

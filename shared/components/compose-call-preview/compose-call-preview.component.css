@@ -1,0 +1,26 @@
+.preview-canvas-wrapper {
+    border: 10px solid #d4d9e3;
+    border-radius: 8px;
+    /* position: absolute;
+    top: -40px;
+    width: 95%; */
+}
+.default-flow-preview {
+    height: 350px;
+    background-color: #f7faff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.default-flow-preview p {
+    margin: 0;
+    opacity: 0.5;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    color: #000;
+    margin-bottom: 0 !important;
+}

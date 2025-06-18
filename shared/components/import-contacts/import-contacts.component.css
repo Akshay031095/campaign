@@ -1,0 +1,130 @@
+::ng-deep #import .app-modal-body {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 30px 80px;
+}
+::ng-deep .internal .create-campaign-schedule-timezone .ui.floating.dropdown .menu {
+    bottom: 100%;
+    top: auto;
+    margin: 0;
+}
+.internal .progress {
+    height: 0.5rem;
+}
+.internal .progress .progress-bar {
+    background-color: var(--primary-color) !important;
+}
+.import-modal {
+    height: 100%;
+}
+.import-modal .nav-tabs .nav-item .nav-link {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 2.29;
+    letter-spacing: normal;
+    text-align: left;
+    color: #acacac;
+}
+.import-modal .nav-tabs .nav-item .nav-link.active {
+    color: #465981 !important;
+    border-bottom: 5px solid #75767a !important;
+    border: none;
+}
+.import-modal .nav-tabs .nav-item .nav-link:hover {
+    border-color: transparent;
+}
+.import-modal .inside-modal-content {
+    box-shadow: none;
+}
+::ng-deep .modal-wrapper .mat-tab-body-content::-webkit-scrollbar {
+    width: 0.4em;
+}
+::ng-deep .modal-wrapper .mat-tab-body-content::-webkit-scrollbar-track {
+    background-color: #eeeef5;
+    opacity: 0.4;
+    border-radius: 20px;
+}
+::ng-deep .modal-wrapper .mat-tab-body-content::-webkit-scrollbar-thumb {
+    background-color: #e0e0e0;
+    border-radius: 20px;
+}
+.header-modal {
+    background-color: #f6f7ff;
+    padding: 0;
+    padding-bottom: 15px;
+    font-size: 16px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.31;
+    letter-spacing: normal;
+    text-align: left;
+    color: var(--primary-color);
+    margin: 0;
+    height: 37px;
+}
+::ng-deep .import-tabs.mat-tab-group {
+    height: calc(100% - 37px);
+}
+::ng-deep .import-tabs .mat-tab-body-wrapper, .import-tabs .mat-tab-body-wrapper .mat-tab-body {
+    height: 100%;
+}
+.import-tabs .container-fluid {
+    height: 100%;
+}
+::ng-deep .import-tabs .mat-tab-label .mat-tab-label-content {
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.36;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--primary-color) !important;
+}
+::ng-deep .import-tabs .mat-ink-bar {
+    height: 5px;
+}
+::ng-deep .import-tabs .mat-tab-header {
+    margin: 0;
+    padding: 15px;
+    border: none;
+    padding-bottom: 0;
+}
+@media (min-width: 768px) {
+    ::ng-deep #import .app-modal-body {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 30px 80px;
+    }
+}
+@media (min-width: 992px) {
+    ::ng-deep #import .app-modal-body {
+        width: 768px;
+        /* min-height: 90vh;
+        max-height: 90vh; */
+        margin: 30px auto;
+    }
+}
+.custom-import-contacts-voice-wrapper .voice-title {
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.64;
+    letter-spacing: normal;
+    color: #332e38;
+    opacity: 0.75;
+}
+::ng-deep .tabStyle .mat-tab-header {
+    display: none;
+}

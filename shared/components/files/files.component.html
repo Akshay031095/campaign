@@ -1,0 +1,207 @@
+<div class="container-fluid inside-modal-content custom-upload-files">
+    <form [formGroup]="fileForm" class="inside-wrapper-padding">
+        <div class="col-md-6 mb-4" *ngIf="config?.rcsCapability || config?.rcsBlackList">
+            <app-custom-select-with-create [data]="agentList" [config]="configAgent" [value]="agentSelectText"
+                (clickElsewhere)="configAgent.open = false"
+                (selectAction)="selectActionRecive($event, 'service_agent_id')">
+            </app-custom-select-with-create>
+        </div>
+        <div class="row file-upload-wrapper" *ngIf="!fileToProcess">
+            <div class="col-md-6 inside-wrapper-box" [ngClass]="{'or-seperator' : !config?.rcsCapability && !config?.blacklist}">
+                <span class="seperator-text" *ngIf="!config?.rcsCapability && !config?.blacklist">{{'campaign.files-or' | translate}}</span>
+                <div class="file-upload">
+                    <div class="drop-and-click" (click)="fileInput.click()" appDragDrop
+                        (onFileDropped)="uploadFile($event)">
+                        <div class="upload-box">
+
+                            <input hidden type="file" #fileInput (change)="uploadFile($event.target.files)">
+                            <img src="assets/images/upload.png" class="upload-icon" alt="Drop-icon">
+                            <p class="mt-3 file-upload-caption">{{'campaign.files-Click-csv-excel-file' | translate}}
+                            </p>
+                            <p class=" file-upload-format-caption">{{'campaign.files-formar-acceted' | translate}}
+                                <span>{{'campaign.files-cdv-xls-txt-doc' | translate}}</span></p>
+
+                            <div class="progress form-group" *ngIf="progress > 0">
+                                <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                                    [style.width.%]="progress" title="progress bar">
+                                </div>
+                            </div>
+                            <div *ngIf="showDynamicError">
+                                <div *ngFor="let item of errorsArr">
+                                    <div *ngIf="item.field == 'file'">
+                                        <small class="required_field">{{item.errorMessage}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 inside-wrapper-box" *ngIf="!config?.rcsCapability && !config?.blacklist">
+                <div class="select-existing">
+                    <div class="select-file file-selected-ltr">
+                        <p class="existing-file-caption">{{'campaign.files-choose-upload-file' | translate}}</p>
+                        <app-custom-select [data]="existingFilesArray" [config]="configExistingFile"
+                            [value]="existingFileSelectText" (clickElsewhere)="configExistingFile.open = false"
+                            (selectAction)="selectActionRecive($event, 'existingFile')">
+                        </app-custom-select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex justify-content-between flex-column" *ngIf="config?.rcsCapability || config?.blacklist">
+                <div class="mb-3 height-100">
+                    <div class="preview-wrapper" [ngStyle]="{'display': !showPreview ? 'table' : 'block' }">
+                        <div class="no-sheet-selected" *ngIf="!showPreview">
+                            <p *ngIf="sheetSelection && !fileForm.get('selectedSheet').value">
+                                {{'campaign.files-pl-sel-sheet-preview-data' | translate}}</p>
+                            <button appBgColor appBdColor *ngIf="!sheetSelection || (sheetSelection && fileForm.get('selectedSheet').value)"
+                                (click)="previewData()" class="btn preview-data btn-design" [disabled]="!fileToProcess">
+                                {{'campaign.files-preview' | translate}}
+                            </button>
+                        </div>
+                        <div class="sheet-preview height-100" *ngIf="showPreview">
+                            <div class="table-responsive scrollable height-100">
+                                <table class="table table-striped m-0 height-100">
+                                    <tbody>
+                                        <tr *ngFor="let item of previewDataRes; let i = index"
+                                            [ngClass]="{'header-bg': i == '0'}">
+                                            <td class="ellipsis-text custom-table-ellipsis"
+                                                [ngClass]="{'text-capitalize': i == 0}" data-toggle="tooltip"
+                                                data-placement="top" title="{{data}}" *ngFor="let data of item">{{data}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row process-step" *ngIf="fileToProcess">
+            <div class="col-md-6 files-frame-border">
+                <div class="uploaded-file-thumbnail form-group">
+                    <label class="label-text">{{'campaign.files-file-name' | translate}} </label>
+                    <p class="form-control selected-file-name">
+                        <span class="ellipsis-text">{{fileName}}</span>
+                        <span class="cursor-pointer" *ngIf="fileName" (click)="removeUploadedFile()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                <g id="Group_2783" data-name="Group 2783" transform="translate(-907 -297)">
+                                    <g id="Path_2335" data-name="Path 2335" transform="translate(907 297)" fill="none">
+                                        <path d="M12,0A12,12,0,1,1,0,12,12,12,0,0,1,12,0Z" stroke="none" />
+                                        <path
+                                            d="M 12 1 C 9.061790466308594 1 6.299449920654297 2.144199371337891 4.221820831298828 4.221820831298828 C 2.144199371337891 6.299449920654297 1 9.061790466308594 1 12 C 1 14.93820953369141 2.144199371337891 17.7005500793457 4.221820831298828 19.77817916870117 C 6.299449920654297 21.85580062866211 9.061790466308594 23 12 23 C 14.93820953369141 23 17.7005500793457 21.85580062866211 19.77817916870117 19.77817916870117 C 21.85580062866211 17.7005500793457 23 14.93820953369141 23 12 C 23 9.061790466308594 21.85580062866211 6.299449920654297 19.77817916870117 4.221820831298828 C 17.7005500793457 2.144199371337891 14.93820953369141 1 12 1 M 12 0 C 18.62742042541504 0 24 5.372579574584961 24 12 C 24 18.62742042541504 18.62742042541504 24 12 24 C 5.372579574584961 24 0 18.62742042541504 0 12 C 0 5.372579574584961 5.372579574584961 0 12 0 Z"
+                                            stroke="none" style="fill: var(--primary-color)"
+                                        />
+                                    </g>
+                                    <g id="sign" transform="translate(915.148 305.227)">
+                                        <g id="Group_2214" data-name="Group 2214" transform="translate(0 0)">
+                                            <path id="Path_2030" data-name="Path 2030"
+                                                d="M.191,8.72a.65.65,0,0,0,.92,0L4.1,5.729,7.094,8.72a.651.651,0,0,0,.92-.92L5.022,4.809,7.86,1.971a.651.651,0,0,0-.92-.92L4.1,3.888,1.264,1.05a.651.651,0,0,0-.92.92L3.182,4.809.191,7.8A.65.65,0,0,0,.191,8.72Z"
+                                                transform="translate(0 -0.86)" style="fill: var(--primary-color)"
+                                            />
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </span>
+                    </p>
+                </div>
+                <div class="uploaded-successfully" *ngIf="fileToProcess && !showBackButton && fileName">
+                    <p class="file-success-msg"><i class="fa fa-check-circle" aria-hidden="true"></i>
+                        {{'campaign.files-file-upload-success' | translate}}</p>
+                </div>
+                <div class="select-sheet form-group position-relative" *ngIf="sheetSelection">
+                    <app-custom-select [data]="sheets" [config]="configSelectedSheet" [value]="selectedSheetSelectText"
+                        (clickElsewhere)="configSelectedSheet.open = false"
+                        (selectAction)="selectActionRecive($event, 'selectedSheet')"
+                        [errors]="showErrors('selectedSheet', 'required', 'fileForm')"
+                        [ngClass]="{'internal-custom-select' : showErrors('selectedSheet', 'required', 'fileForm')}">
+                    </app-custom-select>
+                    <div class="d-block position-relative">
+                        <span class="error" *ngIf="showErrors('selectedSheet','required', 'fileForm')"><small><img
+                                    src="../../../assets/images/error.svg" alt="error"></small>{{'campaign.files-pl-sel-sheet' |
+                            translate}}</span>
+                    </div>
+                </div>
+                <div class="select-sheet form-group position-relative"
+                    *ngIf="!sheetSelection || (sheetSelection && fileForm.get('selectedSheet').value)">
+
+                    <app-custom-select [data]="contacts" [config]="configContacts" [value]="contactSelectText"
+                        (clickElsewhere)="configContacts.open = false"
+                        (selectAction)="selectActionRecive($event, 'contact')"
+                        [errors]="showErrors('contact', 'required', 'fileForm')"
+                        [ngClass]="{'internal-custom-select' : showErrors('contact', 'required', 'fileForm')}">
+                    </app-custom-select>
+
+                    <div class="d-block position-relative">
+                        <span class="error" *ngIf="showErrors('contact','required', 'fileForm')"><small><img
+                                    src="../../../assets/images/error.svg" alt="error"></small>{{'campaign.files-pl-sel-cont' |
+                            translate}}</span>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="fileForm.get('contact').value && (!blacklistConfig || !blacklistConfig.blacklist) && !config?.blacklist">
+                    <mat-checkbox *ngIf="extraFieldsArr && extraFieldsArr.length > 0" class="d-block" formControlName="selectExtraFields" (change)="showExtraFields()">
+                        {{'campaign.files-sel-fields-displayed-in-reports' | translate}}</mat-checkbox>
+                </div>
+                <div class="select-multiple-fields" *ngIf="(extraFieldsArr && extraFieldsArr.length > 0) && showMultiSelectionFields">
+                    <label class="label-text">{{'campaign.files-sel-field' | translate}} </label>
+
+                    <app-custom-select [data]="extraFieldsArr" [config]="configExtraFields"
+                        [value]="ExtraFieldselectText" (clickElsewhere)="configExtraFields.open = false"
+                        (selectAction)="selectActionRecive($event, 'extraFields', configExtraFields.key)" [errors]="showErrors('extraFields', 'required', 'fileForm')" [ngClass]="{'internal-custom-select' : showErrors('extraFields', 'required', 'fileForm')}"></app-custom-select>
+
+                        <div class="d-block position-relative">
+                            <span class="error" *ngIf="showErrors('extraFields','required', 'fileForm')"><small><img
+                                        src="../../../assets/images/error.svg" alt="error"></small>{{'campaign.files-pl-sel-extra-fields' |
+                                translate}}</span>
+                        </div>
+
+                </div>
+            </div>
+            <div class="col-md-6 d-flex justify-content-between flex-column">
+                <div class="mb-3 height-100">
+                    <div class="preview-wrapper" [ngStyle]="{'display': !showPreview ? 'table' : 'block' }">
+                        <div class="no-sheet-selected" *ngIf="!showPreview">
+                            <p *ngIf="sheetSelection && !fileForm.get('selectedSheet').value">
+                                {{'campaign.files-pl-sel-sheet-preview-data' | translate}}</p>
+                            <button  *ngIf="!sheetSelection || (sheetSelection && fileForm.get('selectedSheet').value)"
+                                (click)="previewData()" class="btn preview-data btn-design">
+                                {{'campaign.files-preview' | translate}}
+                            </button>
+                        </div>
+                        <div class="sheet-preview height-100" *ngIf="showPreview">
+                            <div class="table-responsive scrollable height-100">
+                                <table class="table table-striped m-0 height-100">
+                                    <tbody>
+                                        <tr *ngFor="let item of previewDataRes; let i = index"
+                                            [ngClass]="{'header-bg': i == '0'}">
+                                            <td class="ellipsis-text custom-table-ellipsis"
+                                                [ngClass]="{'text-capitalize': i == 0}" data-toggle="tooltip"
+                                                data-placement="top" title="{{data}}" *ngFor="let data of item">{{data}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-counts"
+                        *ngIf="fileToProcess && (fileName && !sheetSelection) || (fileName && sheetSelection && fileForm.get('selectedSheet').value)">
+                        <p class="m-0 count-text">{{'campaign.files-count-text' | translate}} {{fileContactCount}}
+                            {{'campaign.files-cont-text' | translate}}</p>
+                    </div>
+                </div>
+                <!-- <div class="import text-right" *ngIf="fileForm.get('existingFile').value">
+                    <button type="button" appBgColor appBdColor class="btn btn-import btn-design" (click)="importFilesTabData()">
+                        {{'campaign.files-import-text' | translate}}</button>
+                </div>  -->
+                <div class="import text-right" *ngIf="fileForm.get('existingFile').value || config?.rcsCapability || config?.blacklist">
+                  <button type="button" class="btn btn-import btn-design" (click)="config.voiceListing ? proceedToSchedule():importFilesTabData()">
+                      {{ (config.voiceListing ?'campaign.files-proceed-text':'campaign.files-import-text')  | translate}}</button>
+              </div>
+
+            </div>
+        </div>
+    </form>
+</div>

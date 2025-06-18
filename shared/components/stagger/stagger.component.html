@@ -1,0 +1,90 @@
+<form [formGroup]="staggerForm">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="schedule-message-toggle mb-3 d-flex align-items-center">
+                <div class="custom-control custom-switch mr-3 schedule-switch">
+                    <input type="checkbox" (change)="staggeredSwitch($event)" [disabled]="disableStagger"
+                        class="custom-control-input" id="customSwitch2">
+                    <label class="custom-control-label" for="customSwitch2"></label>
+                </div>
+                <label class="mr-3 mb-0">{{'campaign.stagger-heading' | translate}}</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+
+        <div class="col-md-3">
+            <label class="label-text"
+                [ngStyle]="{'opacity': !showStaggered ? '0.5' : '1'}">{{(config?.voice ? 'num-of-calls' : 'campaign.stagger-number-of-messages-label') |
+                translate}}</label>
+            <input appNumberOnly type="text" class="form-control custom-placement-rtl"
+                placeholder="{{'settings.common-type-here' | translate}}" formControlName="noOfMessages"
+                [ngClass]="{'hasError' : showErrors('noOfMessages', 'required', 'staggerForm') && showStaggered, 'disabled': !showStaggered}"
+                [ngStyle]="{'margin-bottom': showErrors('noOfMessages', 'required', 'staggerForm') && showStaggered ? '5px' : 'auto'}">
+
+            <div class="d-block position-relative">
+                <span class="error"
+                    *ngIf="showErrors('noOfMessages','required', 'staggerForm') && showStaggered"><small><img
+                            src="../../../assets/images/error.svg"></small>{{'campaign.stagger-enter-no-of-messages-error' |
+                    translate}}</span>
+                <span class="error" *ngIf="showErrors('noOfMessages','maxlength', 'staggerForm')"><small><img
+                            src="../../../assets/images/error.svg"></small>{{'common-campaign-stagger-max-length' |
+                    translate}}</span>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="label-text"
+                        [ngStyle]="{'opacity': !showStaggered ? '0.5' : '1'}">{{'campaign.create-campaign-day' |
+                        translate}}</label>
+                    <app-custom-select-with-create [data]="days" [config]="configDays" [value]="daysSelectText"
+                        (clickElsewhere)="configDays.open = false" (selectAction)="selectActionRecive($event, 'day')"
+                        [errors]="showErrors('day', 'required', 'staggerForm') && showStaggered"
+                        [ngClass]="{'internal-custom-select' : showErrors('day', 'required', 'staggerForm') && showStaggered, 'disabled': !showStaggered}">
+                    </app-custom-select-with-create>
+                    <div class="d-block position-relative">
+                        <span class="error"
+                            *ngIf="showErrors('day','required', 'staggerForm') && showStaggered"><small><img
+                                    src="../../../assets/images/error.svg"></small>{{'common.select-day-error' |
+                            translate}}</span>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label class="label-text"
+                        [ngStyle]="{'opacity': !showStaggered ? '0.5' : '1'}">{{'campaign.create-campaign-hr' |
+                        translate}}</label>
+                    <app-custom-select-with-create [data]="hours" [config]="configHours" [value]="hoursSelectText"
+                        (clickElsewhere)="configHours.open = false" (selectAction)="selectActionRecive($event, 'hour')"
+                        [errors]="showErrors('hour', 'required', 'staggerForm') && showStaggered"
+                        [ngClass]="{'internal-custom-select' : showErrors('hour', 'required', 'staggerForm') && showStaggered, 'disabled': !showStaggered}">
+                    </app-custom-select-with-create>
+                    <div class="d-block position-relative">
+                        <span class="error"
+                            *ngIf="showErrors('hour','required', 'staggerForm') && showStaggered"><small><img
+                                    src="../../../assets/images/error.svg"></small>{{'common.select-hour-error' |
+                            translate}}</span>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label class="label-text"
+                        [ngStyle]="{'opacity': !showStaggered ? '0.5' : '1'}">{{'campaign.create-campaign-mins' |
+                        translate}}</label>
+                    <app-custom-select-with-create [data]="minutes" [config]="configMinutes" [value]="minutesSelectText"
+                        (clickElsewhere)="configMinutes.open = false"
+                        (selectAction)="selectActionRecive($event, 'minute')"
+                        [errors]="showErrors('minute', 'required', 'staggerForm') && showStaggered"
+                        [ngClass]="{'internal-custom-select' : showErrors('minute', 'required', 'staggerForm') && showStaggered, 'disabled': !showStaggered}">
+                    </app-custom-select-with-create>
+                    <div class="d-block position-relative">
+                        <span class="error"
+                            *ngIf="showErrors('minute','required', 'staggerForm') && showStaggered"><small><img
+                                    src="../../../assets/images/error.svg"></small>{{'common.select-minute-error' |
+                            translate}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

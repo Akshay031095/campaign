@@ -1,0 +1,512 @@
+<form [formGroup]="messageForm">
+  <div class="row m-0">
+    <div class="create-message steps-frame mb-3 col-sm-12"
+      [ngClass]="{'default-steps-frame-padding': config?.hideStepCounts, 'col-md-7 col-lg-7': config?.workflow, 'col-md-8 col-lg-8': !config?.workflow}">
+      <div class="row" *ngIf="!config?.hideStepCounts">
+        <div class="col-md-12">
+          <div class="tick-box">
+            <div
+              [ngClass]="{'tick-mark': messageForm.get('language').value, 'step-count': !messageForm.get('language').value}">
+              <span *ngIf="!messageForm.get('language').value">{{isKsaUser &&
+                common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['WhatsAppCampaigns'],
+                hasPermissions.permissionName['temporary_blacklist'], false) ? 5 : (!isKsaUser &&
+                common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['WhatsAppCampaigns'],
+                hasPermissions.permissionName['temporary_blacklist'], false) ? 4 : (isKsaUser &&
+                !common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['WhatsAppCampaigns'],
+                hasPermissions.permissionName['temporary_blacklist'], false) ? 4 : 3))}}</span>
+            </div>
+          </div>
+          <h4 class="step-heading">{{'campaign.choose-message-label' | translate}}</h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 create-message-wrapper">
+          <div class="mb-3">
+            <label class="label-text">{{'common.select-template' | translate}}</label>
+            <div class="position-relative choose-template-wrapper width-60" *ngIf="!selectedTemplate"
+              [ngClass]="{'width-88': config?.workflow}">
+              <input type="text" placeholder="Template Name" class="form-control"
+                [ngClass]="{'hasError' : sendCampaignData && !selectedTemplate?.name}"
+                [ngStyle]="{'margin-bottom': sendCampaignData && !selectedTemplate?.name ? '5px' : 'auto'}">
+              <button class="btn btn-design" (click)="insertTemplateModal('insert-template')"
+                [ngClass]="{'disabled':!wabaNumberObj }">{{'common.choose-template'
+                | translate}}</button>
+            </div>
+
+            <div class="d-block position-relative">
+              <span class="error" *ngIf="sendCampaignData && !selectedTemplate?.name"><small><img
+                    src="../../../assets/images/error.svg"></small>{{'common.select-template-error-message' |
+                translate}}</span>
+            </div>
+
+
+            <div *ngIf="selectedTemplate" class="position-relative selected-template-name-wrapper width-60"
+              [ngClass]="{'width-88': config?.workflow}">
+              <input type="text" class="form-control" [value]="selectedTemplate?.name" readonly>
+              <span class="cursor-pointer" (click)="removeSelectedTemplate()">
+                <svg xmlns="http://www.w3.org/2000/svg" id="prefix__Slected" width="17" height="17" viewBox="0 0 17 17"
+                  style="fill: var(--primary-color)">
+                  <g id="prefix__Oval" style="stroke-miterlimit:10;">
+                    <circle cx="8.5" cy="8.5" r="8.5" style="stroke:none" />
+                    <circle cx="8.5" cy="8.5" r="8" style="fill:none" />
+                  </g>
+                  <g id="prefix__interface" transform="translate(6 6)">
+                    <path id="prefix__Path"
+                      d="M3.55 3L5.886.664a.389.389 0 0 0-.55-.55L3 2.45.664.114a.389.389 0 1 0-.55.55L2.45 3 .114 5.336a.389.389 0 1 0 .55.55L3 3.55l2.336 2.336a.389.389 0 0 0 .55-.55z"
+                      style="fill:#fff;stroke:#fff;stroke-width:.5px;stroke-miterlimit:10" />
+                  </g>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="mb-3 custom-placement-rtl">
+            <label class="label-text d-block text-left custom-placement-rtl">{{'common.select-language' |
+              translate}}</label>
+            <app-custom-select-with-create class="custom-select-width-60 " [data]="languageList"
+              [config]="configLanguageList" [value]="languageSelectText"
+              (clickElsewhere)="configLanguageList.open = false" (selectAction)="selectActionRecive($event, 'language')"
+              [errors]="showErrors('language', 'required', 'messageForm')"
+              [ngClass]="{'internal-custom-select' : showErrors('language', 'required', 'messageForm'), 'custom-select-width-88': config?.workflow}">
+            </app-custom-select-with-create>
+            <div class="d-block position-relative">
+              <span class="error" *ngIf="showErrors('language','required', 'messageForm')"><small><img
+                    src="../../../assets/images/error.svg"></small>{{'common.select-language' | translate}}</span>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <p class="message-body-text custom-placement-rtl"
+              *ngIf="messageForm.get('language').value && (isMedia || isHeaderText)">{{'common.header-text' |
+              translate}}
+            </p>
+            <label class="label-text"
+              *ngIf="messageForm.get('language').value && !isHeaderText && isMedia">{{'common.media-text' |
+              translate}}</label>
+            <div class="wa-image-wrapper mb-3" *ngIf="messageForm.get('language').value && !isHeaderText && isMedia">
+              <div class="campaign-type-btn">
+                <button class="btn common-msg-btn tick-btn">
+                  <span class="icon-Icon img-icon" *ngIf="templateMediaType == 'image'"><span class="path1"></span><span
+                      class="path2"></span></span>
+                  <span class="icon-Video" *ngIf="templateMediaType == 'video'"><span class="path1"></span><span
+                      class="path2"></span><span class="path3"></span></span>
+                  <span class="icon-archive" *ngIf="templateMediaType == 'document'"><span class="path1"></span><span
+                      class="path2"></span><span class="path3"></span><span class="path4"></span><span
+                      class="path5"></span></span>
+                  {{ templateMediaType == 'image' ? 'Image' : (templateMediaType == 'video' ? 'Video' : 'Document') }}
+                  <div class="tick-placement">
+                    <div class="tick-mark"></div>
+                  </div>
+                  <input type="radio" class="form-check-input" value="image" checked>
+                </button>
+              </div>
+            </div>
+            <div class="custom-media-type-wrapper custom-placement-rtl"
+              *ngIf="messageForm.get('language').value && !isHeaderText && isMedia">
+              <mat-radio-group aria-label="Select an option" (change)="mediaType($event)" formControlName="mediaType">
+                <mat-radio-button class="form-group mr-3 rtl-margin-placement" [value]="0"
+                  [checked]="messageForm.get('mediaType').value == 0">
+                  {{'common-upload-text' | translate}}</mat-radio-button>
+                <mat-radio-button class="mr-3 rtl-margin-placement" [value]="1"
+                  [checked]="messageForm.get('mediaType').value == 1">
+                  {{'common.from-url-text' | translate}}</mat-radio-button>
+                <mat-radio-button [value]="2" [checked]="messageForm.get('mediaType').value == 2">
+                  {{'campaign.column-containing-url-text' | translate}}</mat-radio-button>
+              </mat-radio-group>
+            </div>
+            <div class="custom-view-or-upload-wrapper"
+              *ngIf="messageForm.get('language').value && !isHeaderText && isMedia">
+              <div class="upload-help-files position-relative"
+                *ngIf="messageForm.get('mediaType').value == 0 && !fileName" (click)="fileInput.click()"
+                style="cursor: pointer;" appDragDrop (onFileDropped)="uploadFile($event)">
+                <input hidden type="file" #fileInput (change)="uploadFile($event.target.files)">
+                <div class="upload-icon-border custom-help-icon-margin-rtl">
+                  <img src="assets/images/upload.png" class="upload-icon" alt="Drop-icon">
+                </div>
+                <div class="upload-text">
+                  <p class="click-text">{{'help.drop-file-text' | translate}}</p>
+                  <p class="format-text" *ngIf="templateMediaType == 'image'">{{'common.media-upload-img-format' |
+                    translate}}</p>
+                  <p class="format-text" *ngIf="templateMediaType == 'document'">{{'common.media-upload-document-format'
+                    | translate}}</p>
+                  <p class="format-text" *ngIf="templateMediaType == 'video'">{{'common.media-upload-video-format'
+                    | translate}}</p>
+                </div>
+              </div>
+
+              <div class="progress form-group"
+                *ngIf="messageForm.get('mediaType').value == 0 && !fileName && progress > 0">
+                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" [style.width.%]="progress">
+                </div>
+              </div>
+
+              <div class="upload-help-files position-relative"
+                *ngIf="messageForm.get('mediaType').value == 0 && fileName">
+                <div class="upload-icon-border custom-help-icon-margin-rtl ">
+                  <img [src]="uploadedFileData.url" class="uploaded-img" alt="Drop-icon"
+                    *ngIf="(templateMediaType == 'image') && !messageForm.get('columnUrl').value">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="214" height="117" viewBox="0 0 214 117"
+                    *ngIf="(templateMediaType == 'image') && messageForm.get('columnUrl').value">
+                    <g transform="translate(-1164.414 -567.564)">
+                      <rect width="213" height="116" fill="#d3d3d3" stroke="rgba(0,0,0,0)" stroke-miterlimit="10" rx="4"
+                        transform="translate(1164.914 568.064)" />
+                      <path fill="#fff"
+                        d="M32.625 31.5H3.375A3.375 3.375 0 0 1 0 28.125V7.875A3.375 3.375 0 0 1 3.375 4.5h29.25A3.375 3.375 0 0 1 36 7.875v20.25a3.375 3.375 0 0 1-3.375 3.375zM7.875 8.438a3.938 3.938 0 1 0 3.938 3.938 3.937 3.937 0 0 0-3.938-3.938zM4.5 27h27v-7.875l-6.153-6.153a.844.844 0 0 0-1.193 0L14.625 22.5l-3.9-3.9a.844.844 0 0 0-1.193 0L4.5 23.625z"
+                        transform="translate(1253.127 608.064)" />
+                    </g>
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="214" height="117" viewBox="0 0 214 117"
+                    *ngIf="(templateMediaType == 'document') && (fileName || messageForm.get('uploadFromUrl').value || messageForm.get('columnUrl').value)">
+                    <g transform="translate(-1164.5 -567.564)">
+                      <rect width="213" height="116" fill="#d3d3d3" stroke="rgba(0,0,0,0)" stroke-miterlimit="10" rx="4"
+                        transform="translate(1165 568.064)" />
+                      <path fill="#fff"
+                        d="M0 0v29.25h25.594V14.625H10.969V0zm14.625 0v10.969h10.969zM3.656 7.313h3.657v3.656H3.656zm0 7.313h3.657v3.656H3.656zm0 7.313h14.625v3.656H3.656z"
+                        transform="translate(1259 610.314)" />
+                    </g>
+                  </svg>
+
+                  <img src="assets/images/play.png" class="uploaded-img video-upload-icon" alt="Drop-icon"
+                    *ngIf="((templateMediaType == 'video') && fileName)">
+
+
+                </div>
+                <div class="upload-text custom-thumbnail-width">
+                  <p class="click-text ellipsis-text width-80 m-auto">{{fileName}}</p>
+                  <p class="format-text" *ngIf="templateMediaType == 'image'">{{'common.media-upload-img-format' |
+                    translate}}</p>
+                  <p class="format-text" *ngIf="templateMediaType == 'document'">{{'common.media-upload-document-format'
+                    | translate}}</p>
+                  <p class="format-text" *ngIf="templateMediaType == 'video'">{{'common.media-upload-video-format'
+                    | translate}}</p>
+                </div>
+                <div class="close-icon">
+                  <span class="cursor-pointer" (click)="removeUploadedMediaFile()">
+                    <svg xmlns="http://www.w3.org/2000/svg" id="prefix__Slected" width="17" height="17"
+                      viewBox="0 0 17 17" style="fill: var(--primary-color)">
+                      <g id="prefix__Oval" style="stroke-miterlimit:10;">
+                        <circle cx="8.5" cy="8.5" r="8.5" style="stroke:none" />
+                        <circle cx="8.5" cy="8.5" r="8" style="fill:none" />
+                      </g>
+                      <g id="prefix__interface" transform="translate(6 6)">
+                        <path id="prefix__Path"
+                          d="M3.55 3L5.886.664a.389.389 0 0 0-.55-.55L3 2.45.664.114a.389.389 0 1 0-.55.55L2.45 3 .114 5.336a.389.389 0 1 0 .55.55L3 3.55l2.336 2.336a.389.389 0 0 0 .55-.55z"
+                          style="fill:#fff;stroke:#fff;stroke-width:.5px;stroke-miterlimit:10" />
+                      </g>
+                    </svg>
+                  </span>
+                </div>
+
+              </div>
+
+              <div *ngIf="messageForm.get('mediaType').value == 1">
+                <div class="position-relative type-url-wrapper width-60" [ngClass]="{'width-88': config?.workflow}">
+                  <input type="text" placeholder="Enter Url" class="form-control" #typedUrl [readonly]="urlUploaded"
+                    [ngClass]="{'url-uploaded': urlUploaded}">
+                  <span class="cursor-pointer" (click)="removeUploadedUrl()" *ngIf="urlUploaded">
+                    <svg xmlns="http://www.w3.org/2000/svg" id="prefix__Slected" width="17" height="17"
+                      viewBox="0 0 17 17" style="fill: var(--primary-color)">
+                      <g id="prefix__Oval" style="stroke-miterlimit:10;">
+                        <circle cx="8.5" cy="8.5" r="8.5" style="stroke:none" />
+                        <circle cx="8.5" cy="8.5" r="8" style="fill:none" />
+                      </g>
+                      <g id="prefix__interface" transform="translate(6 6)">
+                        <path id="prefix__Path"
+                          d="M3.55 3L5.886.664a.389.389 0 0 0-.55-.55L3 2.45.664.114a.389.389 0 1 0-.55.55L2.45 3 .114 5.336a.389.389 0 1 0 .55.55L3 3.55l2.336 2.336a.389.389 0 0 0 .55-.55z"
+                          style="fill:#fff;stroke:#fff;stroke-width:.5px;stroke-miterlimit:10" />
+                      </g>
+                    </svg>
+                  </span>
+                  <button class="btn btn-design" [ngClass]="{'disabled': !typedUrl?.value}" (click)="UploadUrl()"
+                    *ngIf="!urlUploaded">{{'common-upload-text' |
+                    translate}}</button>
+                </div>
+              </div>
+
+              <div *ngIf="messageForm.get('mediaType').value == 2">
+                <app-custom-select-with-create class="custom-select-width-60 " [data]="columnContainingUrlList"
+                  [config]="configColumnContainingUrlList" [value]="columnContainingUrlText"
+                  (clickElsewhere)="configColumnContainingUrlList.open = false"
+                  (selectAction)="selectActionRecive($event, 'columnUrl')"
+                  [errors]="showErrors('columnUrl', 'required', 'messageForm')"
+                  [ngClass]="{'internal-custom-select' : showErrors('columnUrl', 'required', 'messageForm'), 'custom-select-width-88': config?.workflow}">
+                </app-custom-select-with-create>
+              </div>
+            </div>
+          </div>
+
+
+
+
+          <div class="custom-tooltip-version-placement"
+            [ngClass]="{'textarea-hasError' : showErrors('textMessage', 'required', 'messageForm')}"
+            [ngStyle]="{'margin-bottom': showErrors('textMessage', 'required', 'messageForm') ? '5px' : 'auto'}"
+            *ngIf="isHeaderText && messageForm.get('language').value && !isMedia">
+            <p class="message-body-text custom-placement-rtl">{{'common.text-label' | translate}}</p>
+            <label class="label-text">{{'campaign.editor-label1' | translate}} <span
+                class="link-color">{{'common.variables-text' | translate}}&#123;Vn&#125;</span>
+              {{'campaign.editor-label2' | translate}}</label>
+            <div appPreventTyping id="editor2" attr.placeholder="{{'common.message-appear-here-text' | translate}}"
+              class="form-control d-inline-block align-top custom-editable-textarea textarea a mb-3 custom-placement-rtl"
+              contenteditable="true" (contextmenu)="getEvent($event)" #text2 ondrop="return false;"></div>
+
+            <div style="visibility: hidden; position: fixed" *ngIf="showContextMenu"
+              [style.left]="contextMenuPosition.x" (contextmenu)="getEvent($event)" #text2 ondrop="return false;">
+            </div>
+            <div style="visibility: hidden; position: fixed" *ngIf="showContextMenu"
+              [style.left]="contextMenuPosition.x" [style.top]="contextMenuPosition.y"
+              [matMenuTriggerFor]="contextMenu">
+            </div>
+          </div>
+
+          <div class="custom-tooltip-version-placement"
+            [ngClass]="{'textarea-hasError' : showErrors('textMessage', 'required', 'messageForm')}"
+            [ngStyle]="{'margin-bottom': showErrors('textMessage', 'required', 'messageForm') ? '5px' : 'auto'}">
+            <p class="message-body-text custom-placement-rtl">{{'common.body-text' | translate}}</p>
+            <label class="label-text">{{'campaign.editor-body-label1' | translate}} <span
+                class="link-color">{{'common.variables-text' | translate}}&#123;Vn&#125;</span>
+              {{'campaign.editor-label2' | translate}}</label>
+            <div appPreventTyping id="editor" attr.placeholder="{{'common.message-appear-here-text' | translate}}"
+              class="form-control d-inline-block align-top custom-editable-textarea textarea a custom-placement-rtl"
+              contenteditable="true" (contextmenu)="getEvent($event, 'text')" #text ondrop="return false;"></div>
+            <div style="visibility: hidden; position: fixed" *ngIf="showContextMenu"
+              [style.left]="contextMenuPosition.x" [style.top]="contextMenuPosition.y"
+              [matMenuTriggerFor]="contextMenu">
+            </div>
+            <mat-menu #contextMenu="matMenu">
+              <ng-template matMenuContent let-item="item">
+                <button mat-menu-item class="editor-context-menu" [matMenuTriggerFor]="submenu1"
+                  [disabled]="disablePersonalise"
+                  *ngIf="(!hidePersonaliseOption) && ((config?.workflow && columnContainingUrlList && (columnContainingUrlList.length > 0)) || (!config?.workflow && ((contactCount > 0) && columnContainingUrlList && (columnContainingUrlList.length > 0))))"><span
+                    class="icon-user1 mr-1"></span>{{'common.personalise-text' | translate}}</button>
+                <button mat-menu-item (click)="insertLink('insert-link')" [disabled]="disableAddLink"
+                  *ngIf="!hideAllLink"><span class="icon-link1 mr-1"></span>{{'campaign.create-campaign-add-link' |
+                  translate}}</button>
+                <button mat-menu-item (click)="resetVariable($event)"
+                  *ngIf="(config?.workflow && (showVariables || showReset) && columnContainingUrlList && (columnContainingUrlList.length > 0)) || (!config?.workflow && ((showVariables || showReset) && ((contactCount > 0) && (columnContainingUrlList && columnContainingUrlList.length > 0))) && !hideResetBtnInCopyOfferCode)"><span
+                    class="icon-reset mr-1"></span>{{'common-reset-text' | translate}}</button>
+              </ng-template>
+            </mat-menu>
+
+            <mat-menu #submenu1="matMenu">
+              <ng-container *ngIf="showVariables;else hideVariables">
+                <button mat-menu-item
+                  (click)="showAllVariablesPersonalisation('personalise-variables')">{{'common.all-variables-text' |
+                  translate}}</button>
+              </ng-container>
+              <ng-template #hideVariables>
+                <!-- <button mat-menu-item *ngFor="let item of personalizeOptions"
+                  (click)="insertPersonalizeItem(item, text)">{{item.headerName}}</button> -->
+              </ng-template>
+            </mat-menu>
+            <div class="mt-1" *ngIf="showQuickReplyPersonalisedButton">
+              <a class="custom-link-color" (click)="showAllVariablesPersonalisation('personalise-variables')">+
+                {{'whatsapp.personalise-button-identifier' | translate}}</a>
+            </div>
+          </div>
+          <div class="d-block position-relative">
+            <span class="error" *ngIf="showErrors('textMessage','required', 'messageForm')"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'campaign.create-campaign-pl-enter-your-msg' |
+              translate}}</span>
+            <span class="error"
+              *ngIf="!showErrors('textMessage','required', 'messageForm') && messageForm.get('textMessage').errors">
+              <small><img src="../../../assets/images/error.svg"></small>{{messageForm.get('textMessage').errors}}
+            </span>
+          </div>
+
+          <div class="custom-tooltip-version-placement mt-3"
+            [ngClass]="{'textarea-hasError' : showErrors('textMessage', 'required', 'messageForm')}"
+            [ngStyle]="{'margin-bottom': showErrors('textMessage', 'required', 'messageForm') ? '5px' : 'auto'}"
+            *ngIf="showDynamicUrlEditor && messageForm.get('language').value">
+            <p class="message-body-text custom-placement-rtl">{{'campaign.footer-button-url-label' | translate}} -
+              ({{dynamicButton?.text}})
+            </p>
+            <label class="label-text">{{'campaign.editor-right-click-label1' | translate}} <span
+                class="link-color">{{'common.variables-text' | translate}}&#123;Vn&#125;</span>
+              {{'campaign.footer-button-url-label-brief' | translate}}</label>
+            <div appPreventTyping id="editor3" attr.placeholder="{{'common.message-appear-here-text' | translate}}"
+              class="form-control d-inline-block align-top custom-editable-textarea textarea a mb-3 custom-placement-rtl"
+              contenteditable="true" (contextmenu)="getEvent($event, 'text3')" #text3 ondrop="return false;"></div>
+            <div style="visibility: hidden; position: fixed" *ngIf="showContextMenu"
+              [style.left]="contextMenuPosition.x" [style.top]="contextMenuPosition.y"
+              [matMenuTriggerFor]="contextMenu">
+            </div>
+          </div>
+          <div class="custom-tooltip-version-placement mt-3"
+            [ngClass]="{'textarea-hasError' : showErrors('textMessage', 'required', 'messageForm')}"
+            [ngStyle]="{'margin-bottom': showErrors('textMessage', 'required', 'messageForm') ? '5px' : 'auto'}"
+            *ngIf="showDynamicUrlEditor2 && messageForm.get('language').value">
+            <p class="message-body-text custom-placement-rtl">{{'campaign.footer-button-url-label' | translate}} -
+              ({{dynamicButton2?.text}})
+            </p>
+            <label class="label-text">{{'campaign.editor-right-click-label1' | translate}} <span
+                class="link-color">{{'common.variables-text' | translate}}&#123;Vn&#125;</span>
+              {{'campaign.footer-button-url-label-brief' | translate}}</label>
+            <div appPreventTyping id="editor3" attr.placeholder="{{'common.message-appear-here-text' | translate}}"
+              class="form-control d-inline-block align-top custom-editable-textarea textarea a mb-3 custom-placement-rtl"
+              contenteditable="true" (contextmenu)="getEvent($event, 'text4')" #text4 ondrop="return false;"></div>
+            <div style="visibility: hidden; position: fixed" *ngIf="showContextMenu"
+              [style.left]="contextMenuPosition.x" [style.top]="contextMenuPosition.y"
+              [matMenuTriggerFor]="contextMenu">
+            </div>
+          </div>
+          <div class="custom-tooltip-version-placement mt-3"
+            [ngClass]="{'textarea-hasError' : showErrors('textMessage', 'required', 'messageForm')}"
+            [ngStyle]="{'margin-bottom': showErrors('textMessage', 'required', 'messageForm') ? '5px' : 'auto'}"
+            *ngIf="showCopyOfferCodePersonalisedButton && messageForm.get('language').value">
+            <p class="message-body-text custom-placement-rtl">{{'whatsapp.copy-offer-code' | translate}}
+            </p>
+            <label class="label-text">{{'campaign.editor-right-click-label1' | translate}} <span
+                class="link-color">{{'common.variables-text' | translate}}&#123;Vn&#125;</span>
+              {{'campaign.footer-button-url-label-brief' | translate}}</label>
+            <div appPreventTyping id="editor4" attr.placeholder="{{'common.message-appear-here-text' | translate}}"
+              class="form-control d-inline-block align-top custom-editable-textarea textarea a mb-3 custom-placement-rtl"
+              contenteditable="true" (contextmenu)="getEvent($event, 'text5')" #text5 ondrop="return false;"></div>
+            <div style="visibility: hidden; position: fixed" *ngIf="showContextMenu"
+              [style.left]="contextMenuPosition.x" [style.top]="contextMenuPosition.y"
+              [matMenuTriggerFor]="contextMenu">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 mb-3 preview-content-wrapper-custom"
+      [ngClass]="{'col-md-5 col-lg-5': config?.workflow, 'col-md-4 col-lg-4': !config?.workflow}">
+      <div class="whatsapp-preview-wrapper">
+        <div class="message-content-custom-preview position-relative text-break custom-placement-rtl"
+          *ngIf="messageForm.get('language').value"
+          [ngStyle]="{'background':  messageForm.get('language').value && langSelectedCardsButtons ? 'none' :'' }">
+          <div [ngClass]="{'left-chat-in-carousel': messageForm.get('language').value && langSelectedCardsButtons}">
+            <div class="left-chat-arrow" *ngIf="messageForm.get('language').value && langSelectedCardsButtons"></div>
+            <div class="left-chat-arrow-small" *ngIf="messageForm.get('language').value && langSelectedCardsButtons">
+            </div>
+            <span *ngIf="!(fileName || messageForm.get('columnUrl').value || urlUploaded)">
+              <div class="preview_dummy d-flex align-items-center justify-content-center"
+                *ngIf="templateMediaType== 'image' || templateMediaType== 'video' || templateMediaType == 'document'">
+                <span class="icon-Icon-awesome-image" *ngIf="templateMediaType == 'image'"></span>
+                <span class="icon-Icon-open-document" *ngIf="templateMediaType == 'document'"></span>
+                <span class="icon-Icon-ionic-ios-play-circle" *ngIf="templateMediaType == 'video'"></span>
+              </div>
+            </span>
+            <div class="upload-icon-border custom-help-icon-margin-rtl bdr-none"
+              *ngIf="fileName || messageForm.get('columnUrl').value || urlUploaded"
+              [ngClass]="{'height-130':templateMediaType == 'image'}">
+              <img [src]="urlUploaded ? uploadFromUrlData.url : uploadedFileData.url" class="uploaded-img"
+                alt="Drop-icon" *ngIf="(templateMediaType == 'image') && !messageForm.get('columnUrl').value ">
+              <div class="preview_dummy d-flex align-items-center justify-content-center"
+                *ngIf="((templateMediaType == 'image') && (messageForm.get('columnUrl').value)) || ((templateMediaType == 'document') && (fileName || messageForm.get('uploadFromUrl').value || messageForm.get('columnUrl').value)) || templateMediaType == 'video'">
+                <span class="icon-Icon-awesome-image"
+                  *ngIf="(templateMediaType == 'image') && (messageForm.get('columnUrl').value)"></span>
+                <span class="icon-Icon-open-document"
+                  *ngIf="(templateMediaType == 'document') && (fileName || messageForm.get('uploadFromUrl').value || messageForm.get('columnUrl').value)"></span>
+                <span *ngIf="templateMediaType == 'video'" class="icon-Icon-ionic-ios-play-circle"></span>
+              </div>
+            </div>
+            <p class="wa-content-preview mb-3 header-text-style pre-wrap">{{headerTextPreview}}</p>
+            <p class="wa-content-preview mb-3 pre-wrap">{{bodyTextPreview}}</p>
+            <div class="position-relative">
+              <p class="wa-content-signature" *ngIf="footerTextPreview">{{footerTextPreview}}</p>
+              <div class="custom-preview-time">9:54 PM</div>
+            </div>
+          </div>
+          <!-- {{ this.selectedTemplate[this.messageForm.get('language').value].header_type }} -->
+          <div *ngIf="messageForm.get('language').value && langSelectedCardsButtons"
+            [ngClass]="{'bg-media-rich-card p-0 mb-3': messageForm.get('language').value }">
+            <span class="previous" *ngIf="langSelectedCardsButtons?.total_cards > 1" (click)="activeCard('previous')"
+              [ngClass]="{'disabled': this.slctdCardIndex == 0}">
+              <i aria-hidden="true" class="fa arrow-icon fa-angle-down"></i>
+            </span>
+            <!-- *ngIf="!langSelectedCardsButtons?.card?.header" -->
+            <div class="p-1 border-bottom">
+              <div class="preview_dummy d-flex align-items-center justify-content-center"
+                *ngIf="!langSelectedCardsButtons?.card?.header?.url">
+                <span class="icon-Icon-awesome-image"
+                  *ngIf="langSelectedCardsButtons?.card_media_type == 'IMAGE'"></span>
+                <span class="icon-Icon-open-document"
+                  *ngIf="langSelectedCardsButtons?.card_media_type == 'DOCUMENT'"></span>
+                <span *ngIf="langSelectedCardsButtons?.card_media_type == 'VIDEO'"
+                  class="icon-Icon-ionic-ios-play-circle"></span>
+              </div>
+              <div class="upload-icon-border custom-help-icon-margin-rtl bdr-none"
+                *ngIf="langSelectedCardsButtons?.card?.header?.url"
+                [ngClass]="{'height-130':langSelectedCardsButtons?.card_media_type  == 'IMAGE'}">
+                <img *ngIf="langSelectedCardsButtons?.card_media_type =='IMAGE'"
+                  [src]="'/assets/cb' + langSelectedCardsButtons?.card?.header?.url" class="uploaded-img"
+                  [alt]="langSelectedCardsButtons?.file_name">
+                <div class="preview_dummy d-flex align-items-center justify-content-center"
+                  *ngIf="langSelectedCardsButtons?.card_media_type == 'DOCUMENT' || langSelectedCardsButtons?.card_media_type == 'VIDEO'">
+                  <span class="icon-Icon-open-document"
+                    *ngIf="langSelectedCardsButtons?.card_media_type == 'DOCUMENT'"></span>
+                  <span *ngIf="langSelectedCardsButtons?.card_media_type == 'VIDEO'"
+                    class="icon-Icon-ionic-ios-play-circle"></span>
+                </div>
+              </div>
+
+              <p class="wa-content-preview mb-3 pre-wrap my-2"
+                [innerHtml]="langSelectedCardsButtons?.card?.bodyTextPreview"></p>
+
+            </div>
+
+            <div *ngFor="let button of langSelectedCardsButtons?.card?.buttons" class=" card-btns">
+              <span class="content">
+                <span
+                  class="icon-{{button.type == 'URL' ? 'link-external' : (button.type == 'PHONE_NUMBER' ? 'call' :'')}} text-center"></span>
+                {{button.buttonText}}
+              </span>
+            </div>
+            <!-- <div class="message-footer-buttons"
+              [ngClass]="{'d-flex': langSelectedCardsButtons?.card?.buttons && langSelectedCardsButtons?.card?.buttons.length > 1, 'text-center': langSelectedCardsButtons?.card?.buttons && langSelectedCardsButtons?.card?.buttons.length == 1}">
+              <button class="btn preview-btn-white no-border"
+                *ngFor="let btn of langSelectedCardsButtons?.card?.buttons">{{btn.buttonText ? btn.buttonText :
+                btn?.text}}</button>
+            </div> -->
+            <span class="next ng-star-inserted" *ngIf="langSelectedCardsButtons?.total_cards > 1"
+              (click)="activeCard('next')" [ngClass]="{'disabled': this.slctdCardIndex == (this.totalCards-1)}">
+              <i aria-hidden="true" class="fa arrow-icon fa-angle-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="message-footer-buttons"
+          [ngClass]="{'d-flex': buttons && buttons.length > 1, 'text-center': buttons && buttons.length == 1}"
+          *ngIf="messageForm.get('language').value">
+          <button class="btn preview-btn-white" *ngFor="let btn of buttons">
+            <span class="icon-call mr-1" *ngIf="btn.type.toUpperCase() === 'PHONE_NUMBER'"></span>
+            <span class="icon-link-external mr-1" *ngIf="btn.type.toUpperCase() === 'URL'"></span>
+            <span class="icon-copy offer-code mr-1" *ngIf="btn.type.toUpperCase() === 'COPY_CODE'"></span>
+            {{btn.buttonText ? btn.buttonText :
+            btn.text}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<!-- insert-template -->
+<app-insert-template id="insert-template" [config]="config" (close)="closeDrawer($event)"
+  (sendData)="recievedDataTemplate($event)" [wabaNumberObj]="wabaNumberObj"
+  [showDrawer]="showInsertTemplate"></app-insert-template>
+
+<!-- All-Variables-Side-Drawer -->
+<app-personalize-variabless id="personalise-variables" *ngIf="variables && variables.length > 0" [variables]="variables"
+  [personalizeOptions]="columnContainingUrlList" [config]="config" (close)="closeDrawer($event)"
+  (sendFinalVariabledData)="getFinalVariabledData($event)" [finalVarData]="finalVarData"
+  [showDrawer]="showPersonaliseVariables"></app-personalize-variabless>
+
+<!-- insert-link -->
+<app-short-url id="insert-link" (close)="closeDrawer($event)" (urlTypeTab)="urlFormText($event)"
+  [urlChanged]="urlChanged" [contactCount]="contactCount" [textareaInput]="textareaInputElement"
+  [previewValue]="previewValue" (sendUrlFormValue)="getUrlFormValue($event)" [campaignId]="campaignId"
+  (sendData)="recievedData($event)" [config]="config" [showDrawer]="showAddLink" [hideDropdown]="hideDropdown"
+  [hideForm]="hideForm"></app-short-url>
+
+<!-- save-template -->
+<!-- <app-save-template id="save-template" (sendLoaderState)="receivedLoaderState($event)" [previewValue]="previewValue">
+</app-save-template> -->
+
+
+
+<div #element1 style="display: none;"></div>
+<div #element2 style="display: none;"></div>
+
+
+<div #elRef style="display: none;"></div>

@@ -1,0 +1,193 @@
+<div class="row rcs-configure-sms-wrapper">
+  <div class="col-md-8">
+    <div class="set-parameters steps-frame mb-3 set-message-wrapper"
+      [ngClass]="{'default-steps-frame-padding': config?.hideStepCounts}">
+      <div class="row" *ngIf="!config?.hideStepCounts">
+        <div class="col-md-12">
+          <div class="tick-box">
+            <div
+              [ngClass]="{'tick-mark': messageForm.get('textMessage').value, 'step-count': !messageForm.get('textMessage').value}">
+              <span *ngIf="!messageForm.get('textMessage').value">
+                <ng-container *ngIf="!config?.updatedStepCount">{{isKsaUser ? 4 : 5 }}</ng-container>
+                <ng-container
+                  *ngIf="config?.updatedStepCount">{{selectorData?.appConfigureSms?.stepCount}}</ng-container>
+              </span>
+              <!-- <span *ngIf="!messageForm.get('textMessage').value">{{4 }}</span> -->
+            </div>
+          </div>
+          <h4 class="step-heading">{{config?.truecaller && ('common.configure-fallback') || ('campaign.choose-message-label') | translate}} </h4>
+        </div>
+      </div>
+      <form [formGroup]="messageForm">
+        <div class="row" [ngClass]="{'disabled no-pointer-event': !enableSection && this.config?.truecaller}">
+          <div class="col-md-12">
+
+            <div class="schedule-message-toggle mb-3 d-flex align-items-center">
+              <div class="custom-control custom-switch mr-3 schedule-switch"
+                [ngClass]="{'custom-disable-schedule-toggle-permission': false}">
+                <input type="checkbox" (change)="scheduleSwitch($event)" class="custom-control-input"
+                  formControlName="configureSms" id="rcs-configure-sms">
+                <label class="custom-control-label" for="rcs-configure-sms"></label>
+              </div>
+              <label class="mr-3 mb-0">{{
+                "user-management.accounts-configure-sms" | translate
+                }}</label>
+            </div>
+          </div>
+          <div class="col-md-12 mb-3" *ngIf="messageForm.get('configureSms').value">
+            <label class="label-text">{{'campaign.create-campaign-sender-id' | translate}}</label>
+            <app-custom-select-with-create [data]="senderId" [config]="configSenderId" [value]="senderIdSelectText"
+              (clickElsewhere)="configSenderId.open = false" (selectAction)="selectActionRecive($event, 'senderId')"
+              [errors]="sendCampaignData && !messageForm.get('senderId').value"
+              [ngClass]="{'internal-custom-select' : sendCampaignData && !messageForm.get('senderId').value}">
+            </app-custom-select-with-create>
+            <div class="d-block position-relative">
+              <span class="error" *ngIf="sendCampaignData && !messageForm.get('senderId').value"><small><img
+                    src="../../../assets/images/error.svg"></small>{{'campaign.create-campaign-pl-sel-sender-id' |
+                translate}}</span>
+            </div>
+          </div>
+          <div class="col-md-12" *ngIf="messageForm.get('configureSms').value">
+            <div class="mb-3">
+              <label class="label-text">{{'common.select-template' | translate}}</label>
+              <div class="position-relative choose-template-wrapper" *ngIf="!templateName"
+                [ngClass]="{'no-pointer-event': !messageForm.get('senderId').value}">
+                <!-- <div class="position-relative choose-template-wrapper" *ngIf="!templateName" [ngClass]="{'no-pointer-event': !senderType}"> -->
+                <input type="text" placeholder="Template Name" class="form-control"
+                  [ngClass]="{'hasError' : sendCampaignData && !templateName}"
+                  [ngStyle]="{'margin-bottom': sendCampaignData && !templateName ? '5px' : 'auto'}">
+
+                <button class="btn btn-design" (click)="insertTemplateModal('configure-sms')">{{'common.choose-template'
+                  | translate}}</button>
+              </div>
+
+              <div class="d-block position-relative">
+                <span class="error" *ngIf="sendCampaignData && !templateName"><small><img
+                      src="../../../assets/images/error.svg"></small>{{'common.select-template-error-message' |
+                  translate}}</span>
+              </div>
+              <div *ngIf="templateName" class="position-relative selected-template-name-wrapper">
+                <input type="text" class="form-control" [value]="templateName" readonly>
+                <span class="cursor-pointer" (click)="removeUploadedFile()">
+                  <svg xmlns="http://www.w3.org/2000/svg" id="prefix__Slected" width="17" height="17"
+                    viewBox="0 0 17 17" style="fill: var(--primary-color)">
+                    <g id="prefix__Oval" style="stroke-miterlimit:10;">
+                      <circle cx="8.5" cy="8.5" r="8.5" style="stroke:none" />
+                      <circle cx="8.5" cy="8.5" r="8" style="fill:none" />
+                    </g>
+                    <g id="prefix__interface" transform="translate(6 6)">
+                      <path id="prefix__Path"
+                        d="M3.55 3L5.886.664a.389.389 0 0 0-.55-.55L3 2.45.664.114a.389.389 0 1 0-.55.55L2.45 3 .114 5.336a.389.389 0 1 0 .55.55L3 3.55l2.336 2.336a.389.389 0 0 0 .55-.55z"
+                        style="fill:#fff;stroke:#fff;stroke-width:.5px;stroke-miterlimit:10" />
+                    </g>
+                  </svg>
+                </span>
+              </div>
+
+            </div>
+          </div>
+          <div class="col-md-12" *ngIf="!templateName && messageForm.get('configureSms').value">
+            <div
+              class="no-template-wrapper textarea custom-editable-textarea d-flex justify-content-center align-items-center flex-column">
+              <img src="../../../../assets/images/rcs/no-rcs-templates.png" alt="no-template" class="mb-3">
+              <div class="no-template-text">
+                <label class="label-text">{{'common.no-template-selected' | translate}}</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12" *ngIf="messageForm.get('configureSms').value"
+            [ngClass]="{'hide-with-opacity': !templateName}">
+            <label class="label-text">{{'campaign.rcs-body-text-click' | translate}}</label>
+            <div class="custom-tooltip-version-placement"
+              [ngClass]="{'textarea-hasError' : showErrors('textMessage', 'required', 'messageForm') || showDynamicError}"
+              [ngStyle]="{'margin-bottom': showErrors('textMessage', 'required', 'messageForm') ? '5px' : 'auto'}">
+              <app-text-editor [actualCharacterCount]="actualCharacterCount" [messageCount]="messageCount"
+                [variablesDetails]="variablesDetails" [urlType]="urlType" [urlFormValue]="urlFormValue"
+                [showErrors]="showErrors('textMessage', 'required', 'messageForm')" [isEditable]="isEditable"
+                [disableAddLink]="disableAddLink" [IsNonEnglish]="IsNonEnglish" [previewValue]="previewValue"
+                [hasPersonalisedColumn]="hasPersonalisedColumn" [showFooter]="showFooter"
+                [showPersonalise]="showPersonalise" [showAddLink]="true" [showSetValues]="showSetValues"
+                [variables]="variables" [personalizeOptions]="personalizeOptions" [finalVarData]="finalVarData"
+                [selectedCardTabIndex]="selectedCardTabIndex" [inputType]="inputType" [templateType]="templateType"
+                [editorType]="'text'" (setAllPersonalization)="setAllPersonalization($event)"
+                (resetVariableEvent)="resetVariableEvent($event)" (sendVarDetails)="sendVarDetails($event)"
+                (insertLinkEvent)="insertLink($event)" (showGridPreviewEvent)="showGridPreview($event)"
+                [editorIsDisable]="!senderType"></app-text-editor>
+            </div>
+            <div class="d-block position-relative">
+              <span class="error" *ngIf="showErrors('textMessage','required', 'messageForm')"><small><img
+                    src="../../../assets/images/error.svg"></small>Please enter text.</span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="col-md-4 mb-4">
+    <div class="device-outline" *ngIf="messageForm.get('configureSms').value">
+      <div class="smartphone">
+        <div class="notch">
+        </div>
+        <div class="device-header-left">
+          <span>9:41</span>
+        </div>
+        <div class="device-header-right">
+          <i class="fa fa-wifi" aria-hidden="true"></i>
+          <i class="fa fa-battery-full" aria-hidden="true"></i>
+        </div>
+        <div class="device-message-preview" style="height: 100%;
+                    padding-top: 28px;">
+          <div class="text-center inner-device">
+            <h4 class="preview-heading custom-placement-ltr"><img src="assets/images/Layer_93.png" class="mr-2" alt="">
+              {{senderName ?
+              senderName : senderText}}</h4>
+            <div class="preview-text-box">
+              <div class="usertext mb-3">
+
+                <div class="user-msg-img mr-3">
+                  <span class="icon-Icon-awesome-user-circle user-circle"></span>
+                </div>
+                <textarea class="form-control enter-your-msg custom-placement-ltr custom-placement-rtl" maxlength="4000"
+                  readonly>{{previewValue ? previewValue : defaultPreview}}</textarea>
+              </div>
+              <div class="sample-var-length text-left">
+                <label appCustomTooltip class="label-text position-relative">
+                  <img class="campaign-type-hint" src="assets/images/hint.png" alt="hint">
+                  {{'campaign.variable-count' | translate}} <strong>{{previewValue ? actualCharacterCount + reduceLength
+                    : 0}}</strong> {{'common.character-text' | translate}}
+                  <div class="type-tooltip-text custom-rtl-placement text-left">
+                    <span>{{'campaigns.variable-sample-preview-length' | translate}}</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- All-Variables-Side-Drawer -->
+<app-personalize-variabless [id]="'personalise-variables'" [showDrawer]="showPersonaliseVariables"
+  [variables]="variables" [personalizeOptions]="personalizeOptions" [config]="config" (close)="closeDrawer($event)"
+  (sendFinalVariabledData)="getFinalVariabledData($event)" [finalVarData]="finalVarData"
+  [nextCardIndex]="selectedCardTabIndex" [inputType]="inputType"
+  [templateType]="templateType"></app-personalize-variabless>
+
+
+<!-- insert-link -->
+<app-short-url id="insert-link" (close)="closeDrawer($event)" (urlTypeTab)="urlFormText($event)"
+  *ngIf="(messageForm.get('configureSms').value && config.truecaller) || !config.truecaller" [urlChanged]="urlChanged"
+  [contactCount]="contactCount" [textareaInput]="textareaInputElement" [previewValue]="previewValue"
+  (sendUrlFormValue)="getUrlFormValue($event)" [campaignId]="campaignId" (sendData)="recievedData($event)"
+  [config]="config" [showDrawer]="showAddLink"></app-short-url>
+
+<!-- <app-card-carousel-error-modal id="card-carousel-error" [noValueFields]="noValueFields"></app-card-carousel-error-modal> -->
+
+<div #text style="display: none;"></div>
+<div #elRef style="display: none;"></div>
+<!-- <div #elRefTitle style="display: none;"></div>
+<div #elRefDescription style="display: none;"></div>
+<div #elRefMediaUrl style="display: none;"></div> -->

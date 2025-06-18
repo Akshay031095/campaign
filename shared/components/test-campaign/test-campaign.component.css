@@ -1,0 +1,33 @@
+.test-sms-wrapper .step-heading span {
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.36;
+  letter-spacing: normal;
+  text-align: left;
+  opacity: .5;
+}
+.test-sms-wrapper .test-sms-numbers-textarea {
+  width: 100%;
+  resize: none;
+}
+.test-sms-wrapper .test-btn-wrapper {
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+.test-sms-wrapper .test-btn-wrapper button {
+  min-width: 100px;
+  margin-right: 1rem;
+}
+.test-sms-wrapper .test-btn-wrapper .test-sms-message {
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: normal;
+  text-align: left;
+  color: #41c038;
+}

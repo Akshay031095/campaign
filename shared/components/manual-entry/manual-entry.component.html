@@ -1,0 +1,45 @@
+<div class="container-fluid copy-contacts inside-modal-content">
+    <form [formGroup]="copyContactsForm">
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <div class="user-input-contacts position-relative">
+                    <textarea class="form-control" name="" id="" rows="10"
+                        formControlName="typedContacts" *ngIf="!config?.email"
+                        placeholder="{{'common.manual-entry-placeholder-text-number' | translate }}" [ngClass]="{'textarea-hasError': !hasImportedData && showErrors('typedContacts','required')}" [ngStyle]="{'margin-bottom': !hasImportedData && showErrors('typedContacts','required') ? '5px' : 'auto'}"></textarea>
+                    <textarea class="form-control" name="" id="" rows="10"
+                        formControlName="typedContacts" *ngIf="config?.email"
+                        [ngClass]="{'textarea-hasError': !hasImportedData && showErrors('typedContacts','required') }"
+                        placeholder="{{'common.manual-entry-placeholder-text-email' | translate }}" [ngStyle]="{'margin-bottom': !hasImportedData && showErrors('typedContacts','required') ? '5px' : 'auto'}"></textarea>
+                        <div class="d-block position-relative">
+                            <span class="error" *ngIf="!hasImportedData && showErrors('typedContacts','required')"><small><img
+                                        src="../../../assets/images/error.svg"></small>{{manualEntryError}}</span>
+                        </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="delimiter">
+                    <label class="label-text">{{'list.f-upload-pl-choose-seprator' | translate}} </label>
+                    <app-custom-select-with-create [data]="listDelimter" [config]="configDelimiter" [value]="delimiterSelectText"
+                        (clickElsewhere)="configDelimiter.open = false" (selectAction)="delimiterReceived($event)" [errors]="!hasImportedData && showErrors('delimiter', 'required')"
+                        [ngClass]="{'internal-custom-select' : !hasImportedData && showErrors('delimiter', 'required')}">
+                    </app-custom-select-with-create>
+    
+                    <div class="d-block position-relative">
+                        <span class="error" *ngIf="!hasImportedData && showErrors('delimiter','required')"><small><img
+                                    src="../../../assets/images/error.svg"></small>{{'list.f-upload-pl-sel-delimiter' | translate}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="text-right">
+                    <button *ngIf="!hasImportedData" class="btn process-file btn-design"
+                        (click)="insertTypedContactData()">
+                        {{'common-import-text' | translate}}</button>
+                    <button *ngIf="hasImportedData" class="btn process-file btn-design"
+                        (click)="insertTypedContactData()">
+                        {{'camapign.manual-entry-update' | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

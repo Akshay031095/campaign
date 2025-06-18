@@ -1,0 +1,203 @@
+<!-- <div class="custom-tooltip-version-placement"
+        [ngClass]="{'textarea-hasError' : showErrors('textMessage', 'required', 'createCampaignForm') || showDynamicError, 'no-pointer-event': !senderType}"
+        [ngStyle]="{'margin-bottom': showErrors('textMessage', 'required', 'createCampaignForm') ? '5px' : 'auto'}">
+        <div id="editor"
+          *ngIf="(hasEditingPermission || (!isDltUser && ((editableContent && ((userCategory == 6) || ((userCategory != 6) && (senderType != 'transactional')))) || !editableContent && (senderType != 'transactional')))); else noEditDiv"
+          attr.placeholder="{{'common.enter-text-msg-here-text' | translate}}" class="form-control d-inline-block align-top custom-editable-textarea textarea custom-placement-rtl white-space-content"
+          [attr.contenteditable]="senderType ? true : false" ondrop="return false;" (keypress)="showGridPreview('html', $event)" (contextmenu)="getEvent($event)" #text (input)="showGridPreview('html', $event)"></div>
+      <ng-template #noEditDiv>
+        <div appPreventTyping
+        id="editor" attr.placeholder="{{'common.message-appear-here-text' | translate}}"
+        class="form-control d-inline-block align-top custom-editable-textarea textarea a custom-placement-rtl" contenteditable="true" ondrop="return false;"
+        (contextmenu)="getEvent($event)" #text (keypress)="showGridPreview('html', $event)" (input)="showGridPreview('html', $event)"></div>
+      </ng-template>
+        <div style="visibility: hidden; position: fixed" *ngIf="showContextMenu" [style.left]="contextMenuPosition.x"
+          [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu">
+        </div>
+        <mat-menu #contextMenu="matMenu">
+          <ng-template matMenuContent let-item="item">
+            <button mat-menu-item class="editor-context-menu" [matMenuTriggerFor]="submenu1" [disabled]="disablePersonalise"
+              *ngIf="(config && config.workflow) || (messageType == 'Personalised' && (contactCount > 0) && (personalizeOptions && personalizeOptions.length > 0) && (isDltUser || (!isDltUser && (((senderType == 'transactional') && hasEditingPermission) || (senderType != 'transactional') || existingTemplate.length > 0))))"><span
+                class="icon-user1 mr-1"></span>{{'common.personalise-text' | translate}}</button>
+            <button mat-menu-item class="editor-context-menu" [matMenuTriggerFor]="submenu1" [disabled]="disablePersonalise"
+              *ngIf="messageType == 'Common' && showVariables && (contactCount > 0) && (isDltUser || (!isDltUser && ((senderType != 'transactional') || existingTemplate.length > 0)))"><span
+                class="icon-user1 mr-1"></span>{{'campaign.editor-common-set-values' | translate}}</button>
+            <button mat-menu-item (click)="insertLink('insert-link')" [disabled]="disableAddLink"><span
+                class="icon-link1 mr-1"></span>{{'campaign.create-campaign-add-link' | translate}}</button>
+            <button mat-menu-item (click)="resetVariable($event)" *ngIf="showVariables || showReset"><span
+                class="icon-reset mr-1"></span>{{'common-reset-text' | translate}}</button>
+          </ng-template>
+        </mat-menu>
+
+        <mat-menu #submenu1="matMenu">
+          <ng-container *ngIf="showVariables;else hideVariables">
+            <button mat-menu-item (click)="showAllVariablesPersonalisation('personalise-variables')">{{'common.all-variables-text' | translate}}</button>
+          </ng-container>
+          <ng-template #hideVariables>
+            <button mat-menu-item *ngFor="let item of personalizeOptions"
+              (click)="insertPersonalizeItem(item, text)">{{item.headerName}}</button>
+          </ng-template>
+        </mat-menu>
+
+
+
+        <div class="message-footer d-flex"
+          [ngClass]="{'mb-0': !showErrors('textMessage', 'required', 'createCampaignForm')}">
+          <div class="link-templates mr-auto d-flex">
+            <div appCustomTooltip class="cursor-pointer position-relative footer-icons"
+              (click)="saveTemplateModal('save-template')"
+              [ngStyle]="{'pointer-events': (blink && messageForm.get('textMessage').value) ? 'auto': 'none'}"
+              [ngClass]="{'save-template': !showText, 'save-template-collapsed': showText}"
+              *ngIf="(senderType != 'transactional') && showSaveButton && !isDltUser">
+              <span class="icon icon-save"></span>
+              <span *ngIf="showText">{{'campaign.create-campaign-save-as-template' | translate}}</span>
+              <div class="tooltip-text" *ngIf="!showText">
+                <span>{{'campaign.create-campaign-save-as-template' | translate}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="character-counts d-flex">
+            <div class="encoding">
+              <span><strong>{{IsNonEnglish ? 'Unicode' : 'English'}}</strong></span>
+            </div>
+            <div class="msg-char">
+              <span><strong>{{previewValue ? messageCount : 0}} </strong> </span>{{'campaign.create-campaign-msg' |
+              translate}}
+            </div>
+            <div class="char-counts">
+              <strong>{{'campaign.create-campaign-aa' | translate}}</strong> <span>{{previewValue ? actualCharacterCount + (hasPersonalisedColumn ? (' + '+ varLengthText) : '')
+                : 0}}
+              </span>{{(!IsNonEnglish ? 'campaign.create-campaign-4k' : 'campaign.create-campaign-1k') | translate}}
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="custom-tooltip-version-placement"
+  [ngClass]="{'textarea-hasError' : showErrors, 'no-pointer-event': editorIsDisable}"
+  [ngStyle]="{'margin-bottom': showErrors ? '5px' : 'auto'}">
+  <div id="editor" *ngIf="isEditable; else noEditDiv"
+    attr.placeholder="{{'common.enter-text-msg-here-text' | translate}}"
+    class="form-control d-inline-block align-top custom-editable-textarea textarea custom-placement-rtl white-space-content"
+    [attr.contenteditable]="editorIsDisable" ondrop="return false;" (keypress)="showGridPreview('html')"
+    (contextmenu)="getEvent($event)" #text (input)="showGridPreview('html')"></div>
+  <ng-template #noEditDiv>
+    <div appPreventTyping id="editor" attr.placeholder="{{'common.message-appear-here-text' | translate}}"
+      class="form-control d-inline-block align-top custom-editable-textarea textarea a custom-placement-rtl"
+      contenteditable="true" ondrop="return false;" (contextmenu)="getEvent($event)" #text
+      (keypress)="showGridPreview('html')" (input)="showGridPreview('html')"></div>
+  </ng-template>
+  <div style="visibility: hidden; position: fixed" *ngIf="showContextMenu" [style.left]="contextMenuPosition.x"
+    [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu">
+  </div>
+  <mat-menu #contextMenu="matMenu">
+    <ng-template matMenuContent let-item="item">
+      <button mat-menu-item class="editor-context-menu" [matMenuTriggerFor]="submenu1" [disabled]="disablePersonalise"
+        *ngIf="showPersonalise && showVariables"><span class="icon-user1 mr-1"></span>{{'common.personalise-text' |
+        translate}}</button>
+      <button mat-menu-item class="editor-context-menu" [matMenuTriggerFor]="submenu1" [disabled]="disablePersonalise"
+        *ngIf="showSetValues && showVariables && !showPersonalise"><span
+          class="icon-user1 mr-1"></span>{{'campaign.editor-common-set-values' | translate}}</button>
+      <button mat-menu-item *ngIf="showAddLink" (click)="insertLink('insert-link')" [disabled]="disableAddLink"><span
+          class="icon-link1 mr-1"></span>{{'campaign.create-campaign-add-link' |
+        translate}}</button>
+      <button mat-menu-item (click)="resetVariable($event)" *ngIf="showVariables || showReset"><span
+          class="icon-reset mr-1"></span>{{'common-reset-text' | translate}}</button>
+    </ng-template>
+  </mat-menu>
+
+  <mat-menu #submenu1="matMenu">
+    <ng-container *ngIf="showVariables;else hideVariables">
+      <button mat-menu-item
+        (click)="showAllVariablesPersonalisation('personalise-variables', editorType)">{{'common.all-variables-text' |
+        translate}}</button>
+    </ng-container>
+    <ng-template #hideVariables>
+      <button mat-menu-item *ngFor="let item of personalizeOptions"
+        (click)="insertPersonalizeItem(item, editorType)">{{item.headerName}}</button>
+    </ng-template>
+  </mat-menu>
+
+
+
+  <div class="message-footer d-flex" [ngClass]="{'mb-0': !showErrors}" *ngIf="showFooter">
+    <div class="link-templates mr-auto d-flex">
+      <!-- <div appCustomTooltip class="cursor-pointer position-relative footer-icons"
+                (click)="saveTemplateModal('save-template')"
+                [ngStyle]="{'pointer-events': (blink && messageForm.get('textMessage').value) ? 'auto': 'none'}"
+                [ngClass]="{'save-template': !showText, 'save-template-collapsed': showText}"
+                *ngIf="(senderType != 'transactional') && showSaveButton && !isDltUser">
+                <span class="icon icon-save"></span>
+                <span *ngIf="showText">{{'campaign.create-campaign-save-as-template' | translate}}</span>
+                <div class="tooltip-text" *ngIf="!showText">
+                    <span>{{'campaign.create-campaign-save-as-template' | translate}}</span>
+                </div>
+            </div> -->
+    </div>
+    <div class="character-counts d-flex">
+      <div class="encoding">
+        <span><strong>{{IsNonEnglish ? 'Unicode' : 'English'}}</strong></span>
+      </div>
+      <div class="msg-char">
+        <span><strong>{{previewValue ? messageCount : 0}} </strong> </span>{{'campaign.create-campaign-msg' |
+        translate}}
+      </div>
+      <div class="char-counts">
+        <strong>{{'campaign.create-campaign-aa' | translate}}</strong> <span>{{previewValue ?
+          actualCharacterCount + (hasPersonalisedColumn ? (' + '+ varLengthText) : '')
+          : 0}}
+        </span>{{(!IsNonEnglish ? 'campaign.create-campaign-4k' : 'campaign.create-campaign-1k') | translate}}
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <div class="d-block position-relative">
+    <span class="error"
+        *ngIf="showErrors('textMessage','required', 'messageForm') && ((senderType == 'promotional') || !senderType)"><small><img
+                src="../../../assets/images/error.svg"></small>{{'campaign.create-campaign-pl-enter-your-msg' |
+        translate}}</span>
+
+    <span class="error"
+        *ngIf="showErrors('textMessage','required', 'messageForm') && (senderType == 'transactional')"><small><img
+                src="../../../assets/images/error.svg"></small>{{'campaigns.required-insert-template' |
+        translate}}</span>
+
+    <span class="error"
+        *ngIf="!showErrors('textMessage','required', 'messageForm') && showDynamicError && messageForm.get('textMessage').errors">
+        <small><img src="../../../assets/images/error.svg"></small>{{messageForm.get('textMessage').errors}}
+    </span>
+</div> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- All-Variables-Side-Drawer -->
+<app-personalize-variabless [id]="'personalise-variables'" *ngIf="config?.showDrawer" [variables]="variables"
+  [personalizeOptions]="personalizeOptions" [config]="config" (close)="closeDrawer($event)"
+  (sendFinalVariabledData)="getFinalVariabledData($event)" [finalVarData]="finalVarData"
+  [nextCardIndex]="selectedCardTabIndex" [inputType]="inputType" [templateType]="templateType">
+</app-personalize-variabless>

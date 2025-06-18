@@ -1,0 +1,254 @@
+<div class="row m-0">
+    <div class="create-message steps-frame mb-3 col-sm-12"
+        [ngClass]="{'default-steps-frame-padding': config?.hideStepCounts, 'col-md-7 col-lg-7': config?.workflow, 'col-md-8 col-lg-8': !config?.workflow}">
+        <div class="row" *ngIf="!config?.hideStepCounts">
+            <div class="col-md-12">
+                <div class="tick-box">
+                    <div [ngClass]="{'tick-mark': mediaUploadedForAllCard, 'step-count': !mediaUploadedForAllCard}">
+                        <span *ngIf="!mediaUploadedForAllCard">{{mediaTypeAndLangData.step_number+1}}</span>
+                    </div>
+                </div>
+                <h4 class="step-heading">Cards</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mb-4" [ngClass]="{'disabled': imageUploadingInProcess}">
+                <div class="tab-container" #tabContainer>
+                    <div class="tabs">
+                        <ng-container *ngFor="let card of cards;let i = index">
+                            <button class="btn mr-3"
+                                [ngClass]="{'btn-design-white': i != activeCardIndex, 'btn-design': i == activeCardIndex}"
+                                type="button" (click)="openSelectedCard(i, card,true)"
+                                [disabled]="imageUploadingInProcess">Card
+                                {{i+1}}</button>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="scroll-button left" *ngIf="showLeftButton" (click)="scrollLeft()">&lt;</div>
+                <div class="scroll-button right" *ngIf="showRightButton" (click)="scrollRight()">&gt;</div>
+            </div>
+            <div class="col-md-12 mb-4" [ngClass]="{'disabled': imageUploadingInProcess}">
+                <button class="btn common-msg-btn tick-btn active"
+                    [ngClass]="{ 'mr-3': getLangFromStorage === 'en', 'ml-3': getLangFromStorage === 'ar'}">
+                    <div class="tick-placement">
+                        <div class="tick-mark"></div>
+                    </div>
+                    <span class="icon-{{cardMediaType === 'VIDEO' ? 'Video' : 'Icon'}}"
+                        [ngClass]="{'mr-2': getLangFromStorage === 'en', 'ml-2': getLangFromStorage === 'ar'}"><span
+                            class="path1"></span><span class="path2"></span></span>
+                    {{'cont.wa.header-'+(cardMediaType === 'VIDEO' ?'videoText' : 'imgtxt') | translate}}
+                </button>
+            </div>
+            <div class="col-md-12 mb-4" [ngClass]="{'disabled': imageUploadingInProcess}">
+                <div class="custom-media-type-wrapper custom-placement-rtl">
+                    <mat-radio-group aria-label="Select an option" (change)="changeMediaType($event)"
+                        name="card{{activeCardIndex}}">
+                        <mat-radio-button class="form-group mr-3 rtl-margin-placement mb-0" [value]="0"
+                            [checked]="mediaType == 0">
+                            {{'common-upload-text' | translate}}</mat-radio-button>
+                        <mat-radio-button class="form-group mr-3 rtl-margin-placement mb-0" [value]="1"
+                            [checked]="mediaType == 1">
+                            {{'common.from-url-text' | translate}}</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4" [ngClass]="{'disabled': imageUploadingInProcess}">
+            <div class="col-md-7">
+                <ng-container *ngIf="mediaType == 0">
+                    <div class="custom-view-or-upload-wrapper">
+                        <div class="upload-help-files position-relative" *ngIf="!this.cardObj?.header?.file_name || cardObj.mediaType==1"
+                            (click)="fileInput.click()" style="cursor: pointer;" appDragDrop
+                            (onFileDropped)="uploadFile($event)">
+                            <input hidden type="file" #fileInput (change)="uploadFile($event.target.files)"
+                                [accept]="cardMediaType === 'VIDEO' ? 'video/*' : 'image/*'">
+                            <div class="upload-icon-border custom-help-icon-margin-rtl">
+                                <img src="assets/images/upload.png" class="upload-icon" alt="Drop-icon">
+                            </div>
+                            <div class="upload-text">
+                                <p class="click-text">{{'help.drop-file-text' | translate}}</p>
+                                <p class="format-text">{{'common.media-upload-'+(cardMediaType === 'VIDEO' ? 'video' :
+                                    'img')+'-format' |
+                                    translate}}</p>
+                            </div>
+                        </div>
+                        <div class="progress form-group" *ngIf="!this.cardObj?.header?.file_name && progress > 0">
+                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                                [style.width.%]="progress">
+                            </div>
+                        </div>
+                        <div class="upload-help-files position-relative" *ngIf="this.cardObj?.header?.file_name && cardObj.mediaType==0">
+                            <div class="upload-icon-border custom-help-icon-margin-rtl ">
+                                <ng-container *ngIf="cardMediaType !== 'VIDEO'">
+                                    <img [src]="'/assets/cb'+this.cardObj?.header?.url" class="uploaded-img"
+                                        [alt]="this.cardObj?.header?.file_name">
+                                </ng-container>
+                                <ng-container *ngIf="cardMediaType === 'VIDEO'">
+                                    <img src="assets/images/play.png" class="uploaded-img video-upload-icon"
+                                        alt="Drop-icon">
+                                </ng-container>
+                            </div>
+                            <div class="upload-text custom-thumbnail-width">
+                                <p class="click-text ellipsis-text width-80 m-auto">
+                                    {{this.cardObj?.header?.file_name}}
+                                </p>
+                                <p class="format-text">{{'common.media-upload-'+(cardMediaType === 'VIDEO' ? 'video' :
+                                    'img')+'-format' |
+                                    translate}}</p>
+                            </div>
+                            <div class="close-icon">
+                                <span class="cursor-pointer" (click)="removeUploadedMediaFile()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" id="prefix__Slected" width="17" height="17"
+                                        viewBox="0 0 17 17" style="fill: var(--primary-color)">
+                                        <g id="prefix__Oval" style="stroke-miterlimit:10;">
+                                            <circle cx="8.5" cy="8.5" r="8.5" style="stroke:none" />
+                                            <circle cx="8.5" cy="8.5" r="8" style="fill:none" />
+                                        </g>
+                                        <g id="prefix__interface" transform="translate(6 6)">
+                                            <path id="prefix__Path"
+                                                d="M3.55 3L5.886.664a.389.389 0 0 0-.55-.55L3 2.45.664.114a.389.389 0 1 0-.55.55L2.45 3 .114 5.336a.389.389 0 1 0 .55.55L3 3.55l2.336 2.336a.389.389 0 0 0 .55-.55z"
+                                                style="fill:#fff;stroke:#fff;stroke-width:.5px;stroke-miterlimit:10" />
+                                        </g>
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="mediaType == 1">
+                    <div class="position-relative type-url-wrapper">
+                        <input type="text" placeholder="Enter Url" class="form-control" #typedUrl name="typeurl"
+                        [(ngModel)]="cardObj.enterUrl" [readonly]="cardObj.urlUploaded" [ngClass]="{'url-uploaded': cardObj.urlUploaded}">
+                        <span class="cursor-pointer" (click)="removeUploadedUrl()" *ngIf="cardObj.urlUploaded">
+                            <svg xmlns="http://www.w3.org/2000/svg" id="prefix__Slected" width="17" height="17"
+                                viewBox="0 0 17 17" style="fill: var(--primary-color)">
+                                <g id="prefix__Oval" style="stroke-miterlimit:10;">
+                                    <circle cx="8.5" cy="8.5" r="8.5" style="stroke:none" />
+                                    <circle cx="8.5" cy="8.5" r="8" style="fill:none" />
+                                </g>
+                                <g id="prefix__interface" transform="translate(6 6)">
+                                    <path id="prefix__Path"
+                                        d="M3.55 3L5.886.664a.389.389 0 0 0-.55-.55L3 2.45.664.114a.389.389 0 1 0-.55.55L2.45 3 .114 5.336a.389.389 0 1 0 .55.55L3 3.55l2.336 2.336a.389.389 0 0 0 .55-.55z"
+                                        style="fill:#fff;stroke:#fff;stroke-width:.5px;stroke-miterlimit:10" />
+                                </g>
+                            </svg>
+                        </span>
+                        <button class="btn btn-design enter-url" [ngClass]="{'disabled': !cardObj.enterUrl}"
+                        (click)="UploadUrl()" *ngIf="!cardObj.urlUploaded">{{'common-upload-text' |
+                            translate}}</button>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <div class="row" [ngClass]="{'disabled': imageUploadingInProcess}">
+            <div class="col-md-12 mb-4">
+                <div class="custom-tooltip-version-placement">
+                    <p class="message-body-text custom-placement-rtl">{{'common.body-text' | translate}}</p>
+                    <label class="label-text">{{'campaign.editor-body-label1' | translate}} <span
+                            class="link-color">{{'common.variables-text' | translate}}&#123;Vn&#125;</span>
+                        {{'campaign.editor-label2' | translate}}</label>
+                    <div appPreventTyping id="cardeditor"
+                        attr.placeholder="{{'common.message-appear-here-text' | translate}}"
+                        class="form-control d-inline-block align-top custom-editable-textarea textarea a custom-placement-rtl"
+                        contenteditable="true" (contextmenu)="getEvent($event, 'cardtext')" #cardtext
+                        ondrop="return false;">
+                    </div>
+                    <div style="visibility: hidden; position: fixed" *ngIf="showContextMenu"
+                        [style.left]="cardObj?.contextMenuPosition.x" [style.top]="cardObj?.contextMenuPosition.y"
+                        [matMenuTriggerFor]="contextMenu">
+                    </div>
+                </div>
+                <mat-menu #contextMenu="matMenu">
+                    <ng-template matMenuContent let-item="item">
+                        <button mat-menu-item class="editor-context-menu" [matMenuTriggerFor]="submenu1"
+                            [disabled]="cardObj?.disablePersonalise"
+                            *ngIf="!cardObj?.hidePersonaliseOption && ((contactCount > 0) && cardObj?.columnContainingUrlList && (cardObj?.columnContainingUrlList.length > 0))"><span
+                                class="icon-user1 mr-1"></span>{{'common.personalise-text' | translate}}</button>
+                        <button mat-menu-item (click)="insertLink('carousel-insert-link')"
+                            *ngIf="!cardObj?.hideAllLink && (cardObj.urlClickedEditor == 'cardBtnText' || cardObj.urlClickedEditor == 'cardBtnText2')"
+                            [disabled]="cardObj?.disableAddLink"><span
+                                class="icon-link1 mr-1"></span>{{'campaign.create-campaign-add-link' |
+                            translate}}</button>
+                        <button mat-menu-item (click)="resetVariable($event)"><span
+                                class="icon-reset mr-1"></span>{{'common-reset-text' | translate}}</button>
+                    </ng-template>
+                </mat-menu>
+                <mat-menu #submenu1="matMenu">
+                    <ng-container *ngIf="cardObj?.showVariables;else hideVariables">
+                        <button mat-menu-item
+                            (click)="showAllVariablesPersonalisation('carusel-personalise-variables')">{{'common.all-variables-text'
+                            |
+                            translate}}</button>
+                    </ng-container>
+                    <ng-template #hideVariables>
+                        <!-- <button mat-menu-item *ngFor="let item of personalizeOptions"
+                                  (click)="insertPersonalizeItem(item, cardtext)">{{item.headerName}}</button> -->
+                    </ng-template>
+                </mat-menu>
+                <div class="mt-1" *ngIf="cardObj?.showQuickReplyPersonalisedButton">
+                    <a class="custom-link-color"
+                        (click)="showAllVariablesPersonalisation('carusel-personalise-variables')">+
+                        {{'whatsapp.personalise-button-identifier' | translate}}</a>
+                </div>
+            </div>
+            <div class="col-md-12 mb-4" *ngIf="cardObj?.showDynamicUrlEditor || cardObj?.showDynamicUrlEditor2">
+                <p class="message-body-text custom-placement-rtl">Card Buttons</p>
+                <div class="custom-tooltip-version-placement mt-3" *ngIf="cardObj?.showDynamicUrlEditor">
+                    <!-- [ngClass]="{'textarea-hasError' : showErrors('textMessage', 'required', 'messageForm')}"
+                    [ngStyle]="{'margin-bottom': showErrors('textMessage', 'required', 'messageForm') ? '5px' : 'auto'}" -->
+                    <p class="message-body-text custom-placement-rtl">{{'campaign.footer-button-url-label' | translate}}
+                        -
+                        ({{cardObj?.dynamicButton?.text}})
+                    </p>
+                    <label class="label-text">{{'campaign.editor-right-click-label1' | translate}} <span
+                            class="link-color">{{'common.variables-text' | translate}}&#123;Vn&#125;</span>
+                        {{'campaign.footer-button-url-label-brief' | translate}}</label>
+                    <div appPreventTyping id="cardbtntext"
+                        attr.placeholder="{{'common.message-appear-here-text' | translate}}"
+                        class="form-control d-inline-block align-top custom-editable-textarea textarea a mb-3 custom-placement-rtl"
+                        contenteditable="true" (contextmenu)="getEvent($event, 'cardBtnText')" #cardBtnText
+                        ondrop="return false;"></div>
+                    <div style="visibility: hidden; position: fixed" *ngIf="showContextMenu"
+                        [style.left]="cardObj?.contextMenuPosition.x" [style.top]="cardObj?.contextMenuPosition.y"
+                        [matMenuTriggerFor]="contextMenu">
+                    </div>
+                </div>
+                <div class="custom-tooltip-version-placement mt-3" *ngIf="cardObj?.showDynamicUrlEditor2">
+                    <!-- [ngClass]="{'textarea-hasError' : showErrors('textMessage', 'required', 'messageForm')}"
+                    [ngStyle]="{'margin-bottom': showErrors('textMessage', 'required', 'messageForm') ? '5px' : 'auto'}" -->
+                    <p class="message-body-text custom-placement-rtl">{{'campaign.footer-button-url-label' | translate}}
+                        -
+                        ({{cardObj?.dynamicButton2?.text}})
+                    </p>
+                    <label class="label-text">{{'campaign.editor-right-click-label1' | translate}} <span
+                            class="link-color">{{'common.variables-text' | translate}}&#123;Vn&#125;</span>
+                        {{'campaign.footer-button-url-label-brief' | translate}}</label>
+                    <div appPreventTyping id="cardbtntext2"
+                        attr.placeholder="{{'common.message-appear-here-text' | translate}}"
+                        class="form-control d-inline-block align-top custom-editable-textarea textarea a mb-3 custom-placement-rtl"
+                        contenteditable="true" (contextmenu)="getEvent($event, 'cardBtnText2')" #cardBtnText2
+                        ondrop="return false;"></div>
+                    <div style="visibility: hidden; position: fixed" *ngIf="showContextMenu"
+                        [style.left]="cardObj?.contextMenuPosition.x" [style.top]="cardObj?.contextMenuPosition.y"
+                        [matMenuTriggerFor]="contextMenu">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- All-Variables-Side-Drawer -->
+<app-personalize-variabless id="carusel-personalise-variables"
+    *ngIf="cardObj?.variables && cardObj?.variables.length > 0" [variables]="cardObj?.variables"
+    [personalizeOptions]="cardObj?.columnContainingUrlList" [config]="config" (close)="closeDrawer($event)"
+    (sendFinalVariabledData)="getFinalVariabledData($event,true)" [finalVarData]="cardObj?.finalVarData"
+    [showDrawer]="cardObj?.showPersonaliseVariables"></app-personalize-variabless>
+<!-- insert-link -->
+<app-short-url id="carusel-insert-link" (close)="closeDrawer($event)" (urlTypeTab)="urlFormText($event)"
+    [urlChanged]="cardObj?.urlChanged" [contactCount]="contactCount" [textareaInput]="cardObj?.textareaInputElement"
+    [previewValue]="cardObj?.previewValue" (sendUrlFormValue)="getUrlFormValue($event)" [campaignId]="campaignId"
+    (sendData)="recievedData($event)" [config]="config" [showDrawer]="cardObj?.showAddLink"
+    [hideDropdown]="cardObj?.hideDropdown" [hideForm]="cardObj?.hideForm"></app-short-url>
+<div #cardElement1 style="display: none;"></div>
+<div #cardElement2 style="display: none;"></div>
+<div #cardElRef style="display: none;"></div>

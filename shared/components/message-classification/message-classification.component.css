@@ -1,0 +1,47 @@
+.tooltip-text, .type-tooltip-text {
+  display: none;
+}
+.custom-tooltip .tooltip-text, .custom-tooltip .type-tooltip-text {
+  display: inline;
+  border-radius: 6px;
+  box-shadow: 0 0 10px 0 rgba(28, 53, 88, 0.18);
+  background-color: #ffffff;
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.21;
+  letter-spacing: normal;
+  text-align: center;
+  color: #24253e;
+  min-width: 101px;
+  min-height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 38px;
+  right: 0px;
+}
+.custom-tooltip .tooltip-text:before, .custom-tooltip .type-tooltip-text:before{
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  border-top: 12px solid #fff;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  bottom: -9px;
+  right: 14px;
+}
+.custom-tooltip .type-tooltip-text {
+  bottom: 26px;
+  /* min-width: 100%; */
+  padding: 8px;
+  right: -15px;
+}
+.campaign-type-tooltip .type-tooltip-text {
+  min-width: 420px;
+}

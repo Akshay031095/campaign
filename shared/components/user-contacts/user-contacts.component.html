@@ -1,0 +1,111 @@
+<div class="container-fluid contacts-tab inside-modal-content">
+    <form [formGroup]="contactsForm" class="inside-wrapper-padding">
+        <div class="row" *ngIf="!config?.segment">
+            <div class="col-md-12">
+                <div class="contacts-type mb-3">
+                    <button    class="btn tick-btn mr-2" (change)="contactType('list')">
+                        {{'campaign.user-cont-ins-list-text' | translate}}
+                        <div  class="tick-placement" *ngIf="contactsForm.get('messageType').value == '1'">
+                            <div class="tick-mark" ></div>
+                        </div>
+                        <input title="radio" type="radio" class="form-check-input" value="1" formControlName="messageType"
+                            name="messageType">
+                    </button>
+                    <button class="btn tick-btn" (change)="contactType('contacts')" *ngIf="!blacklistConfig?.blacklist && hasInsertContactsAccess">
+                        {{'campaign.user-cont-ins-'+((config?.email)?'rec':'cont')+'-text' | translate}}
+                        <div class="tick-placement" *ngIf="contactsForm.get('messageType').value == '2'">
+                            <div class="tick-mark"></div>
+                        </div>
+                        <input title="radio" type="radio" class="form-check-input" value="2" formControlName="messageType"
+                            name="messageType">
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-3 contact-serch-fields" *ngIf="contactsForm.get('messageType').value == '1'">
+                <label class="label-text">{{'campaign.user-cont-search-by-text' | translate}} </label>
+                <input type="text" class="form-control" placeholder="Search List" formControlName="searchList" (keyup)="search($event)" (search)="searchList($event, 'search')">
+            </div>
+            <div class="col-md-3 contact-serch-fields" *ngIf="contactsForm.get('messageType').value == '2'">
+                <label class="label-text">{{'common.select-list-text' | translate}} </label>
+
+                <app-custom-select [data]="listOptions" [config]="configListOptions" [value]="listOptionsSelectText"
+                    (clickElsewhere)="configListOptions.open = false"
+                    (selectAction)="selectActionRecive($event, 'listOptions')"
+                    [errors]="showErrors('listOptions', 'required', 'contactsForm')"
+                    [ngClass]="{'internal-custom-select' : showErrors('listOptions', 'required', 'contactsForm')}">
+                </app-custom-select>
+
+                <div class="d-block position-relative">
+                    <span class="error" *ngIf="showErrors('listOptions','required', 'contactsForm')"><small><img
+                                src="../../../assets/images/error.svg"></small>{{'campaign.user-cont-pl-sel-list' |
+                        translate}}</span>
+                </div>
+            </div>
+            <div class="col-md-3 contact-serch-fields" *ngIf="selectedListHeaders">
+                <label class="label-text">{{'common.search-for-text' | translate}} </label>
+
+                <app-custom-select [data]="selectedListHeaders.headers" [config]="configSelectedListHeaders"
+                    [value]="listHeaderSelectText" (clickElsewhere)="configSelectedListHeaders.open = false"
+                    (selectAction)="selectActionRecive($event, 'selectedListHeader')"
+                    [errors]="showErrors('selectedListHeader', 'required', 'contactsForm')"
+                    [ngClass]="{'internal-custom-select' : showErrors('selectedListHeader', 'required', 'contactsForm')}">
+                </app-custom-select>
+
+                <div class="d-block position-relative">
+                    <span class="error" *ngIf="showErrors('selectedListHeader','required', 'contactsForm')"><small><img
+                                src="../../../assets/images/error.svg"></small>{{'campaign.user-cont-pl-sel-header' |
+                        translate}}</span>
+                </div>
+            </div>
+            <div class="col-md-3 contact-serch-fields" *ngIf="selectedListHeaders">
+                <label class="label-text">{{'common.value-text' | translate}} </label>
+                <input type="text" class="form-control" formControlName="contactNumber"
+                    placeholder="{{'settings.common-type-here' | translate}}" (keyup.enter)="search($event, 'search')"
+                    [ngClass]="{'hasError' : showErrors('contactNumber', 'required', 'contactsForm')}"
+                    [ngStyle]="{'margin-bottom': showErrors('contactNumber', 'required', 'contactsForm') ? '5px' : 'auto'}">
+
+                <div class="d-block position-relative">
+                    <span class="error" *ngIf="showErrors('contactNumber','required', 'contactsForm')"><small><img
+                                src="../../../assets/images/error.svg"></small>{{'common.value-required' |
+                        translate}}</span>
+                </div>
+            </div>
+            <div class="col-md-3 contact-serch-fields search-contact-btn">
+                <button class="btn btn-design btn-send m-0"  (click)="search($event, 'search')">{{'common-go-text' | translate}}</button>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-12 contacts-table" *ngIf="contactsForm.get('messageType').value == '1'">
+
+                <div class="custom-user-contacts-lists-table">
+                    <app-no-filter-table-view *ngIf="loaded && tableConfig.displayedColumns.length > 0"
+                        [listsArr]="receivedDataList" [tableData]="tableData" [tableConfig]="tableConfig"
+                        (tableAction)="tableActionRecieve($event)" class="modal-table"
+                        (sendData)="dataReceived($event)" (sendCheckboxItem)="getCheckboxItem($event)" (selectedData)="selectedData($event)"></app-no-filter-table-view>
+                </div>
+                <div class="text-right" *ngIf="!config?.workflow">
+                    <button class="btn process-file btn-design" (click)="insertUserContactsData()" [ngClass]="{'disabled': blacklistConfig?.blacklist ? (importRes?.data && !importRes?.data?.blacklist_lists || !importRes?.data?.blacklist_lists?.length) && (!receivedDataList || !receivedDataList.length) : (config?.segment ? (!importRes?.data?.segments || !importRes?.data?.segments?.length) : (importRes?.data && !importRes?.data?.lists || !importRes?.data?.lists?.length)) && (!receivedDataList || !receivedDataList.length)}">
+                        {{'common-import-text' | translate}}</button>
+                </div>
+                <!--  -->
+            </div>
+
+            <div class="col-md-12 contacts-table" *ngIf="contactsForm.get('messageType').value == '2'">
+                <div class="custom-user-contacts-lists-table">
+                    <app-no-filter-table-view *ngIf="contactLoaded && contactTableConfig.displayedColumns.length > 0"
+                        [contactsArr]="receivedContactsList" [tableData]="tableData" [tableConfig]="contactTableConfig"
+                        (tableAction)="tableActionRecieve($event)" class="modal-table"
+                        (sendData)="dataReceived($event)" (sendCheckboxItem)="getCheckboxItem($event)" (rowCheckboxStatus)="rowCheckboxStatus($event)" [importedData]="importedListData" (sendCheckedData)=getCheckedData($event) [excludedArr]="importRes?.data?.list_contacts?.exclude_contact_ids" (sendCheckAllData)="getCheckAllData($event)" [newData]="newData"></app-no-filter-table-view>
+                </div>
+
+                <div class="text-right" *ngIf="contactLoaded && !config?.workflow">
+                    <button class="btn process-file btn-design" (click)="insertUserContactsData()" [ngClass]="{'disabled': (!importRes?.data && !importRes?.data?.list_contacts?.contacts || !importRes?.data?.list_contacts?.contacts?.length) && (!receivedContactsList || !receivedContactsList.length) }">
+                        {{'common-import-text' | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

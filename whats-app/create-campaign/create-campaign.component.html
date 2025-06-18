@@ -1,0 +1,63 @@
+<div class="internal create-campaign-wrapper custom-campaign-wrapper component-wrapper container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="create-campaign-heading page-heading">{{'create-wa-campaign-heading' | translate}}</h2>
+        </div>
+    </div>
+    <app-set-parameters *ngIf="campaignName" [messageQuota]="messageQuota"
+        (sendWhatsappBusinessNumber)="getWhatsappBusinessNumber($event)"
+        [whatsAppBusinessNumbers]="whatsAppBusinessNumbers" (sendCategory)="getCategoryValue($event)"
+        [campaignData]="campaignData" [campaignName]="campaignName" [config]="setParametersConfig"
+        (sendLoaderState)="receivedLoaderState($event)" [sendCampaignData]="sendCampaignData"
+        (sendParametersData)="getParametersData($event)"
+        (noMessageQuotaEvent)="noMessageQuotaEvent($event)"></app-set-parameters>
+    <app-upload-contacts [sendCampaignData]="sendCampaignData" [config]="setParametersConfig" [campaignId]="campaignId"
+        [messageType]="messageType" [contactCount]="contactCount"
+        (sendExcludeFreqCapping)="receivedExcludeFreqCappingEvent($event)"></app-upload-contacts>
+    <app-upload-temporary-blacklist *ngIf="showUploadBlacklist" [config]="setParametersConfig"
+        [blacklistConfig]="blacklistConfig" [sendCampaignData]="sendCampaignData" [campaignId]="campaignId"
+        [contactCount]="blacklistContactCount" [isKsaUser]="isKsaUser"></app-upload-temporary-blacklist>
+
+    <app-message-content (sendUrlType)="getUrlType($event)" [wabaNumber]="wabaNumber" [contactCount]="contactCount"
+        (sendLoaderState)="receivedLoaderState($event)" [sendCampaignData]="sendCampaignData"
+        [config]="setParametersConfig" [campaignId]="campaignId" [wabaNumberObj]="wabaNumberObj"
+        (sendUrlFormValue)="getUrlFormValue($event)" (getMediaTypeAndLangData)="getMediaTypeAndLangData($event)"
+        (getSelectedLanguage)="getSelectedLanguage($event)" [langSelectedCardsButtons]="langSelectedCardsButtons">
+    </app-message-content>
+
+    <!-- New section for carousel campaign -->
+    <app-carousel-configuration *ngIf="mediaTypeAndLangData.media_type === 'carousel'" [config]="setParametersConfig"
+        [mediaTypeAndLangData]="mediaTypeAndLangData" [campaignId]="campaignId" [wabaNumber]="wabaNumber"
+        [contactCount]="contactCount" [selectedLanguage]="selectedLanguage"
+        (sendCarouselUrlFormValue)="getCarouselUrlFormValue($event)" (sendCarouselUrlType)="getCarouselUrlType($event)"
+        (sendLoaderState)="receivedLoaderState($event)"
+        (sendCardObj)="receivedCardObj($event)"></app-carousel-configuration>
+    <!--  -->
+
+    <app-test-campaign [contactCount]="contactCount" (sendCampaignDataVar)="getCampaignDataVar($event)"
+        [mediaTypeAndLangData]="mediaTypeAndLangData"
+        [stepCount]="mediaTypeAndLangData.media_type === 'carousel' ? mediaTypeAndLangData.step_number + 2 : mediaTypeAndLangData.step_number+1"
+        [urlType]="urlType" [messageType]="messageType" [config]="setParametersConfig"
+        (sendLoaderState)="receivedLoaderState($event)" [sendCampaignData]="sendCampaignData" [campaignId]="campaignId"
+        [urlFormValue]="urlFormValue"></app-test-campaign>
+    <app-send-message [titleText]="titleText" (showStaggeredEvent)="showStaggeredEvent($event)"
+        [stepCount]="mediaTypeAndLangData.media_type === 'carousel' ? mediaTypeAndLangData.step_number + 3 : mediaTypeAndLangData.step_number+2"
+        [hasScheduleAccess]="hasScheduleAccess" (sendScheduleEvent)="getScheduleEvent($event)"
+        [testCampaign]="testCampaign" [sendCampaignData]="sendCampaignData" [config]="setParametersConfig">
+    </app-send-message>
+    <div class="submit-btn-action-wrapper text-left custom-placement-rtl">
+        <button class="btn btn-design btn-send mr-3 rtl-margin-placement" (click)="validateData()"
+            [disabled]="(disableSend && !showSchedule) || (!hasScheduleAccess && showSchedule)">
+            <span *ngIf="!showSchedule">{{'campaign.create-campaign-send' | translate}}</span>
+            <span *ngIf="showSchedule">{{'campaign.create-campaign-schedule' | translate}}</span>
+        </button>
+        <button class="btn btn-design-white " (click)="cancelCreateCampaign()">{{'campaign.insert-cancel-text' |
+            translate}}</button>
+    </div>
+</div>
+
+
+<!-- validate -->
+<app-validate id="validate" [config]="setParametersConfig" (sendData)="recievedDataValidate($event)"
+    [validateDataPreview]="validateDataPreview">
+</app-validate>

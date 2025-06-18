@@ -1,0 +1,101 @@
+<app-modal id="view-schedule">
+  <div class="internal template-modal validate-modal modal-wrapper" >
+      <div>
+          <h3 class="d-flex justify-content-between align-items-center import-contacts header-modal m-0">{{'campaign.validate-heading' | translate}}
+          <span class="cursor-pointer" (click)="closeModal('view-schedule');">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                  <g id="Group_2783" data-name="Group 2783" transform="translate(-907 -297)">
+                    <g id="Path_2335" data-name="Path 2335" transform="translate(907 297)" fill="none">
+                      <path d="M12,0A12,12,0,1,1,0,12,12,12,0,0,1,12,0Z" stroke="none"/>
+                      <path d="M 12 1 C 9.061790466308594 1 6.299449920654297 2.144199371337891 4.221820831298828 4.221820831298828 C 2.144199371337891 6.299449920654297 1 9.061790466308594 1 12 C 1 14.93820953369141 2.144199371337891 17.7005500793457 4.221820831298828 19.77817916870117 C 6.299449920654297 21.85580062866211 9.061790466308594 23 12 23 C 14.93820953369141 23 17.7005500793457 21.85580062866211 19.77817916870117 19.77817916870117 C 21.85580062866211 17.7005500793457 23 14.93820953369141 23 12 C 23 9.061790466308594 21.85580062866211 6.299449920654297 19.77817916870117 4.221820831298828 C 17.7005500793457 2.144199371337891 14.93820953369141 1 12 1 M 12 0 C 18.62742042541504 0 24 5.372579574584961 24 12 C 24 18.62742042541504 18.62742042541504 24 12 24 C 5.372579574584961 24 0 18.62742042541504 0 12 C 0 5.372579574584961 5.372579574584961 0 12 0 Z" stroke="none" fill="#233670"/>
+                    </g>
+                    <g id="sign" transform="translate(915.148 305.227)">
+                      <g id="Group_2214" data-name="Group 2214" transform="translate(0 0)">
+                        <path id="Path_2030" data-name="Path 2030" d="M.191,8.72a.65.65,0,0,0,.92,0L4.1,5.729,7.094,8.72a.651.651,0,0,0,.92-.92L5.022,4.809,7.86,1.971a.651.651,0,0,0-.92-.92L4.1,3.888,1.264,1.05a.651.651,0,0,0-.92.92L3.182,4.809.191,7.8A.65.65,0,0,0,.191,8.72Z" transform="translate(0 -0.86)" fill="#233670"/>
+                      </g>
+                    </g>
+                  </g>
+                </svg>
+          </span>
+          </h3>
+      </div>
+      <div class="inside-modal-content container-fluid">
+          <div class="row mb-4">
+              <div class="col-md-4">
+                  <div class="campaign-type-summary">
+                      <label class="label-text">{{'campaign.validate-label-type-camp' | translate}}</label>
+                      <h4 class="summary-value campaign-type-value">{{scheduleDataPreview?.createCampaignForm?.messageType}}</h4>
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="credit-summary" >
+                      <label  class="label-text">{{'campaign.validate-label-credit-currency-deducted' | translate}}</label>
+                      <h4 class="summary-value credit-currency-count">
+                          <span >{{scheduleDataPreview?.validateRes?.currencyUnit}} </span>
+                          {{scheduleDataPreview?.validateRes?.currencyCount}}</h4>
+                  </div>
+
+              </div>
+              <div class="col-md-4">
+                  <div class="total-contacts" >
+                    <label  class="label-text">{{'campaign.validate-label-valid-cont' | translate}}</label>
+                      <!-- <h4 class="summary-value contact-text">Valid Contacts</h4> -->
+                      <span class="total-contacts-counts contact-counts-value" >{{scheduleDataPreview?.validateRes?.totalCount - scheduleDataPreview?.validateRes?.invalidCount - scheduleDataPreview?.validateRes?.duplicateCount}}</span>
+                      <!-- <span class="total-contacts-counts contact-counts-value" >{{scheduleDataPreview?.validateRes?.totalCount - scheduleDataPreview?.validateRes?.invalidCount}}</span> -->
+                  </div>
+
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="total-contacts">
+                  <label class="label-text">{{'campaign.validate-label-uploaded-cont' | translate}}</label>
+                    <!-- <h4 class="summary-value contact-text">Uploaded Contacts</h4> -->
+                    <span class="total-contacts-counts contact-counts-value">{{scheduleDataPreview?.validateRes?.totalCount}}</span>
+                </div>
+            </div>
+            <!-- <div class="col-md-4">
+                <div class="invalid-contacts">
+                  <label class="label-text">{{'campaign.validate-label-invalid-cont' | translate}}</label>
+                      <span class="total-contacts-counts contact-counts-value">{{scheduleDataPreview?.validateRes?.totalCount}}</span>
+                  </div>
+              </div> -->
+              <div class="col-md-4">
+                  <div class="invalid-contacts">
+                    <label  class="label-text">{{'campaign.validate-label-invalid-cont' | translate}}</label>
+                      <!-- <h4 class="summary-value contact-text">Invalid Contacts</h4> -->
+                      <span
+                          class="invalid-contacts-counts contact-counts-value">{{scheduleDataPreview?.validateRes?.invalidCount}}</span>
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="duplicate-contacts">
+                    <label  class="label-text">{{'campaign.validate-label-dup-cont' | translate}}</label>
+                      <!-- <h4 class="summary-value contact-text">{{'campaign.validate-label-dup-cont' | translate}}</h4> -->
+                      <span
+                          class="duplicate-contacts-counts contact-counts-value" >{{scheduleDataPreview?.validateRes?.duplicateCount}}</span>
+
+                  </div>
+              </div>
+          </div>
+
+          <div class="row" [ngClass]="{'mb-4': scheduleDataPreview?.createCampaignForm?.dateTime || scheduleDataPreview?.createCampaignForm?.noOfMessages || scheduleDataPreview?.scheduledOn}">
+              <div class="col-md-4" >
+                  <div class="schedule-on">
+                      <label class="label-text">{{'campaign.validate-schedule-on' | translate}}</label>
+                      <h4 class="summary-value schedule-value">{{scheduleDataPreview?.scheduledOn}}<br>{{scheduleDataPreview?.scheduleTime}}</h4>
+                  </div>
+              </div>
+          </div>
+          <div class="schedule-now text-right" >
+              <button type="button" class="btn btn-design" (click)="scheduleCampaign()">
+                  <span>{{'campaign.create-campaign-schedule' | translate}}</span>
+              </button>
+
+            <!-- </button> -->
+
+        </div>
+
+    </div>
+  </div>
+</app-modal>

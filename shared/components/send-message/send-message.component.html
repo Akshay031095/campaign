@@ -1,0 +1,367 @@
+<form [formGroup]="createCampaignForm" *ngIf="hasScheduleAccess">
+  <div class="send-sms steps-frame mb-3" [ngStyle]="{
+  'padding': config?.workflow ? '0' : '' , 
+'box-shadow': config?.workflow ? 'none' : ''}">
+    <div class="row" *ngIf="!config?.workflow">
+      <div class="col-md-12">
+        <div class="tick-box">
+          <ng-container *ngIf="config?.voice || config?.updatedStepCount">
+            <div [ngClass]="(selectorData?.appSendMessage?.isVisibleStepCount) ? 'step-count' : 'tick-mark'">
+              <span *ngIf="selectorData?.appSendMessage?.isVisibleStepCount">
+                {{selectorData?.appSendMessage?.stepCount}} </span>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!config?.voice && !config?.updatedStepCount">
+            <div [ngClass]="{
+              'tick-mark':
+                (config && !config.voice && (showSchedule && createCampaignForm.get('dateTime').value && createCampaignForm.get('timezone').value))
+                || (config && config?.voice && (createCampaignForm.get('dateTime').value && createCampaignForm.get('timezone').value)),
+              'step-count':
+                (config && !config.voice && (!createCampaignForm.get('dateTime').value || !createCampaignForm.get('timezone').value))
+                || (config && config?.voice && (!createCampaignForm.get('dateTime').value || !createCampaignForm.get('timezone').value))
+            }">
+              <span
+                *ngIf="(config && !config.voice && (!createCampaignForm.get('dateTime').value || !createCampaignForm.get('timezone').value))
+            || (config && config?.voice && (!createCampaignForm.get('expiry_date').value || !createCampaignForm.get('timezone').value))">
+                {{(config && config.sms) ? (isKsaUser &&
+                common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['SMSCampaigns'],
+                hasPermissions.permissionName['temporary_blacklist'], false) ? 7 : (!isKsaUser &&
+                common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['SMSCampaigns'],
+                hasPermissions.permissionName['temporary_blacklist'], false) ? 6 : (isKsaUser &&
+                !common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['SMSCampaigns'],
+                hasPermissions.permissionName['temporary_blacklist'], false) ? 6 : 5))) : ((config && config.whatsapp) ?
+                (stepCount > 1 ? stepCount :
+                (common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['WhatsAppCampaigns'],
+                hasPermissions.permissionName['temporary_blacklist'], false) ? 6 : 5)) : (config.email ? ((tabCount > 1
+                && !isTempBacklistAllowed || ((tabCount == 1 || !tabCount) && isTempBacklistAllowed)) ? 7 : (tabCount >
+                1 && isTempBacklistAllowed ? 8 : 6)) : ((config && config.rcs) ?
+                (common.checkUserPermissionWithoutTeammate(this.hasPermissions.permissionsTag['RCS_Campaigns'],
+                this.hasPermissions.permissionName['sms_fallback'], false) ? (isKsaUser ? 6 : 7) : (isKsaUser ? 5 : 6))
+                : (isKsaUser ? 5 : 6)) ) )}}
+              </span>
+            </div>
+          </ng-container>
+        </div>
+        <!-- <h4 class="step-heading" *ngIf="titleText == false">
+        {{ "whatsapp.campaign-send-whatsapp-label" | translate }}
+      </h4>
+      <h4 class="step-heading" *ngIf="titleText">
+        {{ "voice.campaign-send-voice-call-label" | translate }}
+      </h4> -->
+        <h4 class="step-heading">{{'campaign.create-campaign-send-or-schedule' | translate}}</h4>
+      </div>
+    </div>
+    <!-- <div class="row">
+    <div class="col-md-10">
+      <div class="schedule-message-toggle mb-3 d-flex align-items-center">
+        <div class="custom-control custom-switch mr-3 schedule-switch">
+          <input type="checkbox" class="custom-control-input" id="customSwitch1"
+            (change)="scheduleSwitchExpiry($event)" />
+          <label class="custom-control-label" for="customSwitch1"></label>
+        </div>
+        <label class="mr-3 mb-0">{{
+          "voice.campaign-expiry-date-label" | translate
+          }}</label>
+      </div>
+    </div>
+  </div> -->
+    <div [ngClass]="{'disabled': config.email && emailCampaignApproval}">
+      <!--<div class="row mb-3" *ngIf="config?.voice">
+    <div class="col-12 p-0 mb-4">
+      <div class="col-md-3">
+        <label class="label-text" [ngStyle]="{ opacity: !showScheduleExpiry ? '0.5' : '1' }">{{
+          "campaign.create-campaign-timezone" | translate }}</label>
+
+          <app-custom-select-with-create class="create-campaign-schedule-timezone" [data]="timezones"
+          [config]="configTimezone" [value]="timezoneSelectText" (clickElsewhere)="configTimezone.open = false"
+          (selectAction)="selectActionRecive($event, 'timezone')"
+          [errors]="showErrors('timezone', 'required', 'createCampaignForm')" [ngClass]="{
+            'internal-custom-select': showErrors(
+              'timezone',
+              'required',
+              'createCampaignForm'
+            ),
+            disable: !showScheduleExpiry
+          }">
+        </app-custom-select-with-create>
+        <div class="d-block position-relative">
+          <span class="error" *ngIf="showErrors('timezone', 'required', 'createCampaignForm')"><small><img
+                src="../../../assets/images/error.svg" /></small>{{ "campaign.create-campaign-pl-sel-timezone" | translate
+            }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 p-0 mb-2">
+      <div class="col-md-3 ">
+        <label class="label-text"
+          [ngStyle]="{ opacity: !showScheduleExpiry ? '0.5' : '1' }">
+          {{"voice.campaign-expiry-date-label" | translate}}
+        </label>
+        <div class="date-time-zone custom-datetime-picker" [ngClass]="{
+            'date-selected': createCampaignForm.get('expiry_date').value,
+            'textarea-hasError': showErrors(
+              'expiry_date',
+              'required',
+              'createCampaignForm'
+            ) && showScheduleExpiry,
+            disable: !showScheduleExpiry
+          }" [ngStyle]="{
+            'margin-bottom': showErrors('expiry_date', 'required', 'createCampaignForm')
+              ? '5px'
+              : 'auto'
+          }">
+          <app-datepicker [config]="datePickerConfigExpiry" [showDefaultDate]="datePickerObjExp"
+            (dateInOutObj)="receivedExpiaryDate($event)"></app-datepicker>
+        </div>
+        <div class="d-block position-relative">
+          <span class="error" *ngIf="showErrors('expiry_date', 'required', 'createCampaignForm')"><small><img
+                src="../../../assets/images/error.svg" /></small>{{ "voice.pl-campaign-expiry-date-label" | translate}}</span>
+        </div>
+      </div>
+    </div>
+  </div> -->
+      <!---->
+      <!---->
+
+      <ng-container *ngIf="!config.workflow">
+        <app-stagger [sendCampaignData]="sendCampaignData" (showStaggeredEvent)="getStaggeredEvent($event)"
+          [config]="config"
+          *ngIf="(config.sms && common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['SMSCampaigns'], hasPermissions.permissionName['stagger_sms_campaign'], false)) || (config.rcs && common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['RCS_Campaigns'], hasPermissions.permissionName['stagger_rcs_campaign'], false)) || (config.whatsapp && common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['WhatsAppCampaigns'], hasPermissions.permissionName['stagger_whatsapp_campaign'], false) || (config.email && !show_variant && common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['Email_Campaigns'], hasPermissions.permissionName['stagger_email_campaign'], false)) || 
+          (config?.voice && common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['VoiceCampaigns'], hasPermissions.permissionName['stagger_voice_obd_campaign'], false))) || 
+          (config.truecaller && common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['TruecallerCampaigns'], hasPermissions.permissionName['stagger_truecaller_campaign'], false))"></app-stagger>
+        <div class="row">
+          <div class="col-md-10">
+            <div class="schedule-message-toggle mb-3 d-flex align-items-center">
+              <div class="custom-control custom-switch mr-3 schedule-switch"
+                [ngClass]="{'custom-disable-schedule-toggle-permission': !hasScheduleAccess}">
+                <input type="checkbox" (change)="scheduleSwitch($event)" class="custom-control-input"
+                  formControlName="switchedScheduler" id="customSwitch1">
+                <label class="custom-control-label" for="customSwitch1"></label>
+              </div>
+              <label class="mr-3 mb-0">{{
+                "campaign.create-campaign-schedule" | translate
+                }}</label>
+            </div>
+          </div>
+        </div>
+        <div class="row" [ngClass]="{'no-pointer-event': !showSchedule}"
+          *ngIf="(config.sms && common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['SMSCampaigns'], hasPermissions.permissionName['multiple_schedule_sms_campaign'], false)) || (config.whatsapp && common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['WhatsAppCampaigns'], hasPermissions.permissionName['multiple_schedule_whatsapp_campaign'], false)) || (config.rcs && common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['RCS_Campaigns'], hasPermissions.permissionName['multiple_schedule_rcs_campaign'], false)) || (config.email && !hideRecurringOptionInCaseOfSplit && common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['Email_Campaigns'], hasPermissions.permissionName['multiple_schedule_email_campaign'], false)) || 
+          (config.truecaller && common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['TruecallerCampaigns'], hasPermissions.permissionName['multiple_schedule_truecaller_campaign'], false))">
+          <div class="col-md-12 schedule-type-wrapper">
+            <mat-radio-group aria-label="Select an option" (change)="scheduleType($event)"
+              formControlName="scheduleType">
+              <mat-radio-button class="form-group mr-3 rtl-margin-placement" [value]="'oneTime'"
+                [checked]="createCampaignForm.get('scheduleType').value == 'oneTime'">
+                {{'campaign.schedule-type-one-time' | translate}}</mat-radio-button>
+              <mat-radio-button class="form-group mr-3 rtl-margin-placement" [ngClass]="{'disabled':showStaggered}"
+                [value]="'multiple'" [checked]="createCampaignForm.get('scheduleType').value == 'multiple'"
+                *ngIf="config && (config.sms || config.whatsapp || config.workflow)" [disabled]="this.showStaggered">
+                {{'campaign.schedule-type-multiple' | translate}}</mat-radio-button>
+              <mat-radio-button class="mr-3 rtl-margin-placement" [value]="'recurring'"
+                [ngClass]="{'disabled':showStaggered}" [disabled]="this.showStaggered"
+                [checked]="createCampaignForm.get('scheduleType').value == 'recurring'">
+                {{'campaign.schedule-type-recurring' | translate}}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="config?.workflow">
+        <mat-tab-group class="custom-rtl-tab-placement mb-3 worflow-schedule-option-tabs"
+          (selectedTabChange)="tabChange($event.index)" [selectedIndex]="tabIndex">
+          <mat-tab label="{{'campaign.schedule-type-one-time' | translate}}"></mat-tab>
+          <mat-tab label="{{'campaign.schedule-type-multiple' | translate}}"
+            *ngIf="common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['Workflow'], hasPermissions.permissionName['multiple_schedule_workflow'], false)"></mat-tab>
+          <mat-tab label="{{'campaign.schedule-type-recurring' | translate}}"
+            *ngIf="common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['Workflow'], hasPermissions.permissionName['multiple_schedule_workflow'], false)"></mat-tab>
+        </mat-tab-group>
+      </ng-container>
+      <div class="row mb-3" *ngIf="createCampaignForm.get('scheduleType').value != 'multiple'">
+        <div class="col-md-3">
+          <label class="label-text" [ngStyle]="{ opacity: !showSchedule ? '0.5' : '1' }">{{
+            "campaign.create-campaign-choose-date-n-time" | translate }}</label>
+
+          <div class="date-time-zone custom-datetime-picker"
+            [ngClass]="{
+          'date-selected': createCampaignForm.get('dateTime').value,
+          'textarea-hasError':showErrors('dateTime', 'required', 'createCampaignForm') && showSchedule, disable: !showSchedule}" [ngStyle]="{
+          'margin-bottom': showErrors(
+            'dateTime',
+            'required',
+            'createCampaignForm'
+          )
+            ? '5px'
+            : 'auto'
+        }">
+            <app-datepicker [restrictActiveDateTime]="true" [config]="datePickerConfig"
+              [showDefaultDate]="datePickerObj" (dateInOutObj)="receiveDate($event, 'dateTime')"></app-datepicker>
+          </div>
+          <div class="d-block position-relative">
+            <span class="error" *ngIf="showErrors('dateTime', 'required', 'createCampaignForm')"><small><img
+                  src="../../../assets/images/error.svg" alt="error" /></small>{{
+              "campaign.create-campaign-pl-choose-date-n-time" | translate
+              }}</span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label class="label-text" [ngStyle]="{ opacity: !showSchedule ? '0.5' : '1' }">{{
+            "campaign.create-campaign-timezone" | translate }}</label>
+
+          <app-custom-select-with-create class="create-campaign-schedule-timezone" [data]="timezones"
+            [config]="configTimezone" [value]="timezoneSelectText" (clickElsewhere)="configTimezone.open = false"
+            (selectAction)="selectActionRecive($event, 'timezone')"
+            [errors]="showErrors('timezone', 'required', 'createCampaignForm')" [ngClass]="{
+          'internal-custom-select': showErrors(
+            'timezone',
+            'required',
+            'createCampaignForm'
+          ),
+          disable: !showSchedule
+        }">
+          </app-custom-select-with-create>
+          <div class="d-block position-relative">
+            <span class="error" *ngIf="showErrors('timezone', 'required', 'createCampaignForm')"><small><img
+                  src="../../../assets/images/error.svg" alt="error" /></small>{{
+              "campaign.create-campaign-pl-sel-timezone" | translate
+              }}</span>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3" *ngIf="createCampaignForm.get('scheduleType').value == 'recurring'">
+          <label class="label-text"
+            [ngStyle]="{'opacity': !showSchedule ? '0.5' : '1'}">{{'campaign.create-campaign-end-after-label' |
+            translate}}</label>
+
+          <app-custom-select-with-create [data]="endAfterList" [config]="configEndAfter" [value]="endAfterSelectText"
+            (clickElsewhere)="configEndAfter.open = false" (selectAction)="selectActionRecive($event, 'endAfter')"
+            [errors]="showErrors('endAfter', 'required', 'createCampaignForm')"
+            [ngClass]="{'internal-custom-select' : showErrors('endAfter', 'required', 'createCampaignForm'), 'disable': !showSchedule}">
+          </app-custom-select-with-create>
+          <div class="d-block position-relative">
+            <span class="error" *ngIf="showErrors('endAfter','required', 'createCampaignForm')"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'campaign.create-campaign-pl-sel-end-after' |
+              translate}}</span>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3"
+          *ngIf="(endAfterSelectText == 'Date') && createCampaignForm.get('scheduleType').value == 'recurring'">
+          <label class="label-text" [ngStyle]="{'opacity': !showSchedule ? '0.5' : '1'}">{{'advance-search.end-date' |
+            translate}}</label>
+
+          <div class="date-time-zone custom-datetime-picker"
+            [ngClass]="{'date-selected': createCampaignForm.get('endDate').value, 'textarea-hasError' : (showErrors('endDate', 'required', 'createCampaignForm') && showSchedule), 'disable': !showSchedule}"
+            [ngStyle]="{'margin-bottom': showErrors('endDate', 'required', 'createCampaignForm') ? '5px' : 'auto'}">
+            <app-datepicker [restrictActiveDateTime]="true" [config]="endDatePickerConfig"
+              [showDefaultDate]="endDatePickerObj" (dateInOutObj)="receiveDate($event, 'endDate')"
+              [highlightedDate]="highlightedDate"></app-datepicker>
+          </div>
+          <div class="d-block position-relative">
+            <span class="error" *ngIf="showErrors('endDate','required', 'createCampaignForm')"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'campaign.create-campaign-pl-choose-date-n-time' |
+              translate}}</span>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3"
+          *ngIf="(endAfterSelectText == 'Occurrences') && createCampaignForm.get('scheduleType').value == 'recurring'">
+          <label class="label-text"
+            [ngStyle]="{'opacity': !showSchedule ? '0.5' : '1'}">{{'campaign.create-campaign-occurrences-label' |
+            translate}}</label>
+          <input type="text" (input)="getInputData($event, 'occurrences')" class="form-control custom-placement-rtl"
+            formControlName="occurrences"
+            [ngClass]="{'hasError' : showErrors('occurrences', 'required', 'createCampaignForm') && showSchedule, 'disabled': !showSchedule}"
+            [ngStyle]="{'margin-bottom': showErrors('occurrences', 'required', 'createCampaignForm') && showSchedule ? '5px' : 'auto'}">
+
+          <div class="d-block position-relative">
+            <span class="error"
+              *ngIf="showErrors('occurrences','required', 'createCampaignForm') && showSchedule"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'campaign.enter-occurrences-error' |
+              translate}}</span>
+            <span class="error" *ngIf="showErrors('occurrences','maxlength', 'createCampaignForm')"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'common-campaign-occurrences-max-length' |
+              translate}}</span>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3" *ngIf="createCampaignForm.get('scheduleType').value == 'recurring'">
+          <label class="label-text"
+            [ngStyle]="{'opacity': !showSchedule ? '0.5' : '1'}">{{'campaign.create-campaign-repeat-on-label' |
+            translate}}</label>
+
+          <app-custom-select-with-create [data]="getRepeatList(endAfterSelectText)" [config]="configRepeatOn"
+            [value]="repeatOnSelectText" (clickElsewhere)="configRepeatOn.open = false"
+            (selectAction)="selectActionRecive($event, 'repeatOn')"
+            [errors]="showErrors('repeatOn', 'required', 'createCampaignForm')"
+            [ngClass]="{'internal-custom-select' : showErrors('repeatOn', 'required', 'createCampaignForm'), 'disable': !showSchedule}">
+          </app-custom-select-with-create>
+          <div class="d-block position-relative">
+            <span class="error" *ngIf="showErrors('repeatOn','required', 'createCampaignForm')"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'campaign.create-campaign-pl-sel-repeat-on' |
+              translate}}</span>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3"
+          *ngIf="((repeatOnSelectText == 'Days') || (repeatOnSelectText == 'Weeks') || (repeatOnSelectText == 'Months')) && createCampaignForm.get('scheduleType').value == 'recurring'">
+          <label class="label-text"
+            [ngStyle]="{'opacity': !showSchedule ? '0.5' : '1'}">{{'campaign.create-campaign-set-frequency-label' |
+            translate}}</label>
+          <input type="text" (input)="getInputData($event, 'frequency')" class="form-control custom-placement-rtl"
+            formControlName="frequency"
+            [ngClass]="{'hasError' : showErrors('frequency', 'required', 'createCampaignForm') && showSchedule, 'disabled': !showSchedule}"
+            [ngStyle]="{'margin-bottom': showErrors('frequency', 'required', 'createCampaignForm') && showSchedule ? '5px' : 'auto'}">
+          <div class="d-block position-relative">
+
+            <span class="error"
+              *ngIf="showErrors('frequency','required', 'createCampaignForm') && showSchedule"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'campaign.enter-frequency-error' |
+              translate}}</span>
+            <span class="error" *ngIf="showErrors('frequency','maxlength', 'createCampaignForm')"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'common-campaign-frequency-max-length' |
+              translate}}</span>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3 multi-sel-drop-item"
+          *ngIf="(repeatOnSelectText == 'Day of week') && createCampaignForm.get('scheduleType').value == 'recurring'">
+          <label class="label-text"
+            [ngStyle]="{'opacity': !showSchedule ? '0.5' : '1'}">{{'campaign.create-campaign-weekdays-label' |
+            translate}}</label>
+          <app-custom-select-with-create [data]="weekdaysList" [config]="configWeekdays" [value]="weekdaysselectText"
+            (clickElsewhere)="configWeekdays.open = false" (selectAction)="selectActionRecive($event, 'weekdays')"
+            [errors]="showErrors('weekdays', 'required', 'createCampaignForm')"
+            [ngClass]="{'internal-custom-select' : showErrors('weekdays', 'required', 'createCampaignForm'), 'disable': !showSchedule}"></app-custom-select-with-create>
+
+          <div class="d-block position-relative">
+            <span class="error"
+              *ngIf="showErrors('weekdays','required', 'createCampaignForm') && showSchedule"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'campaign.select-weekdays-error' |
+              translate}}</span>
+          </div>
+        </div>
+
+        <div class="col-md-3  multi-sel-drop-item"
+          *ngIf="(repeatOnSelectText == 'Date of month') && createCampaignForm.get('scheduleType').value == 'recurring'">
+          <label class="label-text" [ngStyle]="{'opacity': !showSchedule ? '0.5' : '1'}">{{'mis.sms-date' |
+            translate}}</label>
+          <app-custom-select-with-create [data]="repeatOnDateList" [config]="configRepeatOnDate" [value]="repeatOnDateSelectText"
+            (clickElsewhere)="configRepeatOnDate.open = false"
+            (selectAction)="selectActionRecive($event, 'repeatOnDate')"
+            [errors]="showErrors('repeatOnDate', 'required', 'createCampaignForm')"
+            [ngClass]="{'internal-custom-select' : showErrors('repeatOnDate', 'required', 'createCampaignForm'), 'disable': !showSchedule}"></app-custom-select-with-create>
+
+          <div class="d-block position-relative">
+            <span class="error"
+              *ngIf="showErrors('repeatOnDate','required', 'createCampaignForm') && showSchedule"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'campaign.insert-pl-sel-date' |
+              translate}}</span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="createCampaignForm.get('scheduleType').value == 'multiple'">
+        <app-multiple-schedule (addRow)="addRow($event)" (removeRow)="removeRow($event)"
+          [multipleScheduleForm]="multipleScheduleForm" [testCampaign]="testCampaign"
+          [sendCampaignData]="sendCampaignData"></app-multiple-schedule>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,92 @@
+.tooltip-text, .type-tooltip-text {
+  display: none;
+}
+.custom-tooltip .tooltip-text, .custom-tooltip .type-tooltip-text {
+  display: inline;
+  border-radius: 6px;
+  box-shadow: 0 0 10px 0 rgba(28, 53, 88, 0.18);
+  background-color: #ffffff;
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.21;
+  letter-spacing: normal;
+  text-align: center;
+  color: #24253e;
+  min-width: 101px;
+  min-height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 53px;
+  right: 0px;
+}
+.custom-tooltip .tooltip-text:before, .custom-tooltip .type-tooltip-text:before{
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  border-top: 12px solid #fff;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  bottom: -12px;
+  right: 14px;
+}
+.custom-tooltip .type-tooltip-text {
+  bottom: 26px;
+  /* min-width: 100%; */
+  padding: 8px;
+  right: -15px;
+}
+.invalid-timeslot-error p {
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.36;
+  letter-spacing: normal;
+  text-align: left;
+  color: red;
+}
+.invalid-timeslot-error p .error-title {
+  margin-right: .5rem;
+}
+.view-campaign-textarea {
+  width: 100%;
+  resize: none;
+}
+.voice-btn-white-design {
+  background-color: #fff;
+  border: solid 0.5px #233670;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.36;
+  letter-spacing: normal;
+  text-align: left;
+  color: #233670;
+  font-family: "Roboto", sans-serif;
+  min-height: 42px;
+  min-width: 75px;
+  text-align: center;
+  
+}
+
+.voice-btn-white-design:hover{
+  color: white;
+  background-color: #233670;
+}
+
+.voice-btn-white-design-reverse {
+  color: white;
+  background-color: #233670;
+}
+
+.header-bckgrd {
+  background-color: #f2f4f8;
+}

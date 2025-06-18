@@ -1,0 +1,299 @@
+<h4 class="step-heading mb-0 position-relative"
+    *ngIf="suggestionsForm.get('suggestions')['controls'] && suggestionsForm.get('suggestions')['controls'].length">
+    {{'rcs.suggested-responses-label' | translate}} <span class="opacity-3">{{'common.optional-label' |
+        translate}}</span>
+    <!-- <span class="suggestions-error"
+        *ngIf="suggestionsForm.get('suggestions')['controls'].length && suggestionsArr && suggestionsArr.length > 0">Please
+        fill all the required fields in: {{suggestionsArr}}</span> -->
+</h4>
+<form [formGroup]="suggestionsForm" class="suggested-responses-wrapper rcs-suggested-responses-wrapper">
+
+    <mat-tab-group class="import-tabs custom-rtl-tab-placement"
+        (selectedTabChange)="selectSuggestion($event, 'switch', true)" [selectedIndex]="activeIndex"
+        *ngIf="suggestionsForm.get('suggestions')['controls'] && suggestionsForm.get('suggestions')['controls'].length">
+        <mat-tab
+            label="{{suggestionsForm.get('suggestions').value[i].buttonText ? suggestionsForm.get('suggestions').value[i].buttonText : suggestionsForm.get('suggestions').value[i].actionButtonText}}"
+            *ngFor="let panel of suggestionsForm.get('suggestions')['controls']; let i = index;">
+
+        </mat-tab>
+    </mat-tab-group>
+    <div>
+        <!-- <div formArrayName="suggestions" class="d-inline-block mb-3">
+            <ng-container *ngFor="let panel of suggestionsForm.get('suggestions')['controls']; let i = index;" [formGroupName]="i">
+                <button (click)="selectSuggestion('Reply', i)" class="btn white-dropdown mr-3 rtl-margin-placement" [ngClass]="{'btn-design': suggestionsForm.value.suggestions[i].active, 'btn-design-white': !suggestionsForm.value.suggestions[i].active}" *ngIf="suggestionsForm.value.suggestions[i].buttonText">
+                    {{suggestionsForm.value.suggestions[i].buttonText}}
+                    <span class="icon-Group-2214 font-size-11 margin-left-5" (click)="removeSuggestionType(i, 'Reply', panel)"></span>
+                </button>
+                <button (click)="selectSuggestion('Action', i)" class="btn white-dropdown mr-3 rtl-margin-placement" [ngClass]="{'btn-design': suggestionsForm.value.suggestions[i].active, 'btn-design-white': !suggestionsForm.value.suggestions[i].active}" *ngIf="suggestionsForm.value.suggestions[i].actionButtonText">
+                    {{suggestionsForm.value.suggestions[i].actionButtonText}}
+                    <span class="icon-Group-2214 font-size-11 margin-left-5" (click)="removeSuggestionType(i, 'Action', panel)"></span>
+                </button>
+            </ng-container>
+        </div> -->
+
+        <!-- <button class="btn btn-design-white white-drodown disabled" id="addDropdown" role="button" data-toggle="dropdown" appBdColor appTxtColor
+        aria-haspopup="true" aria-expanded="false" [ngClass]="{'disabled': suggestionsForm.get('suggestions')['controls'].length > 3}">
+        <span class="icon-add font-size-11 margin-right-5"></span>
+        Add
+    </button> -->
+        <div class="row"
+            *ngIf="activeIndex > -1 && suggestionsForm.value.suggestions && suggestionsForm.value.suggestions.length > 0">
+            <div class="col-md-4 mb-3">
+                <label appCustomTooltip class="label-text position-relative custom-tooltip-rcs-text"
+                    [ngClass]="{'custom-tooltip-placement-workflow': config && config.workflow}">Text
+                    <img class="campaign-type-hint" src="assets/images/hint.png" alt="hint">
+                    <div class="type-tooltip-text custom-rtl-placement">
+                        <span>{{'campaign.rcs-text-character-length-25-tooltip' | translate}}</span>
+                    </div>
+                </label>
+                <div class=" position-relative personalise-wrapper">
+                    <div class="qc_btnL">
+
+
+
+
+                        <div id="labelText"
+                            class="form-control textarea custom-placement-rtl d-inline-block nowrap-content-editable"
+                            contenteditable="false" ondrop="return false;" (input)="getTextEvent($event)"
+                            (contextmenu)="getMenuEvent($event, 'labelText')" #labelText></div>
+
+                        <app-mat-menu *ngIf="showTextContext"  [showContextMenu]="showContextMenu"
+                            [contactCount]="contactCount" [personalizeOptions]="personalizeOptions"
+                            (selectItemEvent)="selectItemEvent($event)" [showVariables]="showVariables"
+                            [showReset]="showReset"
+                            (showAllVariables)="showAllVariablesPersonalisation($event, 'labelText')"
+                            (resetVariableData)="resetVariable($event, 'labelText')"></app-mat-menu>
+
+
+
+
+
+
+                        <!-- <input #text type="text" class="form-control" maxlength="25" placeholder="Response Text" (input)="getTextData('text')" formControlName="text"
+                            (keypress)="checkEnter($event)" (keyup)="updateContent($event, 'i')"> -->
+
+
+
+                        <!-- <div id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" class="personalisation-icon-wrapper" title="Click for personalization.">
+                                <span class="icon-prsonlize font-size-18"></span>
+                            </div> -->
+                        <!-- <div class="dropdown-menu language-dropdown p-0" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" *ngFor="let data of personalizeOptions; let i = index"
+                                (click)="setData(text, data, 'text')">{{data.headerName}}</a>
+                            </div> -->
+                    </div>
+
+                    <div class="d-block position-relative">
+                        <span class="error" *ngIf="showErrors('text','required', 'suggestionsForm')"><small><img
+                                    src="../../../assets/images/error.svg"></small>Please enter Text.</span>
+                    </div>
+
+                    <!-- <div class="qc_btnR d-flex align-items-center">
+                        <span class="qc_ratingC">{{suggestionsForm.value.suggestions[activeIndex].text?.length}}/25</span>
+                        <span class="cross-icon-blue icon-Group-7619" (click)="removeQuickBtnRow(activeIndex)"><span class="path1"></span><span class="path2"></span></span>
+                    </div> -->
+                </div>
+            </div>
+            <!-- <div class="col-md-4 mb-3">
+                <label class="label-text">Postback Data</label>
+                <div class="position-relative personalise-wrapper">
+                    <input #postBackData type="text" placeholder="Enter here..." (input)="getTextData('postBackData')" formControlName="postBackData" class="form-control custom-padding-for-personalise-icon disabled">
+                    <div class="dropdown-menu language-dropdown p-0" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" *ngFor="let data of personalizeOptions; let i = index"
+                           (click)="setData(postBackData, data, 'postBackData')">{{data.headerName}}</a>
+                      </div>
+                </div>
+            </div> -->
+
+
+
+            <!-- <div class="col-md-4 mb-3" *ngIf="activeType == 'Action'">
+                <label class="label-text">Fallback URL <span
+                    class="opacity-3">{{'common.optional-label' | translate}}</span></label>
+                    <div class="position-relative personalise-wrapper">
+                        <input #fallBackUrl type="text" placeholder="Enter here..." (input)="getTextData('fallBackUrl')" formControlName="fallBackUrl" class="form-control custom-padding-for-personalise-icon">
+                    <div id="navbarDropdown" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false" class="personalisation-icon-wrapper" title="Click for personalization.">
+                        <span class="icon-prsonlize font-size-18"></span>
+                    </div>
+                    <div class="dropdown-menu language-dropdown p-0" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" *ngFor="let data of personalizeOptions; let i = index"
+                           (click)="setData(fallBackUrl, data, 'fallBackUrl')">{{data.headerName}}</a>
+                      </div>
+                    </div>
+            </div> -->
+            <div class="col-md-4 mb-3" *ngIf="activeType == 'Action'">
+                <label class="label-text">Type</label>
+                <app-custom-select-with-create [data]="actionType" [config]="configActionType"
+                    [value]="suggestionsForm.get('actionTypeSelectText').value ? suggestionsForm.get('actionTypeSelectText').value : actionTypeSelectText"
+                    (clickElsewhere)="configActionType.open = false"
+                    (selectAction)="selectActionRecive($event, 'actionType')" [ngClass]="{'no-pointer-event': true}">
+                </app-custom-select-with-create>
+            </div>
+            <div class="col-md-4 mb-3"
+                *ngIf="(activeType == 'Action') && suggestionsForm.get('actionType').value == 'Dial'">
+                <label class="label-text">Enter Phone Number</label>
+                <!-- <input type="text" placeholder="Enter here..." (input)="getTextData('phoneNumber')" formControlName="phoneNumber" class="form-control disabled"> -->
+                <div id="phoneNumber"
+                    class="form-control textarea custom-placement-rtl d-inline-block nowrap-content-editable"
+                    contenteditable="false" ondrop="return false;" (input)="getTextEvent($event)"
+                    (contextmenu)="getMenuEvent($event, 'phoneNumber')" #phoneNumber></div>
+
+                <app-mat-menu *ngIf="showPhoneNumberContext" [showContextMenu]="showContextMenu"
+                    [contactCount]="contactCount" [personalizeOptions]="personalizeOptions"
+                    (selectItemEvent)="selectItemEvent($event)" [showVariables]="showVariables" [showReset]="showReset"
+                    (showAllVariables)="showAllVariablesPersonalisation($event, 'phoneNumber')"
+                    (resetVariableData)="resetVariable($event, 'phoneNumber')"></app-mat-menu>
+            </div>
+
+            <div class="col-md-4 mb-3"
+                *ngIf="activeType == 'Action' && suggestionsForm.get('actionType').value == 'View Location'">
+                <label class="label-text">Select Location</label>
+                <app-custom-select-with-create [data]="locationBy" [config]="configLocationBy"
+                    [value]="suggestionsForm.get('locationBySelectText').value ? suggestionsForm.get('locationBySelectText').value : locationBySelectText"
+                    (clickElsewhere)="configLocationBy.open = false"
+                    (selectAction)="selectActionRecive($event, 'locationBy')">
+                </app-custom-select-with-create>
+            </div>
+            <div class="col-md-4 mb-3"
+                *ngIf="activeType == 'Action' && suggestionsForm.get('actionType').value == 'view location' && suggestionsForm.get('actionTypeSelectText').value == 'Location (Query)'">
+                <label class="label-text">Query String</label>
+                <input type="text" class="form-control pe-none" formControlName="query" (input)="getTextData('query')"
+                    placeholder="Enter here...">
+            </div>
+
+            <div class="col-md-4 mb-3"
+                *ngIf="activeType == 'Action' && suggestionsForm.get('actionType').value == 'View Location' && suggestionsForm.get('locationBy')?.value == 'By latitude and longitude'">
+                <label class="label-text">Label <span class="opacity-3">{{'common.optional-label' |
+                        translate}}</span></label>
+
+                <div class="position-relative personalise-wrapper">
+                    <input #label type="text" class="form-control" formControlName="label"
+                        (input)="getTextData('label')" placeholder="Enter here...">
+                    <div id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false" class="personalisation-icon-wrapper" title="Click for personalization.">
+                        <span class="icon-prsonlize font-size-18"></span>
+                    </div>
+                    <div class="dropdown-menu language-dropdown p-0" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" *ngFor="let data of personalizeOptions; let i = index"
+                            (click)="setData(label, data, 'label')">{{data.headerName}}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3"
+                *ngIf="activeType == 'Action' && suggestionsForm.get('actionType').value.toLowerCase() == 'view location' && suggestionsForm.get('actionTypeSelectText').value == 'Location (Lat/Long)'">
+                <label class="label-text">Latitude</label>
+                <input appNumberOnlyWithDot type="text" class="form-control pe-none" formControlName="latitude"
+                    (input)="getTextData('latitude', latitude)" placeholder="Enter here..." #latitude >
+            </div>
+
+            <div class="col-md-4 mb-3"
+                *ngIf="activeType == 'Action' && suggestionsForm.get('actionType').value.toLowerCase() == 'view location' && suggestionsForm.get('actionTypeSelectText').value == 'Location (Lat/Long)'">
+                <label class="label-text">Longitude</label>
+                <input appNumberOnlyWithDot type="text" class="form-control pe-none" formControlName="longitude"
+                    (input)="getTextData('longitude', longitude)" placeholder="Enter here..." #longitude >
+            </div>
+
+            <div class="col-md-4 mb-3"
+                [ngClass]="{'hide-with-opacity': activeType != 'Action' || suggestionsForm.get('actionType')?.value != 'Open URL'}">
+                <label class="label-text">URL</label>
+
+                <div id="url"
+                    class="form-control textarea custom-placement-rtl d-inline-block nowrap-content-editable"
+                    contenteditable="false" ondrop="return false;" (input)="getTextEvent($event)"
+                    (contextmenu)="getMenuEvent($event, 'url')" #url></div>
+
+                <app-mat-menu *ngIf="showUrlContext" [showContextMenu]="showContextMenu" [contactCount]="contactCount"
+                    [personalizeOptions]="personalizeOptions" (selectItemEvent)="selectItemEvent($event)"
+                    [showVariables]="showVariables" [showReset]="showReset"
+                    (showAllVariables)="showAllVariablesPersonalisation($event, 'url')"
+                    (resetVariableData)="resetVariable($event, 'url')"></app-mat-menu>
+
+
+                <!-- <div class="position-relative personalise-wrapper">
+            <input #url type="text" class="form-control" formControlName="url" (input)="getTextData('url')" placeholder="Enter here...">
+            
+        <div class="dropdown-menu language-dropdown p-0" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" *ngFor="let data of personalizeOptions; let i = index"
+               (click)="setData(url, data, 'url')">{{data.headerName}}</a>
+          </div>
+        </div> -->
+            </div>
+
+            <div class="col-md-4 mb-3"
+                *ngIf="activeType == 'Action' && suggestionsForm.get('actionType')?.value == 'Create Calendar'">
+                <label class="label-text">Start Date & Time</label>
+                <div class="date-time-zone custom-datetime-picker pe-none">
+                    <app-datepicker [config]="datePickerConfig"
+                        [showDefaultDate]="suggestionsForm.get('datePickerObj')?.value"
+                        (dateInOutObj)="receiveDate($event)"></app-datepicker>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3"
+                *ngIf="activeType == 'Action' && suggestionsForm.get('actionType')?.value == 'Create Calendar'">
+                <label class="label-text">End Date & Time</label>
+                <div class="date-time-zone custom-datetime-picker pe-none">
+                    <app-datepicker [config]="datePickerConfig2"
+                        [showDefaultDate]="suggestionsForm.get('datePickerObj2')?.value"
+                        (dateInOutObj)="receiveDate2($event)"></app-datepicker>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3"
+                *ngIf="activeType == 'Action' && suggestionsForm.get('actionType')?.value == 'Create Calendar'">
+                <label class="label-text">Title</label>
+                <div class="position-relative personalise-wrapper">
+                    <input #calendarTitle type="text" class="form-control pe-none" formControlName="calendarTitle"
+                        (input)="getTextData('calendarTitle')" placeholder="Enter here..." >
+                    <!-- <div id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false" class="personalisation-icon-wrapper" title="Click for personalization.">
+                        <span class="icon-prsonlize font-size-18"></span>
+                    </div>
+                    <div class="dropdown-menu language-dropdown p-0" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" *ngFor="let data of personalizeOptions; let i = index"
+                            (click)="setData(calendarTitle, data, 'calendarTitle')">{{data.headerName}}</a>
+                    </div> -->
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3"
+                *ngIf="activeType == 'Action' && suggestionsForm.get('actionType')?.value == 'Create Calendar'">
+                <label class="label-text">Description </label>
+                <div class="position-relative personalise-wrapper">
+                    <input #calendardescription type="text" class="form-control pe-none" formControlName="calendardescription"
+                        (input)="getTextData('calendardescription')" placeholder="Enter here..." >
+                    <!-- <div id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false" class="personalisation-icon-wrapper" title="Click for personalization.">
+                        <span class="icon-prsonlize font-size-18"></span>
+                    </div>
+                    <div class="dropdown-menu language-dropdown p-0" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" *ngFor="let data of personalizeOptions; let i = index"
+                            (click)="setData(calendardescription, data, 'calendardescription')">{{data.headerName}}</a>
+                    </div> -->
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="dropdown-menu white-drodown-menu user-dropdown p-0" aria-labelledby="addDropdown">
+            <a class="dropdown-item" (click)="suggestionType($event, 'Reply')">
+                Reply
+            </a>
+            <a class="dropdown-item" (click)="suggestionType($event, 'Action')">
+                Action
+            </a>
+        </div>
+    </div>
+
+</form>
+
+<div #elRef style="display: none;"></div>
+
+
+<app-personalize-variabless [id]="'personalise-variables-suggestions'" *ngIf="suggestionsConfig?.showDrawer"
+    [variables]="variables" [personalizeOptions]="personalizeOptions" [config]="suggestionsConfig"
+    (close)="closeDrawer($event)" (sendFinalVariabledData)="getFinalVariabledData($event)" [finalVarData]="finalVarData"
+    [suggestions]="true" [clickedType]="clickedType"
+    [showDrawer]="showPersonaliseVariables"></app-personalize-variabless>

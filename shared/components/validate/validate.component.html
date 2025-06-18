@@ -1,0 +1,679 @@
+<app-modal id="validate">
+    <div class="internal template-modal validate-modal modal-wrapper"
+        *ngIf="(modalType == 'validate') && validateDataPreview">
+        <div>
+            <h3 class="d-flex justify-content-between align-items-center import-contacts header-modal m-0">
+                <span *ngIf="!config.workflow">{{'campaign.validate-heading' | translate}}</span>
+                <span *ngIf="config.workflow">{{'workflow.validate-heading' | translate}}</span>
+                <span class="cursor-pointer" (click)="closeModal('validate');">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                        <g id="Group_2783" data-name="Group 2783" transform="translate(-907 -297)">
+                            <g id="Path_2335" data-name="Path 2335" transform="translate(907 297)" fill="none">
+                                <path d="M12,0A12,12,0,1,1,0,12,12,12,0,0,1,12,0Z" stroke="none" />
+                                <path
+                                    d="M 12 1 C 9.061790466308594 1 6.299449920654297 2.144199371337891 4.221820831298828 4.221820831298828 C 2.144199371337891 6.299449920654297 1 9.061790466308594 1 12 C 1 14.93820953369141 2.144199371337891 17.7005500793457 4.221820831298828 19.77817916870117 C 6.299449920654297 21.85580062866211 9.061790466308594 23 12 23 C 14.93820953369141 23 17.7005500793457 21.85580062866211 19.77817916870117 19.77817916870117 C 21.85580062866211 17.7005500793457 23 14.93820953369141 23 12 C 23 9.061790466308594 21.85580062866211 6.299449920654297 19.77817916870117 4.221820831298828 C 17.7005500793457 2.144199371337891 14.93820953369141 1 12 1 M 12 0 C 18.62742042541504 0 24 5.372579574584961 24 12 C 24 18.62742042541504 18.62742042541504 24 12 24 C 5.372579574584961 24 0 18.62742042541504 0 12 C 0 5.372579574584961 5.372579574584961 0 12 0 Z"
+                                    stroke="none" style="fill: var(--primary-color)" />
+                            </g>
+                            <g id="sign" transform="translate(915.148 305.227)">
+                                <g id="Group_2214" data-name="Group 2214" transform="translate(0 0)">
+                                    <path id="Path_2030" data-name="Path 2030"
+                                        d="M.191,8.72a.65.65,0,0,0,.92,0L4.1,5.729,7.094,8.72a.651.651,0,0,0,.92-.92L5.022,4.809,7.86,1.971a.651.651,0,0,0-.92-.92L4.1,3.888,1.264,1.05a.651.651,0,0,0-.92.92L3.182,4.809.191,7.8A.65.65,0,0,0,.191,8.72Z"
+                                        transform="translate(0 -0.86)" style="fill: var(--primary-color)" />
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                </span>
+            </h3>
+        </div>
+        <div class="inside-modal-content container-fluid">
+            <ng-container *ngIf="config && config?.workflow">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="campaign-type-summary text-break">
+                            <label class="label-text">{{'campaign.validate.workflow-name' | translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0 custom-text-ellipsis-two-lines"
+                                [title]="validateDataPreview.name">{{validateDataPreview.name}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="campaign-type-summary text-break">
+                            <label class="label-text">{{'campaign.validate.category' | translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0 custom-text-ellipsis-two-lines"
+                                [title]="validateDataPreview.category">{{validateDataPreview?.category ?
+                                validateDataPreview?.category : 'NA'}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="campaign-type-summary text-break">
+                            <label class="label-text">{{'campaign.validate.target-audience' | translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0 custom-text-ellipsis-two-lines"
+                                [title]="validateDataPreview.target_audience">{{validateDataPreview.target_audience}}
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="campaign-type-summary text-break">
+                            <label class="label-text">{{'campaign.validate.remove-duplicate' | translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0 custom-text-ellipsis-two-lines"
+                                [title]="validateDataPreview.remove_duplicate">{{validateDataPreview.remove_duplicate}}
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="campaign-type-summary text-break">
+                            <label class="label-text">{{'campaign.validate.mobile-identifier' | translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0 custom-text-ellipsis-two-lines"
+                                [title]="validateDataPreview.mobile_identifier">
+                                {{validateDataPreview.mobile_identifier}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="campaign-type-summary text-break">
+                            <label class="label-text">{{'campaign.validate.email-identifier' | translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0 custom-text-ellipsis-two-lines"
+                                [title]="validateDataPreview.email_identifier">{{validateDataPreview.email_identifier}}
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="campaign-type-summary text-break">
+                            <label class="label-text">{{'campaign.validate.mobile-recipients' | translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0 custom-text-ellipsis-two-lines"
+                                [title]="validateDataPreview.mobile_counts">{{validateDataPreview.mobile_counts}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="campaign-type-summary text-break">
+                            <label class="label-text">{{'campaign.validate.email-recipients' | translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0 custom-text-ellipsis-two-lines"
+                                [title]="validateDataPreview.email_counts">{{validateDataPreview.email_counts}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2"
+                        *ngIf="validateDataPreview?.createCampaignForm?.dateTime || (validateDataPreview?.createCampaignForm?.scheduleType && validateDataPreview?.createCampaignForm?.scheduleType == 'multiple')">
+                        <div class="schedule-on">
+                            <label class="label-text mb-0">{{'campaign.schedule-reccurring-achedule-type-label' |
+                                translate}}</label>
+                            <h4 class="summary-value schedule-value mb-0">
+                                {{((validateDataPreview.createCampaignForm.scheduleType?.toLowerCase() == 'recurring') ?
+                                'campaign.schedule-type-recurring' :
+                                (validateDataPreview.createCampaignForm.scheduleType?.toLowerCase() == 'multiple' ?
+                                'campaign.schedule-type-multiple' : 'campaign.schedule-type-one-time')) | translate}}
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2"
+                        *ngIf="validateDataPreview?.createCampaignForm?.dateTime || (validateDataPreview?.createCampaignForm?.scheduleType && validateDataPreview?.createCampaignForm?.scheduleType == 'multiple')">
+                        <div class="schedule-on">
+                            <label class="label-text mb-0">{{'campaign.validate-schedule-on' | translate}}</label>
+                            <h4 class="summary-value schedule-value mb-0">
+                                {{validateDataPreview.scheduledOn}}<br>{{validateDataPreview.scheduleTime}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2"
+                        *ngIf="validateDataPreview?.createCampaignForm?.scheduleType && validateDataPreview?.createCampaignForm?.scheduleType == 'multiple'">
+                        <div class="schedule-on">
+                            <label class="label-text mb-0">{{'campaign.multiple-no-of-occurences' | translate}}</label>
+                            <h4 class="summary-value schedule-value mb-0">
+                                {{validateDataPreview.createCampaignForm?.multipleScheduleArr.length}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2"
+                        *ngIf="validateDataPreview?.createCampaignForm?.dateTime && (validateDataPreview?.createCampaignForm?.scheduleType?.toLowerCase() == 'recurring')">
+                        <div class="schedule-on">
+                            <label class="label-text mb-0">{{'campaign.schedule-reccurring-repeat-every-label' |
+                                translate}}</label>
+                            <h4 class="summary-value schedule-value text-capitalize word-break-all mb-0">
+                                {{(validateDataPreview.createCampaignForm.repeatOn == 'days') ||
+                                (validateDataPreview.createCampaignForm.repeatOn == 'weeks') ||
+                                (validateDataPreview.createCampaignForm.repeatOn == 'months') ?
+                                validateDataPreview.createCampaignForm.frequency + ' ' +
+                                validateDataPreview.createCampaignForm.repeatOn :
+                                ((validateDataPreview.createCampaignForm.repeatOn == 'day_of_week') ?
+                                validateDataPreview.createCampaignForm.weekdays : validateDataPreview.repeatDate + ' ' +
+                                ('campaign.schedule-reccurring-each-month-label' | translate))}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2"
+                        *ngIf="validateDataPreview?.createCampaignForm?.dateTime && (validateDataPreview?.createCampaignForm?.scheduleType?.toLowerCase() == 'recurring')">
+                        <div class="schedule-on">
+                            <label class="label-text mb-0">{{'campaign.schedule-reccurring-end-at-label' |
+                                translate}}</label>
+                            <h4 class="summary-value schedule-value mb-0">
+                                {{(validateDataPreview.createCampaignForm.endAfter == 'date') ?
+                                (validateDataPreview.endDate + ', ' +validateDataPreview.endTime) :
+                                validateDataPreview.createCampaignForm.occurrences + ' ' +
+                                ('campaign.create-campaign-occurrences-label' | translate)}}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-now text-right">
+                    <button type="button" class="btn btn-design mr-3"
+                        [disabled]="(validateDataPreview.mobile_counts == 0 && validateDataPreview.email_counts == 0) || is_ta_changed"
+                        *ngIf="workflowStatus.running_status || workflowStatus?.scheduler"
+                        (click)="reexecuteWorkflow()">
+                        <span>{{'workflow.re-execute-now' | translate}}</span>
+                    </button>
+                    <button type="button" class="btn btn-design mr-3"
+                        [disabled]="validateDataPreview.mobile_counts == 0 && validateDataPreview.email_counts == 0"
+                        *ngIf="!config?.isSchedule && !workflowStatus?.scheduler" (click)="updateCampaign()">
+                        <span>{{'workflow.execute-now' | translate}}</span>
+                    </button>
+                    <button type="button" class="btn btn-design mr-3"
+                        *ngIf="config?.isSchedule && !workflowStatus?.scheduler" (click)="updateCampaign(true)">
+                        <span>{{'workflow.execute-later' | translate}}</span>
+                    </button>
+                    <button type="button" class="btn btn-design-white" (click)="closeModal('validate')">
+                        <span>{{'common-cancel-text' | translate}}</span>
+                    </button>
+                </div>
+
+            </ng-container>
+            <ng-container *ngIf="config && !config?.workflow">
+                <div class="row">
+                    <!-- Campaign Name -->
+                    <div class="col-md-4 mb-2"
+                        *ngIf="config && (config?.whatsapp || config?.rcs || config?.sms || config?.voice || config?.email || config?.truecaller)">
+                        <div class="campaign-type-summary text-break">
+                            <label class="label-text mb-0">{{'campaign.create-campaign-campaign-name' |
+                                translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0 custom-text-ellipsis-two-lines"
+                                [title]="validateDataPreview.createCampaignForm.campaignName">
+                                {{validateDataPreview.createCampaignForm.campaignName ?
+                                validateDataPreview.createCampaignForm.campaignName :
+                                validateDataPreview.createCampaignForm.name}}</h4>
+                        </div>
+                    </div>
+                    <!-- Campaign Type -->
+                    <div class="col-md-4 mb-2" *ngIf="config && (config?.sms || config?.voice || config?.email)">
+                        <div class="campaign-type-summary" *ngIf="config && (config?.sms || config?.email)">
+                            <label class="label-text mb-0">{{'campaign.validate-label-type-camp' | translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0" *ngIf="!config || config?.sms">
+                                {{validateDataPreview.createCampaignForm.messageType +' Campaign'}}
+                            </h4>
+                            <h4 class="summary-value campaign-type-value" *ngIf="config?.email">
+                                {{validateDataPreview.createCampaignForm.typeSelectText ?
+                                validateDataPreview.createCampaignForm.typeSelectText :
+                                validateDataPreview.createCampaignForm.type | titlecase}}</h4>
+                        </div>
+                        <div class="campaign-type-summary text-break" *ngIf="config && config?.voice">
+                            <label class="label-text mb-0">{{'campaign.create-campaign-campaign-type' |
+                                translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0">
+                                {{validateDataPreview.createCampaignForm.campaign_type | titlecase}}</h4>
+                        </div>
+                    </div>
+                    <ng-container
+                        *ngIf="!config || (config && (config?.sms || config?.whatsapp || config?.rcs || config?.voice || config.email || config?.truecaller))">
+                        <!-- Currency -->
+                        <div class="col-md-4 mb-2"
+                            *ngIf="!config || (config && (config?.sms || config?.whatsapp || config?.rcs || config.email || config?.truecaller))">
+                            <div class="credit-summary"
+                                *ngIf="!config || (config && (config?.sms  || config.email))">
+                                <label appCustomTooltip class="label-text position-relative mb-0"
+                                    *ngIf="validateDataPreview.validateRes.creditMode == 'currency'">{{'campaign.validate-label-currency-deducted'
+                                    | translate}}
+                                    <img class="campaign-type-hint" src="assets/images/hint.png" alt="hint">
+                                    <div class="type-tooltip-text custom-rtl-placement">
+                                        <span *ngIf="!config?.email">{{'currency-credit-label-tooltip' |
+                                            translate}}</span>
+                                        <span *ngIf="config?.email">{{'campaign.email-currency-credit-label-tooltip' |
+                                            translate}}</span>
+                                    </div>
+                                </label>
+                                <label appCustomTooltip class="label-text position-relative mb-0"
+                                    *ngIf="validateDataPreview.validateRes.creditMode != 'currency'">{{'campaign.validate-label-credit-deducted'
+                                    | translate}}
+                                    <img class="campaign-type-hint" src="assets/images/hint.png" alt="hint">
+                                    <div class="type-tooltip-text custom-rtl-placement">
+                                        <span *ngIf="!config?.email">{{'currency-credit-label-tooltip' |
+                                            translate}}</span>
+                                        <span *ngIf="config?.email">{{'campaign.email-currency-credit-label-tooltip' |
+                                            translate}}</span>
+                                    </div>
+                                </label>
+                                <h4 class="summary-value credit-currency-count mb-0">
+                                    <span
+                                        *ngIf="validateDataPreview.validateRes.creditMode == 'currency'">{{validateDataPreview.validateRes.currencyUnit}}
+                                    </span>
+                                    {{validateDataPreview.validateRes.currencyCount}}
+                                </h4>
+                            </div>
+                            <div class="campaign-type-summary text-break"
+                                *ngIf="config && (config?.whatsapp || config?.rcs || config?.truecaller)">
+                                <label class="label-text mb-0">{{'campaign.create-campaign-campaign-category' |
+                                    translate}}</label>
+                                <h4 class="summary-value campaign-type-value mb-0">
+                                    {{validateDataPreview.createCampaignForm.categorySelectText}}</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-2" *ngIf="config && config?.email">
+                            <div class="total-contacts">
+                                <label class="label-text mb-0">{{'campaign.mail-content-content-type-text' |
+                                    translate}}</label>
+                                <h4 class="summary-value campaign-type-value direction-ltr">{{validateDataPreview &&
+                                    (validateDataPreview?.createCampaignForm?.content?.content_type == 'text/plain' ?
+                                    'campaign.email-plain-text' : 'campaign.email-html') | translate}}</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-2" *ngIf="config && config?.rcs">
+                            <div class="campaign-type-summary">
+                                <label class="label-text mb-0">{{'campaign.rcs-rbm-agent-label' | translate}}</label>
+                                <h4 class="summary-value campaign-type-value direction-ltr mb-0">{{ validateDataPreview
+                                    && validateDataPreview.createCampaignForm.rbmSelectText}}</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-2" *ngIf="(config && config?.whatsapp)">
+                            <div class="campaign-type-summary">
+                                <label class="label-text mb-0">{{'campaign.wa-business-number' | translate}}</label>
+                                <h4 class="summary-value campaign-type-value direction-ltr mb-0">{{ validateDataPreview
+                                    && validateDataPreview.createCampaignForm.whatsappBusinessNumber}}</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-2" *ngIf="config && config?.truecaller">
+                            <div class="campaign-type-summary">
+                                <label class="label-text mb-0">{{'common.truecaller-number' | translate}}</label>
+                                <h4 class="summary-value campaign-type-value direction-ltr mb-0">{{ validateDataPreview
+                                    && validateDataPreview.createCampaignForm.tc_number}}</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-2" *ngIf="config && config?.email">
+                            <div class="campaign-type-summary">
+                                <label class="label-text mb-0">{{'campaign.uploaded-email' | translate}}</label>
+                                <h4 class="summary-value campaign-type-value direction-ltr">{{ validateDataPreview &&
+                                    validateDataPreview.validateRes.totalCount}}</h4>
+                            </div>
+                        </div>
+                        <!-- Uploaded Contact -->
+                        <div class="col-md-4 mb-2" *ngIf="(config && !config?.email) || (config && config?.truecaller)">
+                            <div class="total-contacts">
+                                <h4 class="summary-value contact-text mb-0">{{'campaign.validate-label-uploaded-cont' |
+                                    translate}}</h4>
+                                <span
+                                    class="total-contacts-counts contact-counts-value">{{validateDataPreview.validateRes.totalCount}}</span>
+                            </div>
+                        </div>
+                        <!-- Valid Contact -->
+                        <div class="col-md-4 mb-2"
+                            *ngIf="!config || (config && config?.sms) || (config && config?.whatsapp) || (config && config?.voice) || (config && config?.rcs) || (config && config?.truecaller)">
+                            <div class="total-contacts">
+                                <h4 class="summary-value contact-text mb-0">{{'campaign.validate-label-valid-cont' |
+                                    translate}}</h4>
+                                <span
+                                    class="total-contacts-counts contact-counts-value">{{validateDataPreview.validateRes.validCount}}</span>
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-4 mb-2" *ngIf="config && !config?.email">
+                            <div class="invalid-contacts">
+                                <h4 class="summary-value contact-text mb-0">{{'campaign.validate-label-invalid-cont' | translate}}</h4>
+                                <span
+                                    class="invalid-contacts-counts contact-counts-value">{{validateDataPreview.validateRes.invalidCount}}</span>
+                            </div>
+                        </div> -->
+                    </ng-container>
+                    <!-- <div class="col-md-4 mb-2" *ngIf="config && !config?.voice && !config?.email">
+                        <div class="total-contacts">
+                            <h4 class="summary-value contact-text mb-0">{{'campaign.validate-label-uploaded-cont' | translate}}</h4>
+                            <span class="total-contacts-counts contact-counts-value">{{validateDataPreview.validateRes.totalCount}}</span>
+                        </div>
+                    </div> -->
+                    <div class="col-md-4 mb-2" *ngIf="config && config?.email">
+                        <div class="total-contacts">
+                            <h4 class="summary-value contact-text mb-0">{{'campaign.valid-email' | translate}}</h4>
+                            <h4 class="total-contacts-counts contact-counts-value">
+                                {{validateDataPreview.validateRes.validCount}}</h4>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-4 mdiv" *ngIf="!config || (config && config?.sms) || (config && config?.whatsapp) || (config && config?.voice) || (config && config?.rcs)">
+                        <div class="total-contacts">
+                            <h4 class="summary-value contact-text mb-0">{{'campaign.validate-label-valid-cont' | translate}}</h4>
+                            <span class="total-contacts-counts contact-counts-value">{{validateDataPreview.validateRes.validCount}}</span>
+                        </div>
+                    </div> -->
+
+                    <!-- Invalid Contact -->
+                    <div class="col-md-4 mb-2">
+                        <div class="invalid-contacts">
+                            <!-- <h4 class="summary-value contact-text mb-0">{{'campaign.validate-label-invalid-cont' | translate}}</h4> -->
+                            <h4 class="summary-value contact-text mb-0">
+                                <span *ngIf="!config?.email">{{'campaign.validate-label-invalid-cont' |
+                                    translate}}</span>
+                                <span *ngIf="config?.email">{{'campaign.invalid-email' | translate}}</span>
+                            </h4>
+                            <span
+                                class="invalid-contacts-counts contact-counts-value">{{validateDataPreview.validateRes.invalidCount}}</span>
+                        </div>
+                    </div>
+                    <!-- Excluded Contact -->
+                    <div class="col-md-4 mb-2" *ngIf="config && !config?.voice">
+                        <div class="duplicate-contacts">
+                            <h4 class="summary-value contact-text mb-0"
+                                *ngIf="config && (config?.sms || config?.whatsapp || config?.email || config?.rcs || config?.truecaller); else nonSms">
+                                {{(config?.email ? 'common.excluded-mails' : 'campaign.validate-label-dexcluded-cont') |
+                                translate}}</h4>
+                            <!-- <ng-template #nonSms>
+                                <h4 class="summary-value contact-text mb-0">{{'campaign.validate-label-dup-cont' | translate}}</h4>
+                            </ng-template> -->
+                            <ng-template #nonSms>
+                                <h4 class="summary-value contact-text mb-0" *ngIf="!config?.email">
+                                    {{'campaign.validate-label-dup-cont' | translate}}</h4>
+                                <!-- <h4 class="summary-value contact-text mb-0" *ngIf="config?.email">{{'campaign.dup-email' | translate}}</h4> -->
+                            </ng-template>
+                            <span
+                                *ngIf="config && (config?.sms || config?.whatsapp || config?.email || config?.truecaller); else nonSmsContent">
+                                <span class="duplicate-contacts-counts contact-counts-value"
+                                    *ngIf="!validateDataPreview.createCampaignForm.removeDuplicate && !validateDataPreview.createCampaignForm.blacklistCount && !validateDataPreview.createCampaignForm.blacklistFileUploaded && !config?.email; else showExcludedCount">{{'campaign.validate-label-no-contact-selected'
+                                    | translate}}</span>
+                                <ng-template #showExcludedCount>
+                                    <span
+                                        class="duplicate-contacts-counts contact-counts-value">{{validateDataPreview.validateRes.excludedCount}}</span>
+                                </ng-template>
+                            </span>
+                            <ng-template #nonSmsContent>
+                                <span class="duplicate-contacts-counts contact-counts-value"
+                                    *ngIf="validateDataPreview.createCampaignForm.removeDuplicate">{{validateDataPreview.validateRes.duplicateCount}}</span>
+                                <h4 class="duplicate-contacts-counts contact-counts-value"
+                                    [ngClass]="{'mb-0': config && config?.rcs}"
+                                    *ngIf="!validateDataPreview.createCampaignForm.removeDuplicate">
+                                    {{'campaign.validate-label-no-contact-selected' | translate}}</h4>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-4 mb-2" *ngIf="config && config?.email">
+                        <div class="duplicate-contacts">
+                            <h4 class="summary-value contact-text mb-0">{{'campaign.blacklist-email' | translate}}</h4>
+                            <span class="duplicate-contacts-counts contact-counts-value">{{validateDataPreview.validateRes.droppedCount ? validateDataPreview.validateRes.droppedCount : 0}}</span>
+                        </div>
+                    </div> -->
+                    <div class="col-md-4 mb-2" *ngIf="config && config?.email">
+                        <div class="duplicate-contacts">
+                            <h4 class="summary-value contact-text mb-0">{{'campaign.selected-subscribers' | translate}}
+                            </h4>
+                            <span
+                                class="duplicate-contacts-counts contact-counts-value">{{validateDataPreview.validateRes.selectedSubscriberCount
+                                ? validateDataPreview.validateRes.selectedSubscriberCount : 0}}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-2"
+                        *ngIf="config && config.sms && validateDataPreview.createCampaignForm && validateDataPreview.createCampaignForm.urlFormValue && validateDataPreview.createCampaignForm.urlFormValue.formName">
+                        <div class="campaign-type-summary">
+                            <label class="label-text mb-0">{{'campaign.form-builder-add-form' | translate}}</label>
+                            <h4 class="summary-value campaign-type-value direction-ltr mb-0">
+                                {{'campaign.stagger-enabled' | translate}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2"
+                        *ngIf="config && config.sms && validateDataPreview.createCampaignForm && validateDataPreview.createCampaignForm.urlFormValue && validateDataPreview.createCampaignForm.urlFormValue.formName">
+                        <div class="campaign-type-summary">
+                            <label class="label-text mb-0">{{'form-builder.createform-form-name' | translate}}</label>
+                            <h4 class="summary-value campaign-type-value direction-ltr mb-0">
+                                {{validateDataPreview.createCampaignForm.urlFormValue.formName}}</h4>
+                        </div>
+                    </div>
+                    <!-- </div> -->
+                    <div class="col-md-8 mb-2"
+                        [ngClass]="{'col-md-12': !validateDataPreview.createCampaignForm.dateTime && !validateDataPreview.createCampaignForm.noOfMessages && (validateDataPreview.createCampaignForm?.scheduleType && validateDataPreview.createCampaignForm?.scheduleType != 'multiple')}"
+                        *ngIf="config && config?.sms && !config.email">
+                        <label class="label-text">{{'campaign.view-campaign-msg-text-text' | translate}} -
+                            {{(validateDataPreview?.createCampaignForm?.IsNonEnglish ?
+                            'campaign.validate-summary-non-english-text' : 'campaign.validate-summary-english-text') |
+                            translate}}</label>
+                        <textarea #textMessage [value]="validateDataPreview?.createCampaignForm?.previewValue" rows="3"
+                            readonly
+                            class="text-right-with-direction-ltr validate-campaign-textarea form-control"></textarea>
+                    </div>
+                    <div class="col-md-4 mb-2" *ngIf="config && (config?.whatsapp || config?.rcs || config?.truecaller)">
+                        <div class="credit-summary">
+                            <label appCustomTooltip
+                                class="label-text position-relative text-left custom-placement-rtl mb-0"
+                                *ngIf="validateDataPreview.validateRes.creditMode == 'currency'">{{'campaign.validate-label-currency-deducted'
+                                | translate}}
+                                <img class="campaign-type-hint" src="assets/images/hint.png" alt="hint">
+                                <div class="type-tooltip-text custom-rtl-placement">
+                                    <span>{{'currency-credit-label-tooltip' | translate}}</span>
+                                </div>
+                            </label>
+                            <label appCustomTooltip class="label-text position-relative mb-0"
+                                *ngIf="validateDataPreview.validateRes.creditMode != 'currency'">{{'campaign.validate-label-credit-deducted'
+                                | translate}}
+                                <img class="campaign-type-hint" src="assets/images/hint.png" alt="hint">
+                                <div class="type-tooltip-text custom-rtl-placement">
+                                    <span>{{'currency-credit-label-tooltip' | translate}}</span>
+                                </div>
+                            </label>
+                            <h4 class="summary-value credit-currency-count mb-0">
+                                <span
+                                    *ngIf="validateDataPreview.validateRes.creditMode == 'currency'">{{validateDataPreview.validateRes.currencyUnit}}
+                                </span>
+                                {{validateDataPreview.validateRes.currencyCount}}
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2" *ngIf="(config && config?.whatsapp)">
+                        <div class="campaign-type-summary text-break">
+                            <label class="label-text mb-0">{{'campaign.create-campaign-validate-template-used' |
+                                translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0">
+                                {{validateDataPreview.createCampaignForm.templateName}}</h4>
+                        </div>
+                    </div>
+                    <!-- </div> -->
+                    <div class="col-md-4 mb-2" *ngIf="(config && config?.whatsapp)">
+                        <div class="total-contacts">
+                            <label class="label-text mb-0">{{'campaign.create-campaign-validate-template-language' |
+                                translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0">
+                                {{validateDataPreview.createCampaignForm.language}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2"
+                        *ngIf="validateDataPreview.createCampaignForm.noOfMessages && config && !config?.voice">
+                        <div class="schedule-on">
+                            <label class="label-text mb-0">{{'campaign.stagger-sending-label' | translate}}</label>
+                            <h4 class="summary-value schedule-value mb-0">{{'campaign.stagger-enabled' | translate}}
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2"
+                        *ngIf="validateDataPreview.createCampaignForm.noOfMessages && config && !config?.voice">
+                        <div class="schedule-on">
+                            <label class="label-text mb-0">{{'campaign.staggered-configuration-label' |
+                                translate}}</label>
+                            <h4 class="summary-value schedule-value mb-0">
+                                {{validateDataPreview.createCampaignForm.noOfMessages}} {{'common.lower-messages-text' |
+                                translate}}<br>{{'common.every-text' | translate}}
+                                {{validateDataPreview.createCampaignForm.day ?
+                                validateDataPreview.createCampaignForm.day : 00}} {{'common.every-days' | translate}},
+                                {{validateDataPreview.createCampaignForm.hour ?
+                                validateDataPreview.createCampaignForm.hour : 00}} {{'common.every-hour' |
+                                translate}}<br>{{'authentication.and' | translate}}
+                                {{validateDataPreview.createCampaignForm.minute ?
+                                validateDataPreview.createCampaignForm.minute : 00}} {{'common.every-minutes' |
+                                translate}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2"
+                        *ngIf="validateDataPreview.createCampaignForm.dateTime && config && !config?.sms && !config?.whatsapp && !config?.voice && !config?.email && !config?.rcs && !config?.truecaller">
+                        <div class="schedule-on">
+                            <label class="label-text mb-0">{{'campaign.validate-schedule-on' | translate}}</label>
+                            <h4 class="summary-value schedule-value mb-0">
+                                {{validateDataPreview.scheduledOn}}<br>{{validateDataPreview.scheduleTime}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-8 mb-2"
+                        [ngClass]="{'col-md-12': config && config.whatsapp && !validateDataPreview.createCampaignForm.dateTime}"
+                        *ngIf="config && config.whatsapp">
+                        <label class="label-text mb-0">{{'campaign.view-campaign-msg-text-text' | translate}} -
+                            {{(validateDataPreview?.createCampaignForm?.IsNonEnglish ?
+                            'campaign.validate-summary-non-english-text' : 'campaign.validate-summary-english-text') |
+                            translate}}</label>
+                        <textarea #textMessage [value]="validateDataPreview?.createCampaignForm?.bodyTextPreview"
+                            rows="3" readonly
+                            class="text-right-with-direction-ltr validate-campaign-textarea form-control"></textarea>
+                    </div>
+                    <div class="col-md-8 mb-2"
+                        [ngClass]="{'col-md-12': config && config?.truecaller && !validateDataPreview.createCampaignForm.dateTime}"
+                        *ngIf="config && config?.truecaller">
+                        <label class="label-text mb-0">{{'campaign.view-campaign-msg-text-text' | translate}} -
+                            {{(validateDataPreview?.createCampaignForm?.IsNonEnglish ?
+                            'campaign.validate-summary-non-english-text' : 'campaign.validate-summary-english-text') |
+                            translate}}</label>
+                        <textarea #textMessage [value]="validateDataPreview?.createCampaignForm?.previewValue" 
+                            rows="3" readonly HTMLToText
+                            class="text-right-with-direction-ltr validate-campaign-textarea form-control"></textarea>
+                    </div>
+                    <div class="col-md-4 mb-2"
+                        *ngIf="validateDataPreview.createCampaignForm.dateTime || ((validateDataPreview.createCampaignForm?.scheduleType && validateDataPreview.createCampaignForm?.scheduleType == 'multiple') || (validateDataPreview?.createCampaignForm?.showSchedule))">
+                        <div class="schedule-on">
+                            <label class="label-text mb-0">{{'campaign.schedule-reccurring-achedule-type-label' |
+                                translate}}</label>
+                            <h4 class="summary-value schedule-value mb-0">
+                                {{((validateDataPreview.createCampaignForm.scheduleType?.toLowerCase() == 'recurring') ?
+                                'campaign.schedule-type-recurring' :
+                                (validateDataPreview.createCampaignForm.scheduleType?.toLowerCase() == 'multiple' ?
+                                'campaign.schedule-type-multiple' : 'campaign.schedule-type-one-time')) | translate}}
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2"
+                        *ngIf="validateDataPreview.createCampaignForm.dateTime || ((validateDataPreview.createCampaignForm?.scheduleType && validateDataPreview.createCampaignForm?.scheduleType == 'multiple') || (validateDataPreview?.createCampaignForm?.showSchedule))">
+                        <div class="schedule-on">
+                            <label class="label-text mb-0">{{'campaign.validate-schedule-on' | translate}}</label>
+                            <h4 class="summary-value schedule-value mb-0">
+                                {{validateDataPreview.scheduledOn}}<br>{{validateDataPreview.scheduleTime}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2"
+                        *ngIf="validateDataPreview.createCampaignForm?.scheduleType && validateDataPreview.createCampaignForm?.scheduleType == 'multiple'">
+                        <div class="schedule-on">
+                            <label class="label-text mb-0">{{'campaign.multiple-no-of-occurences' | translate}}</label>
+                            <h4 class="summary-value schedule-value mb-0">
+                                {{validateDataPreview.createCampaignForm?.multipleScheduleArr.length}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2"
+                        *ngIf="validateDataPreview.createCampaignForm.dateTime && (validateDataPreview.createCampaignForm.scheduleType?.toLowerCase() == 'recurring')">
+                        <div class="schedule-on">
+                            <label class="label-text mb-0">{{'campaign.schedule-reccurring-repeat-every-label' |
+                                translate}}</label>
+                            <h4 class="summary-value schedule-value text-capitalize word-break-all mb-0">
+                                {{(validateDataPreview.createCampaignForm.repeatOn == 'days') ||
+                                (validateDataPreview.createCampaignForm.repeatOn == 'weeks') ||
+                                (validateDataPreview.createCampaignForm.repeatOn == 'months') ?
+                                validateDataPreview.createCampaignForm.frequency + ' ' +
+                                validateDataPreview.createCampaignForm.repeatOn :
+                                ((validateDataPreview.createCampaignForm.repeatOn == 'day_of_week') ?
+                                validateDataPreview.createCampaignForm.weekdays : validateDataPreview.repeatDate + ' ' +
+                                ('campaign.schedule-reccurring-each-month-label' | translate))}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2"
+                        *ngIf="validateDataPreview.createCampaignForm.dateTime && (validateDataPreview.createCampaignForm.scheduleType?.toLowerCase() == 'recurring')">
+                        <div class="schedule-on">
+                            <label class="label-text mb-0">{{'campaign.schedule-reccurring-end-at-label' |
+                                translate}}</label>
+                            <h4 class="summary-value schedule-value mb-0">
+                                {{(validateDataPreview.createCampaignForm.endAfter == 'date') ?
+                                (validateDataPreview.endDate + ', ' +validateDataPreview.endTime) :
+                                validateDataPreview.createCampaignForm.occurrences + ' ' +
+                                ('campaign.create-campaign-occurrences-label' | translate)}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4" *ngIf="config && (config?.voice || config?.rcs)">
+                        <div class="duplicate-contacts">
+                            <h4 class="summary-value contact-text mb-0">{{'campaign.validate-label-excluded-count' |
+                                translate}}</h4>
+                            <!-- <h4 class="summary-value contact-text">{{'campaign.validate-label-dup-cont' | translate}}</h4> -->
+                            <span
+                                class="duplicate-contacts-counts contact-counts-value">{{validateDataPreview.validateRes.excludedCount}}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-2" *ngIf="config && (config?.rcs || config?.truecaller)">
+                        <div class="campaign-type-summary text-break">
+                            <label class="label-text mb-0">{{'common.sms-fallback' | translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0 custom-text-ellipsis-two-lines">
+                                {{(validateDataPreview.createCampaignForm.fallback_enabled ? 'campaign.stagger-enabled'
+                                : 'campaign.validate-label-no-contact-selected') | translate}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4"
+                        *ngIf="config && (config?.rcs || config?.truecaller) && validateDataPreview.createCampaignForm.fallback_enabled">
+                        <div class="campaign-type-summary text-break">
+                            <label class="label-text mb-0">{{'campaign.create-campaign-sender-id' | translate}}</label>
+                            <h4 class="summary-value campaign-type-value mb-0 custom-text-ellipsis-two-lines">
+                                {{validateDataPreview.createCampaignForm.fallback_config.sender_id}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-2"
+                        *ngIf="config && (config?.rcs || config?.truecaller) && validateDataPreview.createCampaignForm.fallback_enabled">
+                        <label class="label-text mb-0">{{'campaign.view-campaign-msg-text-text' | translate}} -
+                            {{(validateDataPreview?.createCampaignForm?.is_unicode ?
+                            'campaign.validate-summary-non-english-text' : 'campaign.validate-summary-english-text') |
+                            translate}}</label>
+                        <textarea #textMessage [value]="validateDataPreview?.createCampaignForm?.fallback_config?.previewValue"
+                            rows="3" readonly
+                            class="text-right-with-direction-ltr validate-campaign-textarea form-control"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="schedule-now text-right"
+                    *ngIf="!config  || (config && !config.hideActionButtons && !config?.voice)">
+                    <span class="mess-info mt-4" *ngIf="config && config?.email">
+                        <small><img src="assets/images/error.svg"></small>
+                        {{'campaign.this-campaign-might-get-affected-due-to-the-limit-of-warmup-will-be-achieved-futher' | translate}}
+                    </span>
+                    <button type="button" class="btn btn-design as" (click)="updateCampaign()"
+                        *ngIf="(validateDataPreview.createCampaignForm.dateTime || validateDataPreview.scheduledOn)"
+                        [disabled]="validateDataPreview.scheduledOn && ((config?.email || config?.rcs) && validateDataPreview?.validateRes?.validCount == 0)">
+                        <span>{{'campaign.create-campaign-schedule' | translate}}</span>
+                    </button>
+                    <button type="button" class="btn btn-design" (click)="updateCampaign()"
+                        *ngIf="(!validateDataPreview.createCampaignForm.dateTime && !validateDataPreview.scheduledOn)"
+                        [disabled]="!(config?.rcs || config?.voice || config?.email) && validateDataPreview?.validateRes?.currencyCount == 0
+                    || (config?.email || config?.rcs) && validateDataPreview?.validateRes?.validCount == 0">
+                        <span>{{'campaign.validate-send-now' | translate}}</span>
+                    </button>
+                </div>
+                <div class="schedule-now text-right" *ngIf="config && config?.voice">
+                    <button type="button" class="btn btn-design" (click)="updateCampaign()" [disabled]="validateDataPreview?.validateRes?.totalCount > 0 && (validateDataPreview?.validateRes?.invalidCount == validateDataPreview?.validateRes?.totalCount)">
+                        <!-- [disabled]="(validateDataPreview.validateRes.currencyCount == 0) && !config.voiceListing" -->
+                        <span *ngIf="!validateDataPreview.scheduledOn">{{'campaign.validate-send-now' |
+                            translate}}</span>
+                        <span *ngIf="validateDataPreview.scheduledOn">{{'campaign.create-campaign-schedule' |
+                            translate}}</span>
+                    </button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <div class="internal template-modal validate-modal modal-wrapper"
+        *ngIf="validateDataPreview && validateDataPreview.is_view && validateDataPreview.previewData && (config && config?.email)">
+        <div>
+            <h3 class="d-flex justify-content-between align-items-center import-contacts header-modal mt-5 mb-3">
+                <span *ngIf="!config.workflow">{{'campaign.email-preview-heading' | translate}}</span>
+            </h3>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <mat-tab-group class="import-tabs custom-campaign-tabs listing-tabs emailPreview"
+                    (selectedTabChange)="previewTabChanged($event?.tab?.textLabel, $event.index)"
+                    [selectedIndex]="selectedPreviewTabIndex">
+                    <mat-tab *ngFor="let item of contentTypes" label="{{item.label}}">
+                    </mat-tab>
+                </mat-tab-group>
+
+            </div>
+            <div class="email-preview m-3">
+                <img src="/assets/images/Email_preview.svg" *ngIf="!iframeContent">
+                <iframe id="emailpreview" #iframe *ngIf="iframeContent"
+                    srcdoc="{{iframeContent?.mail_content}}"></iframe>
+            </div>
+        </div>
+    </div>
+
+</app-modal>

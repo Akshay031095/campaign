@@ -1,0 +1,208 @@
+.container-fluid, .container-fluid form {
+    height: 100%;
+}
+.import-modal .inside-modal-content {
+    box-shadow: none;
+}
+form .file-upload-wrapper {
+    height: 100%;
+}
+form .file-upload-wrapper .inside-wrapper-box {
+    height: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+.or-seperator {
+    border-right: 1px solid #f6f7ff;
+}
+.seperator-text {
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: left;
+    color: #233670;
+    background-color: #f6f7ff;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: -14px;
+}
+.upload-box {
+    text-align: center;
+    margin: auto;
+}
+.upload-icon {
+    width: 42px;
+    height: auto;
+}
+.file-upload-caption, .existing-file-caption {
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.36;
+    letter-spacing: normal;
+    text-align: center;
+    color: #24253e;
+    margin-bottom: 1rem !important;
+}
+.file-upload-format-caption {
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: center;
+    color: #24253e;
+    opacity: 0.5;
+}
+.progress {
+    height: 0.5rem;
+}
+.progress .progress-bar {
+    background-color: var(--primary-color) !important;
+}
+.select-file .down-arrow, .select-sheet .down-arrow {
+    position: absolute;
+    right: 5px;
+    top: 15px;
+    pointer-events: none;
+}
+.upload-existing .select-file .category {
+    width: 50%;
+    margin: auto;
+}
+.process-step {
+    height: 100%;
+}
+.files-frame-border {
+    border-right: 1px solid #f6f7ff;
+}
+.uploaded-file-thumbnail .selected-file-name {
+    box-shadow: 0 3.5px 8.5px 0 rgba(28, 53, 88, 0.03);
+    border: solid 0.5px rgba(28, 53, 88, 0.19) !important;
+}
+.uploaded-file-thumbnail p {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+}
+.uploaded-file-thumbnail p span.close-modal {
+    font-size: 12px;
+    width: 15px;
+    height: 15px;
+}
+.uploaded-file-thumbnail p span.close-modal img {
+    width: 50%;
+    height: auto;
+}
+.file-success-msg {
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: left;
+    color: #41c038;
+}
+.file-success-msg i {
+    color:#4ec139;
+    font-size: 14px;
+}
+.select-multiple-fields .preview-data {
+    width: auto;
+}
+.height-100 {
+    height: 100%;
+}
+.preview-wrapper {
+    border: solid 0.5px rgba(28, 53, 88, 0.19);
+    border-radius: 4px;
+    overflow: auto;
+    width: 100%;
+    text-align: center;
+    height: 100%;
+}
+.preview-wrapper .no-sheet-selected {
+    flex-direction: column;
+    height: 100%;
+    display: table-cell;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+}
+.preview-wrapper .no-sheet-selected p {
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    opacity: 0.5;
+    color: #24253e;
+}
+.sheet-preview table td {
+    padding: .5rem;
+    vertical-align: middle;
+    text-align: start;
+}
+.sheet-preview .scrollable::-webkit-scrollbar {
+    height: 0.4em;
+}
+.sheet-preview .scrollable::-webkit-scrollbar-track {
+    background-color: #eeeef5;
+    opacity: 0.4;
+    border-radius: 20px;
+}
+.sheet-preview .scrollable::-webkit-scrollbar-thumb {
+    background-color: #e0e0e0;
+    border-radius: 20px;
+}
+.header-bg {
+    background-color: #f4f5ff;
+    border: solid 0.5px rgba(28, 53, 88, 0.19);
+}
+.header-bg td {
+    font-size: 12px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #25335c;
+}
+.contact-counts .count-text {
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: normal;
+    color: #24253e;
+    opacity: 0.5;
+}
+.custom-table-ellipsis {
+    max-width: 125px;
+}
+.custom-upload-files .file-upload {
+    height: 100%;
+    width: 100%;
+}
+.custom-upload-files .file-upload .drop-and-click {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+

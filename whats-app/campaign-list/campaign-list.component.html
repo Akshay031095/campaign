@@ -1,0 +1,93 @@
+  <div class="no-campaigns-wrapper componenet-wrapper container-fluid"
+    [ngClass]="{'custom-width-toggle': toggle, 'custom-width-non-toggle': !toggle}" *ngIf="noCampaignsCreatedYet">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <div class="no-campaigns-img mb-4">
+          <img src="assets/images/no-campaigns.svg" alt="no-campaigns">
+        </div>
+        <p class="mb-4 no-campaigns-text">{{'no-campaigns-yet' | translate}}</p>
+        <button class="btn btn-design" (click)="createButonActionRecieve()">{{'shared.table-create-new-campaign' |
+          translate}}</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="campaign-listing-wrapper component-wrapper container-fluid" *ngIf="!noCampaignsCreatedYet">
+    <div class="row">
+      <div class="col-md-6">
+        <h2 class="create-campaign-heading page-heading">{{ 'campaigns-whatsapp' | translate}}</h2>
+      </div>
+      <div class="col-md-6 text-right demo-url" *ngIf="common.getTutorialsLink('whatsapp_campaign')">
+        <span class="icon-youtube"><span class="path1"></span><span class="path2"></span></span>  <a class="video-link" (click)="common.open('videoLink')">{{'shared-watch-video' | translate}}</a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6 quick-filter no-left-padding">
+        <ul class="p-0 mb-0" style="display: none;">
+          <li><a [ngClass]="{'active':selectedQuickFilter == 'all'}">{{'all' | translate}}
+              {{ tableConfig.name }}</a></li>
+          <li *ngFor="let quickFilter of quickFilterOption"><a
+              [ngClass]="{'active':selectedQuickFilter == quickFilter}">{{ quickFilter?.value }}</a></li>
+        </ul>
+
+        <mat-tab-group class="import-tabs custom-campaign-tabs" (selectedTabChange)="campaignTabChanged($event.index)"
+          [selectedIndex]="selectedCampaignTabIndex" *ngIf="hasApprovalPermission">
+          <mat-tab label="{{'all' | translate}}">
+          </mat-tab>
+          <mat-tab label="{{'common.for-approval-text' | translate}}" *ngIf="hasApprovalPermission">
+          </mat-tab>
+        </mat-tab-group>
+
+
+
+      </div>
+      <div class="campaign-add-button data-filter col-sm-6 pl-0">
+        <span class="search-wrapper content-search">
+          <input type="search" [(ngModel)]="search_text" class="form-control filter-search col-sm-6 pr-25"
+          placeholder="{{'campaign.sms-campaign-search' | translate}} {{ tableConfig.name }}"
+          (keyup)="applySearch($event)" (search)="searchCampaign($event, 'search')">
+          <span (click)="clearSearch($event, 'search')" class="close-icon-search icon-ios-close" type="reset"></span>
+        </span>
+        <button *ngIf="hasCreateAccess" class="btn btn-design btn-send" (click)="createButonActionRecieve()">
+          <span class='icon-add'></span>
+          <span>{{'shared.table-create-new-campaign'|translate}}</span>
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 custom-filter-spacing" *ngIf="hasData">
+        <app-table-more-filter *ngIf="tableConfig.displayedColumns.length > 0" [tableConfig]="tableConfig"
+          (filterAction)="filterActionRecieve($event)"></app-table-more-filter>
+        <app-no-filter-table-view *ngIf="loaded && tableConfig.displayedColumns.length > 0"
+          (tableAction)="tableActionRecieve($event)" [hasApprovalPermission]="hasApprovalPermission"
+          (actionEvent)="actioneEvent($event)" (sendLoaderState)="receivedLoaderState($event)"
+          (viewAction)="viewActionData($event)" [tableConfig]="tableConfig" [tableData]="data">
+        </app-no-filter-table-view>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Schedule -->
+<app-schedule id="schedule" [config]="whatsAppConfig" (sendLoaderState)="receivedLoaderState($event)">
+</app-schedule>
+
+<!-- View -->
+<app-view-campaign id="view" [config]="whatsAppConfig" (approveRejectAction)="approveRejectAction($event)"
+  [isKsaUser]="isKsaUser" [viewCampaignData]="viewCampaignData" [forApprovalTab]="forApprovalTab"
+  [hasApprovalPermission]="hasApprovalPermission" (sendLoaderState)="receivedLoaderState($event)">
+</app-view-campaign>
+
+<span *ngIf="common.getTutorialsLink('whatsapp_campaign')">
+  <app-video-link-dialog
+    [id]="'videoLink'"
+    [url]="common.getTutorialsLink('whatsapp_campaign')">
+
+</app-video-link-dialog>
+</span>
+
+<!-- validate -->
+<app-validate id="validate" [config]="setParametersConfig" [validateDataPreview]="validateDataPreview">
+</app-validate>
+

@@ -1,0 +1,51 @@
+
+    <div class="upload-contacts steps-frame mb-3">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="tick-box">
+            <div [ngClass]="{'tick-mark': contactCount, 'step-count': !contactCount}">
+              <span *ngIf="!contactCount">
+                <ng-container *ngIf="!config?.voice && !config?.updatedStepCount">{{config && config.sms ? (isKsaUser ? 4 : 3) : 3}}</ng-container>
+                <ng-container *ngIf="config?.voice || config?.updatedStepCount"><span> {{selectorData?.appUploadTemporaryBlacklist?.stepCount}} </span></ng-container>
+              </span>
+            </div>
+          </div>
+          <h4 class="step-heading">{{'campaign.create-campaign-upload-temp-blacklist' | translate}}</h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 import-contact-box">
+          <div class="import-contact-btn">
+            <button class="btn import-btn text-capitalize" appBdColor appTxtColor (click)="import('import2')">
+              {{'campaign.create-campaign-import-blacklist' | translate}}
+            </button>
+          </div>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+        </div>
+        <div class="col-md-6 send-to-contacts-box">
+          <div>
+            <h4 class="send-text">{{'campaign.create-campaign-blacklist-contacts' | translate}}</h4>
+            <div class="count-and-remove-duplicate"
+              [ngStyle]="{'margin-bottom': !contactCount && sendCampaignData ? '5px' : 'auto'}">
+              <div>
+                <h4 class="m-0">
+                  <span class="contacts">{{contactCount ? contactCount : 0}}</span>
+                  <span class="mr-3 send-contact-text">{{'campaign.create-campaign-cont' | translate}}</span>
+                  <span class="d-inline-block send-remove-duplicate invisible">
+                    <mat-checkbox class="d-block">
+                      {{'campaign.create-campaign-remove-dupcont' | translate}}</mat-checkbox>
+                  </span>
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  
+  <!-- import -->
+  <app-import-blacklist-contacts [config]="config" [blacklistConfig]="blacklistConfig" (sendContactCount)="getContactCount($event)" (sendLoaderState)="receivedLoaderState($event)" [id]="'import2'"
+    [existingFilesArray]="existingFilesArray" [campaignId]="campaignId" [messageType]="messageType"></app-import-blacklist-contacts>
+  

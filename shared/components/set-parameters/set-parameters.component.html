@@ -1,0 +1,368 @@
+<form [formGroup]="parametersForm">
+  <div class="set-parameters steps-frame mb-3" [ngClass]="{'default-steps-frame-padding': config?.hideStepCounts}">
+    <div class="row" *ngIf="!config?.hideStepCounts">
+      <div class="col-md-12">
+        <div class="tick-box">
+          <ng-container *ngIf="config?.voice || config?.updatedStepCount">
+            <div [ngClass]="(selectorData?.appSetParameters?.isVisibleStepCount) ? 'step-count':'tick-mark'">
+              <span *ngIf="selectorData?.appSetParameters?.isVisibleStepCount">
+                {{selectorData?.appSetParameters?.stepCount}} </span>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!config?.voice && !config?.updatedStepCount">
+            <div [ngClass]="{'tick-mark':
+            config && config?.whatsapp ? (parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && parametersForm.get('whatsappBusinessNumber').value)
+            : (config && config?.rcs ? (parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && parametersForm.get('rbmAgent').value)
+              : (config && config?.voice ? (parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && parametersForm.get('callerId').value && parametersForm.get('type').value)
+                : (config && config?.email ? (parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && (parametersForm.get('type').value && ((!showDdForEmailVarient) || (showDdForEmailVarient && parametersForm.get('variation').value))))
+                : ((config?.missedCall || config?.ibd) ? (parametersForm.get('campaignName').value && parametersForm.get('pri_number').value && parametersForm.get('did_number').value )
+                  : (parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && parametersForm.get('senderId').value && parametersForm.get('messageType').value))))),
+            'step-count': 
+            config && config?.whatsapp ? !(parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && parametersForm.get('whatsappBusinessNumber').value) 
+            : (config && config?.rcs ? !(parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && parametersForm.get('rbmAgent').value)
+              : (config && config?.voice ? !(parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && parametersForm.get('callerId').value && parametersForm.get('type').value)
+                : (config && config?.email ? !(parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && (parametersForm.get('type').value && ((!showDdForEmailVarient) || (showDdForEmailVarient && parametersForm.get('variation').value))))
+                : ((config?.missedCall || config?.ibd) ? !(parametersForm.get('campaignName').value && parametersForm.get('pri_number').value && parametersForm.get('did_number').value )
+                  : !(parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && parametersForm.get('senderId').value && parametersForm.get('messageType').value)))))
+            }">
+              <span
+                *ngIf="
+            config && config?.whatsapp ? !(parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && parametersForm.get('whatsappBusinessNumber').value) 
+            : (config && config?.rcs ? !(parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && parametersForm.get('rbmAgent').value)
+              : (config && config?.voice ? !(parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && parametersForm.get('callerId').value && parametersForm.get('type').value)
+                : (config && config?.email ? !(parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && (parametersForm.get('type').value && ((!showDdForEmailVarient) || (showDdForEmailVarient && parametersForm.get('variation').value))))
+                : ((config?.missedCall || config?.ibd) ? !(parametersForm.get('campaignName').value && parametersForm.get('pri_number').value && parametersForm.get('did_number').value )
+                  : !(parametersForm.get('campaignName').value && parametersForm.get('campaignCategory').value && parametersForm.get('senderId').value && parametersForm.get('messageType').value)))))">
+                {{isKsaUser ? 2 : 1}}
+              </span>
+            </div>
+          </ng-container>
+        </div>
+        <h4 class="step-heading" *ngIf="config?.rbmAgent">{{ 'campaign.rcs-campaign-details' | translate }}</h4>
+        <h4 class="step-heading" *ngIf="!config?.rbmAgent">{{ 'campaign.create-campaign-step-heading' | translate }}
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 campaign-name" *ngIf="config?.campaign">
+        <label class="label-text">{{'campaign.create-campaign-campaign-name' | translate}}</label>
+        <input type="text" class="form-control custom-placement-rtl" placeholder="Type here..."
+          (input)="validateText($event)" formControlName="campaignName"
+          [ngClass]="{'hasError' : showErrors('campaignName', 'required', 'parametersForm'), 'disabled':(config.email && emailCampaignApproval || (isEdit && (config?.missedCall || config?.ibd))) ? true : false}"
+          [ngStyle]="{'margin-bottom': showErrors('campaignName', 'required', 'parametersForm') ? '5px' : 'auto'}">
+
+        <div class="d-block position-relative">
+          <span class="error" *ngIf="showErrors('campaignName','required', 'parametersForm')"><small><img
+                src="../../../assets/images/error.svg"></small>{{'campaign.create-campaign-pl-enter-campaign-name' |
+            translate}}</span>
+          <span class="error" *ngIf="showErrors('campaignName','maxlength', 'parametersForm')"><small><img
+                src="../../../assets/images/error.svg"></small>{{'campaign.create-campaign-pl-enter-campaign-max-length'
+            |
+            translate}}</span>
+          <span class="error" *ngIf="showErrors('campaignName','minlength', 'parametersForm')"><small><img
+                src="../../../assets/images/error.svg"></small>{{'campaign.create-campaign-pl-enter-campaign-min-length'
+            |
+            translate}}</span>
+        </div>
+
+      </div>
+
+      <div class="col-md-3" *ngIf="config?.category">
+        <label appCustomTooltip class="label-text position-relative">{{'campaign.create-campaign-campaign-category' |
+          translate}}
+          <img class="campaign-type-hint" src="assets/images/hint.png" alt="hint">
+          <div class="type-tooltip-text custom-rtl-placement">
+            <span>{{'campaign.create-campaign-category-tooltip' | translate}}</span>
+          </div>
+        </label>
+
+        <app-custom-select-with-create [data]="campaignCategoryList" (createNewAction)="newCategory($event)"
+          [config]="configCategory" [value]="categorySelectText" (clickElsewhere)="configCategory.open = false"
+          (selectAction)="selectActionRecive($event, 'campaignCategory')"
+          [errors]="showErrors('campaignCategory', 'required', 'parametersForm')"
+          [ngClass]="{'internal-custom-select' : showErrors('campaignCategory', 'required', 'parametersForm'), 'disabled':config.email && emailCampaignApproval ? true : false}">
+        </app-custom-select-with-create>
+        <div class="d-block position-relative">
+          <span class="error" *ngIf="showErrors('campaignCategory','required', 'parametersForm')"><small><img
+                src="../../../assets/images/error.svg"></small>{{'campaign.create-campaign-pl-sel-category' |
+            translate}}</span>
+        </div>
+      </div>
+      <div class="col-md-3" *ngIf="config?.truecallerNumber" [ngClass]="{'col-md-6': config?.workflow}">
+        <label appCustomTooltip class="label-text position-relative">{{'common.truecaller-number' | translate}}</label>
+
+        <app-custom-select-with-create [data]="tcNumberList" [config]="configTC" [value]="tcSelectText"
+          (clickElsewhere)="configTC.open = false" (selectAction)="selectActionRecive($event, 'tc_number')"
+          [errors]="showErrors('tc_number', 'required', 'parametersForm')"
+          [ngClass]="{'internal-custom-select' : showErrors('tc_number', 'required', 'parametersForm')}">
+        </app-custom-select-with-create>
+        <div class="d-block position-relative">
+          <span class="error" *ngIf="showErrors('tc_number','required', 'parametersForm')"><small>
+              <img src="../../../assets/images/error.svg"></small>{{'err.pl-sel-truecaller-num' | translate}}</span>
+        </div>
+      </div>
+      <div class="col-md-3" *ngIf="config?.messageCategory" [ngClass]="{'col-md-6': config?.workflow}">
+        <label appCustomTooltip class="label-text position-relative">{{'common.msg-category' | translate}}</label>
+
+        <app-custom-select-with-create [data]="typeList" [config]="configMessageCategory"
+          [value]="messageCategorySelectText" (clickElsewhere)="configMessageCategory.open = false"
+          (selectAction)="selectActionRecive($event, 'messagecategory')"
+          [errors]="showErrors('messagecategory', 'required', 'parametersForm')"
+          [ngClass]="{'internal-custom-select' : showErrors('messagecategory', 'required', 'parametersForm')}">
+        </app-custom-select-with-create>
+        <div class="d-block position-relative">
+          <span class="error" *ngIf="showErrors('messagecategory','required', 'parametersForm')"><small>
+              <img src="../../../assets/images/error.svg"></small>{{'err.pl-sel-msg-category' | translate}}</span>
+        </div>
+      </div>
+      <ng-container *ngIf="config?.email && config?.emailType">
+        <div class="col-md-3">
+          <label class="label-text position-relative">{{'campaign.create-campaign-email-type' | translate}}</label>
+
+          <app-custom-select-with-create [data]="emailCampaignType" [config]="configEmailType" [value]="typeSelectText"
+            (clickElsewhere)="configEmailType.open = false" (selectAction)="selectActionRecive($event, 'type')"
+            [errors]="showErrors('type', 'required', 'parametersForm')"
+            [ngClass]="{'internal-custom-select' : showErrors('type', 'required', 'parametersForm'), 'disabled':config.email && emailCampaignApproval ? true : false}">
+          </app-custom-select-with-create>
+          <div class="d-block position-relative">
+            <span class="error" *ngIf="showErrors('type','required', 'parametersForm')"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'campaign.create-campaign-pl-sel-email-type' |
+              translate}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-3" *ngIf="showDdForEmailVarient">
+          <label class="label-text position-relative">{{'campaign.create-campaign-email-varient-test-for' |
+            translate}}</label>
+
+          <app-custom-select-with-create [data]="emailCampaignVarientTestFor" [config]="configEmailVarientTestFor"
+            [value]="testEmailVarientForSelectText" (clickElsewhere)="configEmailVarientTestFor.open = false"
+            (selectAction)="selectActionRecive($event, 'variation')"
+            [errors]="showErrors('variation', 'required', 'parametersForm')"
+            [ngClass]="{'internal-custom-select' : showErrors('variation', 'required', 'parametersForm'), 'disabled':config.email && emailCampaignApproval ? true : false}">
+          </app-custom-select-with-create>
+          <div class="d-block position-relative">
+            <span class="error" *ngIf="showErrors('variation','required', 'parametersForm')"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'campaign.create-campaign-pl-sel-email-varient-test-for'
+              | translate}}
+            </span>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="col-md-3" *ngIf="config?.callerId">
+        <label class="label-text">{{'voice.campaign-caller-id-label' | translate}}</label>
+        <app-custom-select-with-create [data]="callerIdList" [config]="configCallerId" [value]="callerIdText"
+          (clickElsewhere)="configCallerId.open = false" (selectAction)="selectActionRecive($event, 'callerId')"
+          [errors]="showErrors('callerId', 'required', 'parametersForm')"
+          [ngClass]="{'internal-custom-select' : showErrors('callerId', 'required', 'parametersForm')}">
+        </app-custom-select-with-create>
+        <div class="d-block position-relative">
+          <span class="error" *ngIf="showErrors('callerId','required', 'parametersForm')"><small><img
+                src="../../../assets/images/error.svg"></small>{{'voice.caller-id-error-text' | translate}}</span>
+        </div>
+      </div>
+
+
+      <div class="col-md-3" *ngIf="config?.type">
+        <label class="label-text">{{'voice.campaign-type-label' | translate}}</label>
+
+        <app-custom-select-with-create [data]="typeList" (createNewAction)="newCategory($event)" [config]="configType"
+          [value]="typeSelectText" (clickElsewhere)="configType.open = false"
+          (selectAction)="selectActionRecive($event, 'type')"
+          [errors]="showErrors('type', 'required', 'parametersForm')"
+          [ngClass]="{'internal-custom-select' : showErrors('type', 'required', 'parametersForm')}">
+        </app-custom-select-with-create>
+        <div class="d-block position-relative">
+          <span class="error" *ngIf="showErrors('type','required', 'parametersForm')"><small><img
+                src="../../../assets/images/error.svg"></small>{{'voice.type-error-text' |
+            translate}}</span>
+        </div>
+      </div>
+
+
+      <div class="col-md-3" *ngIf="config?.sender" [ngClass]="{'col-md-7': config?.workflow}">
+        <label class="label-text">{{'campaign.create-campaign-sender-id' | translate}}</label>
+        <app-custom-select-with-create [data]="senderId" [config]="configSenderId" [value]="senderIdSelectText"
+          (clickElsewhere)="configSenderId.open = false" (selectAction)="selectActionRecive($event, 'senderId')"
+          [errors]="showErrors('senderId', 'required', 'parametersForm')"
+          [ngClass]="{'internal-custom-select' : showErrors('senderId', 'required', 'parametersForm')}">
+        </app-custom-select-with-create>
+        <div class="d-block position-relative">
+          <span class="error" *ngIf="showErrors('senderId','required', 'parametersForm')"><small><img
+                src="../../../assets/images/error.svg"></small>{{'campaign.create-campaign-pl-sel-sender-id' |
+            translate}}</span>
+        </div>
+      </div>
+      <div class="col-md-3" *ngIf="config?.WhatsappBusinessNumber" [ngClass]="{'col-md-7': config?.workflow}">
+        <label class="label-text">{{'campaign.wa-business-number' | translate}}</label>
+
+        <app-custom-select-with-create class="wa-business-number" [data]="whatsAppBusinessNumbers"
+          [config]="configWhatsAppBusinessNumber" [value]="whatsAppBusinessNumberText"
+          (clickElsewhere)="configWhatsAppBusinessNumber.open = false"
+          (selectAction)="selectActionRecive($event, 'whatsappBusinessNumber')"
+          [errors]="showErrors('whatsappBusinessNumber', 'required', 'parametersForm')"
+          [ngClass]="{'internal-custom-select' : showErrors('whatsappBusinessNumber', 'required', 'parametersForm')}">
+        </app-custom-select-with-create>
+        <div class="d-block position-relative">
+          <span class="error custom-placement-rtl"
+            *ngIf="showErrors('whatsappBusinessNumber','required', 'parametersForm')"><small><img
+                src="../../../assets/images/error.svg"></small>{{'whatsapp.waba-number-error-text' | translate}}</span>
+        </div>
+      </div>
+
+
+
+      <div class="col-md-6" *ngIf="config?.rbmAgent" [ngClass]="{'col-md-7': config?.workflow}">
+        <label class="label-text">{{'advance-search-agent' | translate}}</label>
+
+        <app-custom-select-with-create class="wa-business-number" [data]="rbmAgentList" [config]="configRbmAgent"
+          [value]="rbmSelectText" (clickElsewhere)="configRbmAgent.open = false"
+          (selectAction)="selectActionRecive($event, 'rbmAgent')"
+          [errors]="showErrors('rbmAgent', 'required', 'parametersForm')"
+          [ngClass]="{'internal-custom-select' : showErrors('rbmAgent', 'required', 'parametersForm')}">
+        </app-custom-select-with-create>
+        <div class="d-block position-relative">
+          <span class="error custom-placement-rtl"
+            *ngIf="showErrors('rbmAgent','required', 'parametersForm')"><small><img
+                src="../../../assets/images/error.svg"></small>{{'campaign.rcs-select-rbm-agent-error' |
+            translate}}</span>
+        </div>
+      </div>
+
+
+
+      <div class="col-md-3" *ngIf="config?.campaignType">
+        <label appCustomTooltip
+          class="label-text position-relative campaign-type-tooltip">{{'campaign.create-campaign-campaign-type' |
+          translate}}
+          <img class="campaign-type-hint" src="assets/images/hint.png" alt="hint">
+          <div class="type-tooltip-text custom-rtl-placement">
+            <span>{{'campaign.create-campaign-campaign-type-tooltip' | translate}}</span>
+          </div>
+        </label>
+        <div class="campaign-type-btn">
+          <button class="btn common-msg-btn tick-btn mr-2" (click)="changeCampaignType($event)"
+            [ngStyle]="{'margin-bottom': showErrors('messageType', 'required', 'parametersForm') ? '5px' : 'auto'}">
+            {{'campaign.create-campaign-common' | translate}}
+            <div class="tick-placement" *ngIf="parametersForm.get('messageType').value == 'Common'">
+              <div class="tick-mark"></div>
+            </div>
+            <input type="radio" (change)="getEvent()" class="form-check-input" value="Common"
+              formControlName="messageType" name="messageType">
+          </button>
+          <button class="btn personalised-msg-btn tick-btn" (click)="changeCampaignType($event)"
+            [ngStyle]="{'margin-bottom': showErrors('messageType', 'required', 'parametersForm') ? '5px' : 'auto'}">
+            {{'campaign.create-campaign-personlised' | translate}}
+            <div class="tick-placement" *ngIf="parametersForm.get('messageType').value == 'Personalised'">
+              <div class="tick-mark"></div>
+            </div>
+            <input type="radio" (change)="getEvent()" class="form-check-input" value="Personalised"
+              formControlName="messageType" name="messageType">
+          </button>
+          <div class="d-block position-relative">
+            <span class="error" *ngIf="showErrors('messageType','required', 'parametersForm')"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'campaign.create-campaign-campaign-type-select' |
+              translate}}</span>
+          </div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="config?.missedCall || config?.ibd">
+        <div class="col-md-3" *ngIf="!config?.ibd">
+          <label class="label-text position-relative">{{'missed-call-duration(sec)' | translate}}</label>
+          <app-custom-select-with-create [data]="callDurationData" [config]="configCallDuration"
+            [value]="callDurationSelectText" (clickElsewhere)="configCallDuration.open = false"
+            (selectAction)="selectActionRecive($event, 'misscall_duration')"
+            [errors]="showErrors('misscall_duration', 'required', 'parametersForm')"
+            [ngClass]="{'internal-custom-select' : showErrors('misscall_duration', 'required', 'parametersForm')}">
+          </app-custom-select-with-create>
+          <div class="d-block position-relative">
+            <span class="error" *ngIf="showErrors('misscall_duration','required', 'parametersForm')"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'error-missed-call-duration' | translate}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label class="label-text position-relative">{{'pri-number' | translate}}</label>
+          <!-- for backup -->
+          <!-- [ngClass]="{'disabled' : isEdit && !PRINumData?.length && editCampaignData?.pri_number}" -->
+          <div>
+            <app-custom-select-with-create [data]="PRINumData" [config]="configPRINum" [value]="PRINumSelectText"
+              (clickElsewhere)="configPRINum.open = false"
+              (selectAction)="selectActionRecive($event, 'pri_number','',false,true)"
+              [errors]="showErrors('pri_number', 'required', 'parametersForm')"
+              [ngClass]="{'internal-custom-select' : showErrors('pri_number', 'required', 'parametersForm')}">
+            </app-custom-select-with-create>
+          </div>
+          <div class="d-block position-relative">
+            <span class="error" *ngIf="showErrors('pri_number','required', 'parametersForm')"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'error-pri-number' | translate}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label class="label-text position-relative">{{'did-number' | translate}}</label>
+          <!-- for backup -->
+          <!-- [ngClass]="{'disabled' : isEdit && !DidNumData?.length && editCampaignData?.did_number}" -->
+          <div>
+            <app-custom-select-with-create [data]="DidNumData" [config]="configDidNum" [value]="DidNumSelectText"
+              (clickElsewhere)="configDidNum.open = false" (selectAction)="selectActionRecive($event, 'did_number')"
+              [errors]="showErrors('did_number', 'required', 'parametersForm')"
+              [ngClass]="{'internal-custom-select' : showErrors('did_number', 'required', 'parametersForm')}">
+            </app-custom-select-with-create>
+          </div>
+          <div class="d-block position-relative">
+            <span class="error" *ngIf="showErrors('did_number','required', 'parametersForm')"><small><img
+                  src="../../../assets/images/error.svg"></small>{{'error-did-number' | translate}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-6 mt-4">
+          <!-- Showing VMN/TFN number on the basis of DID number selection -->
+          <span *ngIf="(VMNTollfreeData && VMNTollfreeData?.[0]?.number) || (isEdit && editCampaignData?.vmn_tollfree)">
+            <span for="" class="font-weight-500">{{VMNTollfreeData?.[0]?.type ?? ((isEdit &&
+              editCampaignData?.vmn_toll_free) ?? '')}}</span>:
+            <span>{{ VMNTollfreeData?.[0]?.number ?? (editCampaignData?.vmn_tollfree ?? "") }}</span>
+          </span>
+          <!-- <mat-checkbox class="d-block list-checkbox" (change)="configureVMNTollfree($event)"
+            formControlName="vmn_toll_free_flag">
+            <span>{{'campaign-with-vmn-tfn-number' | translate}}</span>
+          </mat-checkbox>
+          <ng-container *ngIf="showConfigureVMNTollfree">
+            <div class="radion-grp mt-3">
+              <mat-radio-group aria-label="Select an option" (change)="selectVMNTollfree($event)"
+                formControlName="vmn_toll_free">
+                <mat-radio-button [value]="'VMN'" class="mr-3"> {{'vmn-heading' | translate}}</mat-radio-button>
+                <mat-radio-button [value]="'TFN'"> {{'tfn-heading' | translate}}</mat-radio-button>
+              </mat-radio-group>
+            </div>
+            <div class="configure_campaign_number"
+              [ngClass]="{'disabled' : isEdit && !VMNTollfreeData?.length && editCampaignData?.vmn_tollfree}">
+              <app-custom-select-with-create [data]="VMNTollfreeData" [config]="configVMNTFN" [value]="VMNTFNSelectText"
+                (clickElsewhere)="configVMNTFN.open = false" (selectAction)="selectActionRecive($event, 'vmn_tollfree')"
+                [errors]="showErrors('vmn_tollfree', 'required', 'parametersForm')"
+                [ngClass]="{'internal-custom-select' : showErrors('vmn_tollfree', 'required', 'parametersForm')}">
+              </app-custom-select-with-create>
+            </div>
+            <div class="d-block position-relative">
+              <span class="error" *ngIf="showErrors('vmn_tollfree','required', 'parametersForm')"><small><img
+                    src="../../../assets/images/error.svg"></small>{{'error-vmn-tfn-number' | translate}}
+              </span>
+            </div>
+          </ng-container> -->
+        </div>
+      </ng-container>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <p class="mt-3 message-quota mb-0" *ngIf="config?.messageQuota && messageQuota"><img
+            class="campaign-type-hint mr-1" src="assets/images/hint.png" alt="hint">{{messageQuota == '100000000' ?
+          setRateLimitMessageUnlimited : messageQuotaText}}</p>
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- create-category -->
+<!-- <app-create-campaign-category id="create-category" (sendLoaderState)="receivedLoaderState($event)"></app-create-campaign-category> -->

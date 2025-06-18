@@ -1,0 +1,438 @@
+<app-modal id="view" class="custom-view-modal-wrapper"
+  [ngClass]="{'custom-scroll-modal-wrapper': (config?.sms || config?.show_call_flowbuilder)}">
+  <div class="internal modal-wrapper">
+    <div>
+      <h3 class="d-flex justify-content-between align-items-center header-modal m-0">
+        {{'campaign.view-campaign-text' | translate}}
+        <span class="cursor-pointer" (click)="closeModal('view');">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+            <g id="Group_2783" data-name="Group 2783" transform="translate(-907 -297)">
+              <g id="Path_2335" data-name="Path 2335" transform="translate(907 297)" fill="none">
+                <path d="M12,0A12,12,0,1,1,0,12,12,12,0,0,1,12,0Z" stroke="none" />
+                <path
+                  d="M 12 1 C 9.061790466308594 1 6.299449920654297 2.144199371337891 4.221820831298828 4.221820831298828 C 2.144199371337891 6.299449920654297 1 9.061790466308594 1 12 C 1 14.93820953369141 2.144199371337891 17.7005500793457 4.221820831298828 19.77817916870117 C 6.299449920654297 21.85580062866211 9.061790466308594 23 12 23 C 14.93820953369141 23 17.7005500793457 21.85580062866211 19.77817916870117 19.77817916870117 C 21.85580062866211 17.7005500793457 23 14.93820953369141 23 12 C 23 9.061790466308594 21.85580062866211 6.299449920654297 19.77817916870117 4.221820831298828 C 17.7005500793457 2.144199371337891 14.93820953369141 1 12 1 M 12 0 C 18.62742042541504 0 24 5.372579574584961 24 12 C 24 18.62742042541504 18.62742042541504 24 12 24 C 5.372579574584961 24 0 18.62742042541504 0 12 C 0 5.372579574584961 5.372579574584961 0 12 0 Z"
+                  stroke="none" style="fill:var(--primary-color)" />
+              </g>
+              <g id="sign" transform="translate(915.148 305.227)">
+                <g id="Group_2214" data-name="Group 2214" transform="translate(0 0)">
+                  <path id="Path_2030" data-name="Path 2030"
+                    d="M.191,8.72a.65.65,0,0,0,.92,0L4.1,5.729,7.094,8.72a.651.651,0,0,0,.92-.92L5.022,4.809,7.86,1.971a.651.651,0,0,0-.92-.92L4.1,3.888,1.264,1.05a.651.651,0,0,0-.92.92L3.182,4.809.191,7.8A.65.65,0,0,0,.191,8.72Z"
+                    transform="translate(0 -0.86)" style="fill: var(--primary-color)" />
+                </g>
+              </g>
+            </g>
+          </svg>
+        </span>
+      </h3>
+    </div>
+
+    <div class="inside-modal-content container-fluid">
+      <mat-tab-group class="tab-custom-overflow" (selectedTabChange)="tabChanged($event.index)"
+        [selectedIndex]="selectedTabIndex">
+        <mat-tab label="Campaign Details">
+
+          <div class="row mb-2 mt-3">
+            <div class="col-md-3 custom-placement-rtl" [ngClass]="{'order-3': config && config?.voice}">
+              <label class="label-text">{{'campaign.view-campaign-status-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.approval_status}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="(config && !config?.voice)">
+              <label class="label-text">{{'campaign.view-campaign-processed-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.processed_by_user_name}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl custom-placement-ltr" *ngIf="(config && !config?.voice)">
+              <label class="label-text">{{'campaign.view-campaign-processed-on-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.processed_at}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl"
+              *ngIf="isKsaUser && ((!(config) && (config && !config.voice)) || (config && !config?.whatsapp && (config && !config?.voice)))">
+              <label class="label-text">{{'campaign.view-campaign-msg-classification-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.message_classification_type}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl custom-placement-ltr" *ngIf="(config && !config?.voice)">
+              <label class="label-text">{{'campaign.view-campaign-creation-time-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.created_at}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" [ngClass]="{'order-5': config && config?.voice}"
+              *ngIf="(config && config?.whatsapp) || (config && config?.voice)">
+              <label class="label-text">{{'campaign.save-temp-name' | translate}}</label>
+              <p class="word-break-all">{{viewCampaignData?.data.template_name}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="(config && !config?.voice)">
+              <label class="label-text">{{'campaign.view-campaign-is-scheduled-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.scheduler}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="(config && !config?.voice)">
+              <label class="label-text">{{'campaign.view-campaign-scheduled-for-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.schedule_date}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="(config && !config?.voice)">
+              <label class="label-text">{{'campaign.view-campaign-scheduled-timezone-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.timezone}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl custom-placement-ltr" *ngIf="config && !config.voice">
+              <label class="label-text">{{'campaign.view-campaign-campaign-name-text' |
+                translate}}</label>
+              <p>{{viewCampaignData?.data.name}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl custom-placement-ltr"
+              [ngClass]="{'order-1': config && config?.voice}" *ngIf="config && config.voice">
+              <label class="label-text">{{'campaign.view-campaign-campaign-id-text' |translate}}</label>
+              <p>{{viewCampaignData?.data._id}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl custom-placement-ltr"
+              [ngClass]="{'order-2': config && config?.voice}" *ngIf="config && config?.voice">
+              <label class="label-text">{{'campaign.view-campaign-campaign-type-text' | translate}}</label>
+              <p class="text-capitalize">{{viewCampaignData?.data.campaign_type}}</p>
+            </div>
+            <!-- <div class="col-md-3 custom-placement-rtl" *ngIf="(config && config?.whatsapp) || (config && config?.voice)">
+              <label class="label-text">{{'campaign.save-temp-name' | translate}}</label>
+              <p>{{viewCampaignData?.data.template_name}}</p>
+            </div> -->
+            <!-- <div class="col-md-3 custom-placement-rtl">
+              <label class="label-text">{{'campaign.view-campaign-status-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.approval_status}}</p>
+            </div> -->
+            <div class="col-md-3 custom-placement-rtl" [ngClass]="{'order-4': config && config?.voice}">
+              <label class="label-text">{{'campaign.view-campaign-category-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.category_name}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl"
+              *ngIf="!(config) || ((config && !config?.whatsapp) &&  (config && !config?.voice) &&  (config && !config?.rcs))">
+              <label class="label-text">{{'campaign.view-campaign-sender-id-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.sender_id}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" [ngClass]="{'order-6': config && config?.voice}"
+              *ngIf="(config && config?.voice)">
+              <label class="label-text">{{'campaign.view-campaign-caller-id-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.caller_id ? viewCampaignData?.data.caller_id : 'null'}}</p>
+            </div>
+            <!-- <div class="col-md-3 custom-placement-rtl" *ngIf="config && config?.sms">
+              <label class="label-text">{{'campaign.view-campaign-sender-id-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.sender_id}}</p>
+            </div> -->
+            <div class="col-md-3 custom-placement-rtl" *ngIf="(config && config?.rcs)">
+              <label class="label-text">{{'campaign.rcs-rbm-agent' | translate}}</label>
+              <p>{{viewCampaignData?.data.agent_name}}</p>
+            </div>
+            <div class="col-md-3" *ngIf="config && config.whatsapp">
+              <label class="label-text">{{'campaign.waba-number' | translate}}</label>
+              <p class="text-right-with-direction-ltr">
+                +{{viewCampaignData?.data.country_code}}-{{viewCampaignData?.data.waba_number}}</p>
+            </div>
+            <!-- <div class="col-md-3 custom-placement-rtl"
+              *ngIf="!(config)  || ((config && !config?.whatsapp) && (config && !config?.voice))"></div> -->
+            <div class="col-md-3 custom-placement-rtl" *ngIf="config && config?.sms">
+              <label class="label-text">{{'campaign.view-campaign-msg-type-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.type}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="config && config?.rcs">
+              <label class="label-text">{{'content-template-type' | translate}}</label>
+              <p>{{viewCampaignData?.data.message_type}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="config && config?.whatsapp">
+              <label class="label-text">{{'template.cont-type' | translate}}</label>
+              <p>{{viewCampaignData?.data.content_type}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl custom-placement-ltr" *ngIf="(config && !config?.voice)">
+              <label class="label-text">{{'campaign.view-campaign-file-name-text' | translate}}</label>
+              <p class="word-break-all" [title]="viewCampaignData?.data.file_name">{{viewCampaignData?.data.file_name |
+                slice:0:80 }}...</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="(config && !config?.voice)">
+              <label class="label-text">{{'campaign.view-campaign-list-name-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.list_name}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="(config && !config?.voice)">
+              <label class="label-text">{{'campaign.view-campaign-remove-duplicate-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.is_duplicate}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="(config && !config?.voice)">
+              <label class="label-text">{{'campaign.view-campaign-test-campaign-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.is_test_campaign_created}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="config && !config.voice">
+              <label class="label-text">{{'campaign.view-campaign-count-text' |
+                translate}}</label>
+              <p>{{viewCampaignData?.data.count}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="config && config.voice"
+              [ngClass]="{'order-7': config && config?.voice}">
+              <label class="label-text">{{'campaign.view-campaign-total-count-text' |
+                translate}}</label>
+              <p>{{viewCampaignData?.data.count}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl internal"
+              *ngIf="(config && config?.voice && viewCampaignData?.data?.campaign_type != 'promotional')"
+              [ngClass]="{'order-8': config && config?.voice}">
+              <label class="label-text">{{'campaign.view-campaign-remarks-text' | translate}}</label>
+              <textarea rows="3" class="text-right-with-direction-ltr view-campaign-textarea"
+                readonly>{{viewCampaignData?.data?.approval_remarks}}</textarea>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="(config && !config?.voice)">
+              <label class="label-text">{{'campaign.view-campaign-valid-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.valid_recipient_count}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="(config && !config?.voice)">
+              <label class="label-text">{{'campaign.view-campaign-invalid-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.invalid_recipient_count}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="(config && !config?.voice)">
+              <label class="label-text">{{'campaign.view-campaign-duplicate-text' | translate}}</label>
+              <p>{{viewCampaignData?.data.duplicate_recipient_count}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="config && config.sms">
+              <label class="label-text">{{'campaign.view-campaign-short-url-text' | translate}}</label>
+              <p>{{viewCampaignData?.data?.short_url}}</p>
+            </div>
+            <div class="col-md-3 custom-placement-rtl" *ngIf="config && config?.rcs">
+              <label class="label-text">{{'campaign.rcs-suggested-responses' | translate}}</label>
+              <p>{{(((viewCampaignData?.data?.message?.suggestions &&
+                viewCampaignData?.data?.message?.suggestions.length
+                > 0) || (viewCampaignData?.data?.message?.richCard &&
+                viewCampaignData?.data?.message?.richCard.standaloneCard.cardContent.suggestions &&
+                viewCampaignData?.data?.message?.richCard.standaloneCard.cardContent.suggestions.length > 0)) ?
+                'common.yes-text' : 'common.no-text') | translate}}</p>
+            </div>
+            <div class="col-md-12 p-0" *ngIf="(config && !config?.voice)">
+              <!-- <div class="col-md-3 custom-placement-rtl" *ngIf="config && config?.sms">
+                <label class="label-text">{{'campaign.view-campaign-short-url-text' | translate}}</label>
+                <p>{{viewCampaignData?.data?.short_url}}</p>
+              </div> -->
+              <div class="col-md-9" *ngIf="config && (config?.sms || config?.whatsapp)">
+                <label class="label-text">{{'campaign.view-campaign-msg-text-text' | translate}} -
+                  {{viewCampaignData?.data?.is_unicode}}</label>
+                <textarea title="message area for message and whatsapp" #textMessage
+                  [value]="viewCampaignData?.data?.message" rows="3" readonly
+                  class="text-right-with-direction-ltr view-campaign-textarea"></textarea>
+              </div>
+              <div class="col-md-9" *ngIf="(hasApprovalPermission && forApprovalTab) || isTeammate">
+                <label class="label-text">{{'campaign.view-campaign-remarks-text' | translate}}</label>
+                <textarea #textRemark [value]="viewCampaignData?.data.remark ? viewCampaignData?.data.remark : ''"
+                  [readonly]="!hasApprovalPermission || !forApprovalTab || (viewCampaignData?.data.approval_status_original == 'approved') || (viewCampaignData?.data.approval_status_original == 'rejected')"
+                  rows="3" (input)="hasRemarksValue()" class="text-right-with-direction-ltr view-campaign-textarea"
+                  [ngClass]="{'textarea-hasError': !hasRemarks}"></textarea>
+                <div class="d-block position-relative" *ngIf="!hasRemarks">
+                  <span class="error custom-placement-rtl"><small><img
+                        src="../../../assets/images/error.svg"></small>{{'campaign.view-campaign-remarks-error' |
+                    translate}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-12" [ngClass]="{
+            'mr-1':!forApprovalTab,
+            'ml-auto':!forApprovalTab,
+            'mt-4':!forApprovalTab,
+            'order-9':config && config?.voice
+            }">
+              <div class="col-md-12 view-modal-button-wrapper">
+                <button class="btn btn-design mr-3"
+                  *ngIf="viewCampaignData?.data.approval_status.toLowerCase() == 'inactive'"
+                  (click)="reSubmit('view')">{{'common.re-submit' | translate}}</button>
+                <button class="btn btn-design close-button" (click)="cancel('view')" *ngIf="!forApprovalTab">{{'close'|
+                  translate}}</button>
+                <button class="btn btn-design approve-button rtl-margin-placement"
+                  [disabled]="(viewCampaignData?.data.approval_status_original == 'approved') || (viewCampaignData?.data.approval_status_original == 'rejected')"
+                  (click)="approveCampaign()" *ngIf="hasApprovalPermission && forApprovalTab">{{'common.approve-text' |
+                  translate}}</button>
+                <button class="btn btn-design-white reject-button"
+                  [disabled]="(viewCampaignData?.data.approval_status_original == 'approved') || (viewCampaignData?.data.approval_status_original == 'rejected')"
+                  (click)="rejectCampaign()" *ngIf="hasApprovalPermission && forApprovalTab">{{'common.reject-text' |
+                  translate}}</button>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Call Flow" *ngIf="config?.show_call_flowbuilder">
+          <div class="row mb-2 mt-3">
+            <div class="
+                    col-12
+                    create-message-wrapper
+                    compose-voice-call-wrapper compose-call-preview
+                  ">
+              <app-compose-call-preview [flowBuilderPreview]="flowBuilderPreview"></app-compose-call-preview>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Additional Info" *ngIf="config?.show_additional_info">
+          <div class="row mb-2 mt-3">
+            <div class="col-12">
+              <button class="btn voice-btn-white-design mr-2 rtl-margin-placement"
+                [ngClass]="{'voice-btn-white-design-reverse': category == 'callRetry'}"
+                (click)="switchButton('callRetry')">Call Retry</button>
+              <button class="btn voice-btn-white-design mr-2 rtl-margin-placement"
+                [ngClass]="{'voice-btn-white-design-reverse': category == 'smartRetry'}"
+                (click)="switchButton('smartRetry')">Smart Retry</button>
+              <button class="btn voice-btn-white-design mr-2 rtl-margin-placement"
+                [ngClass]="{'voice-btn-white-design-reverse': category == 'setBuffer'}"
+                (click)="switchButton('setBuffer')">Set/Buffer Drop</button>
+              <button class="btn voice-btn-white-design mr-2 rtl-margin-placement"
+                [ngClass]="{'voice-btn-white-design-reverse': category == 'webhook'}"
+                (click)="switchButton('webhook')">Webhook URL</button>
+              <button class="btn voice-btn-white-design mr-2 rtl-margin-placement"
+                [ngClass]="{'voice-btn-white-design-reverse': category == 'maxCall'}"
+                (click)="switchButton('maxCall')">Max Call Duration</button>
+            </div>
+
+            <div class="col-md-12 mt-3">
+              <div *ngIf="category == 'callRetry'">
+                <div class="col-md-12 mb-2">
+                  <span class="font-weight-500">Number of attempts:</span>
+                  <span>{{ viewCampaignData?.data?.call_retry ? viewCampaignData?.data?.call_retry?.no_of_Retry : 0
+                    }}</span>
+                </div>
+
+                <div class="col-md-12">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="header-bckgrd">Call Status</th>
+                        <th scope="col" class="header-bckgrd">Retry Time Period (In Minutes)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td scope="row">User Busy</td>
+                        <td>{{ viewCampaignData?.data?.call_retry ? viewCampaignData?.data?.call_retry?.user_busy : 0 }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td scope="row">No Answer from User</td>
+                        <td>{{ viewCampaignData?.data?.call_retry ? viewCampaignData?.data?.call_retry?.no_answer : 0 }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td scope="row">Switch off</td>
+                        <td>{{ viewCampaignData?.data?.call_retry ? viewCampaignData?.data?.call_retry?.switch_off : 0
+                          }}</td>
+                      </tr>
+                      <tr>
+                        <td scope="row">Out of Network</td>
+                        <td>{{ viewCampaignData?.data?.call_retry ? viewCampaignData?.data?.call_retry?.out_of_network :
+                          0 }}</td>
+                      </tr>
+                      <tr>
+                        <td scope="row">Network Busy</td>
+                        <td>{{ viewCampaignData?.data?.call_retry ? viewCampaignData?.data?.call_retry?.network_busy: 0
+                          }}</td>
+                      </tr>
+                      <tr>
+                        <td scope="row">Network Congestion</td>
+                        <td>{{ viewCampaignData?.data?.call_retry ? viewCampaignData?.data?.call_retry?.network_cong : 0
+                          }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="category == 'smartRetry'">
+                <div class="col-md-4">
+                  <p class="font-weight-500">Number of Retry</p>
+                  <p>{{ viewCampaignData?.data?.smart_retry ? viewCampaignData?.data?.smart_retry?.smart_retry_count : 0
+                    }}</p>
+                </div>
+
+                <div class="col-md-4">
+                  <p class="font-weight-500">Smart Retry Call Duration(sec)</p>
+                  <p>{{ viewCampaignData?.data?.smart_retry ?
+                    viewCampaignData?.data?.smart_retry?.smart_retry_callduration : 0 }}</p>
+                </div>
+
+                <div class="col-md-4">
+                  <p class="font-weight-500">Smart Retry Time(Min)</p>
+                  <p>{{ viewCampaignData?.data?.smart_retry ? viewCampaignData?.data?.smart_retry?.smart_retry_time : 0
+                    }}</p>
+                </div>
+              </div>
+
+              <div *ngIf="category == 'setBuffer'">
+                <div class="row">
+                  <div class="col-md-3">
+                    <p class="font-weight-500">Remaining Calls</p>
+                    <p>{{ viewCampaignData?.data?.pause_stop_campaign_config?.buffer_stop_campaign == '1' ? 'Drop' :
+                      'Buffer' }}</p>
+                  </div>
+                  <ng-container
+                    *ngIf="(viewCampaignData?.data?.pause_stop_campaign_config?.buffer_stop_campaign == '1'); else showBuffer">
+                    <div class="col-md-3">
+                      <p class="font-weight-500">Stop At</p>
+                      <p>{{ viewCampaignData?.data?.pause_stop_campaign_config ?
+                        viewCampaignData?.data?.pause_stop_campaign_config?.drop_time : 0 }}</p>
+                    </div>
+                  </ng-container>
+                  <ng-template #showBuffer>
+                    <div class="col-md-3">
+                      <p class="font-weight-500">Paused At</p>
+                      <p>{{ viewCampaignData?.data?.pause_stop_campaign_config ?
+                        viewCampaignData?.data?.pause_stop_campaign_config?.pause_time : 0 }}</p>
+                    </div>
+                    <div class="col-md-3">
+                      <p class="font-weight-500">Resume At</p>
+                      <p>{{ viewCampaignData?.data?.pause_stop_campaign_config ?
+                        viewCampaignData?.data?.pause_stop_campaign_config?.resume_time : 0 }}</p>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+
+              <div *ngIf="category == 'webhook'">
+                <div class="row">
+                  <div class="col-md-3">
+                    <p class="font-weight-500">URL Call</p>
+                    <p *ngIf="!viewCampaignData?.data?.action_url">NA</p>
+                    <p *ngIf="viewCampaignData?.data?.action_url?.action_flag == 1">Update on call success</p>
+                    <p *ngIf="viewCampaignData?.data?.action_url?.action_flag == 2">Update on call failure</p>
+                    <p *ngIf="viewCampaignData?.data?.action_url?.action_flag == 3">Update on both call success and
+                      failure</p>
+                  </div>
+
+                  <div class="col-md-3">
+                    <p class="font-weight-500">Method</p>
+                    <p>{{ viewCampaignData?.data?.action_url ? viewCampaignData?.data?.action_url?.method : 'NA' }}</p>
+                  </div>
+
+                  <div class="col-md-3">
+                    <p class="font-weight-500">URL</p>
+                    <p class="word-break-all">{{ viewCampaignData?.data?.action_url ?
+                      viewCampaignData?.data?.action_url?.url : 'NA' }}</p>
+                  </div>
+
+                  <div class="col-md-3">
+                    <p class="font-weight-500">Header</p>
+                    <p>{{ viewCampaignData?.data?.action_url ? (viewCampaignData?.data?.action_url?.headers | json ) :
+                      'NA' }}</p>
+                  </div>
+                  <div class="col-md-3 mt-3">
+                    <p class="font-weight-500">Body</p>
+                    <p>{{ viewCampaignData?.data?.action_url ? (viewCampaignData?.data?.action_url?.body | json ) : 'NA'
+                      }}</p>
+                  </div>
+
+                  <div class="col-md-3 mt-3">
+                    <p class="font-weight-500">Status</p>
+                    <p>{{ viewCampaignData?.data?.action_url ? '200' : 'NA' }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="category == 'maxCall'">
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="font-weight-500">Max Call Duration(seconds)</p>
+                    <p>{{ viewCampaignData?.data ? viewCampaignData?.data?.max_call_duration : 'NA' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+
+
+    </div>
+  </div>
+</app-modal>

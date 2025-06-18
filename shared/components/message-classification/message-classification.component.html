@@ -1,0 +1,37 @@
+<form [formGroup]="messageClassificationForm">
+  <div class="message-classification-wrapper steps-frame mb-3" *ngIf="isKsaUser">
+    <div class="row">
+      <div class="col-md-12 custom-step-heading">
+        <div class="tick-box">
+          <div
+            [ngClass]="{'tick-mark': messageClassificationForm.get('messageClassification').value, 'step-count': !messageClassificationForm.get('messageClassification').value}">
+            <span *ngIf="!messageClassificationForm.get('messageClassification').value">1</span>
+          </div>
+        </div>
+        <h4 appCustomTooltip class="step-heading position-relative d-inline-block">{{'campaign.message-classification' |
+          translate}}
+          <img class="campaign-type-hint" src="assets/images/hint.png" alt="hint">
+          <div class="type-tooltip-text custom-rtl-steps-placement">
+            <span>{{'campaign.message-classification-tooltip' | translate}}</span>
+          </div>
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <app-custom-select-with-create [data]="classificationList" [config]="configClassification"
+          [value]="classificationText" (clickElsewhere)="configClassification.open = false"
+          (selectAction)="selectActionRecive($event, 'messageClassification')"
+          [errors]="showErrors('messageClassification', 'required', 'messageClassificationForm')"
+          [ngClass]="{'internal-custom-select' : showErrors('messageClassification', 'required', 'messageClassificationForm')}">
+        </app-custom-select-with-create>
+        <div class="d-block position-relative">
+          <span class="error"
+            *ngIf="showErrors('messageClassification','required', 'messageClassificationForm')"><small><img
+                src="../../../assets/images/error.svg"></small>{{'campaign.message-classification-error' |
+            translate}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,25 @@
+.schedule-message-toggle label {
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.31;
+  letter-spacing: normal;
+  text-align: left;
+  color: #24253e;
+}
+.disable {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.textarea-hasError {
+  border: solid 0.5px red !important;
+}
+.worflow-schedule-option-tabs .mat-tab-label-content{
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  font-stretch: normal !important;
+  font-style: normal !important;
+  line-height: normal !important;
+  letter-spacing: normal !important;
+}

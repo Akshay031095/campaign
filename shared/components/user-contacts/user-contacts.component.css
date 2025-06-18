@@ -1,0 +1,22 @@
+.container-fluid, .container-fluid form {
+    height: 100%;
+}
+.contacts-table {
+    position: relative;
+}
+::ng-deep .contacts-table th .mat-checkbox-frame {
+    background-color: #fff;
+}
+.import-modal .inside-modal-content {
+    box-shadow: none;
+}
+.search-contact-btn {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+.search-contact-btn .btn {
+    width: 80px;
+    margin-bottom: 1rem;
+    text-align: center;
+}

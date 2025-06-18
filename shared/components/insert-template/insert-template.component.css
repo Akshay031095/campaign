@@ -1,0 +1,75 @@
+::ng-deep .modal-wrapper .mat-tab-body-content::-webkit-scrollbar {
+    width: 0.4em;
+}
+::ng-deep .modal-wrapper .mat-tab-body-content::-webkit-scrollbar-track {
+    background-color: #eeeef5;
+    opacity: 0.4;
+    border-radius: 20px;
+}
+::ng-deep .modal-wrapper .mat-tab-body-content::-webkit-scrollbar-thumb {
+    background-color: #e0e0e0;
+    border-radius: 20px;
+}
+.header-modal {
+    background-color: #f6f7ff;
+    padding: 0;
+    padding-bottom: 15px;
+    font-size: 16px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.31;
+    letter-spacing: normal;
+    text-align: left;
+    color: var(--primary-color);
+    margin: 0;
+    height: 37px;
+}
+.import-tabs .container-fluid {
+    height: 100%;
+}
+.container-fluid form {
+    height: 100%;
+}
+::ng-deep .templates-table .mat-radio-button .mat-radio-label {
+    margin: 0 !important;
+}
+.link-templates .insert-link, .link-templates .insert-template, .character-counts .encoding, .character-counts .msg-char, .character-counts .char-counts, .link-templates .personalize, .link-templates .save-template {
+    padding: 0px 14px;
+}
+.link-templates .insert-link-collapsed, .link-templates .insert-template-collapsed, .character-counts .encoding-collapsed, .character-counts .msg-char-collapsed, .character-counts .char-counts-collapsed, .link-templates .personalize-collapsed, .link-templates .save-template-collapsed {
+    padding: 0px 6px;
+}
+.link-templates .insert-link, .character-counts .encoding, .character-counts .msg-char, .link-templates .personalize, .link-templates .insert-template {
+    border-right: 1px solid #acacac;
+}
+::ng-deep .insert-template .data-filter .col-sm-3.no-padding {
+    padding: 0px 15px !important;
+}
+.import-contact-btn .import-btn {
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.36;
+    letter-spacing: normal;
+    text-align: center;
+    color: #233670;
+    box-shadow: 0 1.5px 5px 0 rgba(18, 121, 250, 0.36);
+    border: solid 0.5px #233670;
+    min-height: 38px;
+    width: 100%;
+}
+@media (min-width: 768px) {
+    ::ng-deep #insert-link .app-modal-body, ::ng-deep #insert-template .app-modal-body {
+        width: 568px;
+    }
+}
+@media (min-width: 992px) {
+    ::ng-deep #insert-link .app-modal-body, ::ng-deep #insert-template .app-modal-body {
+        width: 668px;
+    }
+}
+.search-templates-wrapper input {
+    line-height: 1.93;
+}

@@ -1,0 +1,81 @@
+<app-side-drawer [id]="id ? id : 'personalise-variables'" class="internal">
+  <div class="drawer global-drawer custom-drawer-width"
+    [ngClass]="{'hide-drawer-right': (!config?.rcs && !showDrawer) || (config?.rcs && !showDrawer), 'show-drawer-right': (!config?.rcs && showDrawer) || (config?.rcs && showDrawer), 'custom-workflow-height': config?.workflow}">
+    <div class="drawer-heading custom-right-drawer-heading">
+      <h2 class="d-flex justify-content-between align-items-center">Personalize your message
+        <span class="cursor-pointer" (click)="closeDrawer(id ? id : 'personalise-variables');">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: var(--primary-color)">
+            <g id="prefix__Group_2783" data-name="Group 2783" transform="translate(-907 -297)">
+              <g id="prefix__Path_2335"  stroke="none" data-name="Path 2335">
+                <path
+                  d="M12 23.5c-3.072 0-5.96-1.196-8.132-3.368C1.696 17.96.5 15.072.5 12s1.196-5.96 3.368-8.132C6.04 1.696 8.928.5 12 .5s5.96 1.196 8.132 3.368C22.304 6.04 23.5 8.928 23.5 12s-1.196 5.96-3.368 8.132C17.96 22.304 15.072 23.5 12 23.5z"
+                  transform="translate(907 297)" />
+                <path
+                  d="M12 1C9.062 1 6.3 2.144 4.222 4.222 2.144 6.299 1 9.062 1 12c0 2.938 1.144 5.7 3.222 7.778C6.299 21.856 9.062 23 12 23c2.938 0 5.7-1.144 7.778-3.222C21.856 17.701 23 14.938 23 12c0-2.938-1.144-5.7-3.222-7.778C17.701 2.144 14.938 1 12 1m0-1c6.627 0 12 5.373 12 12s-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0z"
+                  transform="translate(907 297)" />
+              </g>
+              <g id="prefix__sign" transform="translate(915.148 305.227)">
+                <g id="prefix__Group_2214" data-name="Group 2214">
+                  <path id="prefix__Path_2030" fill="#fff"
+                    d="M.191 8.72a.65.65 0 0 0 .92 0L4.1 5.729 7.094 8.72a.651.651 0 0 0 .92-.92L5.022 4.809 7.86 1.971a.651.651 0 0 0-.92-.92L4.1 3.888 1.264 1.05a.651.651 0 0 0-.92.92l2.838 2.839L.191 7.8a.65.65 0 0 0 0 .92z"
+                    data-name="Path 2030" transform="translate(0 -.86)" />
+                </g>
+              </g>
+            </g>
+          </svg>
+
+        </span>
+      </h2>
+    </div>
+    <div class="drawer-content custom-right-drawer custom-placement-rtl">
+      <p *ngIf="config && config.sms">{{'campaign.personalise-variables-heading' | translate: { count: variableCount } }}</p>
+      <p *ngIf="config && config.rcs && suggestions && (clickedType == 'labelText')">{{'campaign.rcs-text-character-length-25-tooltip' | translate }}</p>
+      <p *ngIf="config && config.rcs && suggestions && (clickedType == 'url')">{{'campaign.rcs-url-character-length-2048-tooltip' | translate }}</p>
+      <form [formGroup]="variablesForm">
+        <div formArrayName="variablesArr">
+          <div class="row" *ngFor="let item of variablesForm.get('variablesArr')['controls']; let i = index"
+            [formGroupName]="i">
+            <div class="col-md-3 mb-3" *ngIf="!item.get('urlValue').value">
+              <input class="form-control text-center" type="text" [value]="item.get('variable').value"
+                formControlName="variable" readonly>
+            </div>
+            <div class="col-md-4 mb-3" *ngIf="!item.get('urlValue').value">
+              <input class="form-control" type="text" formControlName="text" placeholder="Static text goes here"
+                *ngIf="!item.get('varTextSeq').value">
+              <app-custom-select-with-create [data]="item.get('columnList').value" *ngIf="((campaignType && (campaignType != 'Common')) || !campaignType) && item.get('varTextSeq').value"
+                [config]="item.get('configColumnList').value" [value]="item.get('columnListText').value"
+                (clickElsewhere)="item.get('configColumnList').value.open = false"
+                (selectAction)="selectActionRecive($event, item)" [errors]="showErrors('var1', 'required')"
+                [ngClass]="{'internal-custom-select' : showErrors('var1', 'required')}">
+              </app-custom-select-with-create>
+            </div>
+            <div class="col-md-1 mb-3 d-flex justify-content-center align-items-center"
+              *ngIf="((campaignType && (campaignType != 'Common')) || !campaignType) && !item.get('urlValue').value">
+              <div class="cursor-pointer" (click)="flipPositions(item)" title="Swap position">
+                <span class="icon-swap"></span>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3" *ngIf="!item.get('urlValue').value">
+              <input class="form-control" type="text" formControlName="text" placeholder="Static text goes here"
+                *ngIf="item.get('varTextSeq').value">
+              <app-custom-select-with-create [data]="item.get('columnList').value" *ngIf="((campaignType && (campaignType != 'Common')) || !campaignType) && !item.get('varTextSeq').value"
+                [config]="item.get('configColumnList').value" [value]="item.get('columnListText').value"
+                (clickElsewhere)="item.get('configColumnList').value.open = false"
+                (selectAction)="selectActionRecive($event, item)" [errors]="showErrors('var1', 'required')"
+                [ngClass]="{'internal-custom-select' : showErrors('var1', 'required')}">
+              </app-custom-select-with-create>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col-md-12">
+          <button class="btn btn-design mr-3 custom-multiple-buttons-spacing" (click)="sendPersonalizedVariables()">Save</button>
+          <button class="btn btn-design-white" (click)="closeDrawer(id ? id : 'personalise-variables')">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="app-modal-background" [ngClass]="{'hide-drawer-width': (!config?.rcs && !showDrawer) || (config?.rcs && !config?.showDrawer), 'show-drawer-width': (!config?.rcs && showDrawer) || (config?.rcs && config?.showDrawer)}">
+  </div>
+</app-side-drawer>

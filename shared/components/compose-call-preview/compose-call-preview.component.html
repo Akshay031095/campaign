@@ -1,0 +1,11 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="preview-canvas-wrapper">
+            <div class="default-flow-preview" *ngIf="!flowBuilderPreview">
+                <p>{{'voice.template-default-preview' | translate}}</p>
+            </div>
+            <app-flow-builder *ngIf="view" class="compose-call-preview-canvas" [flowBuilderData]='flowBuilderData'></app-flow-builder>
+        </div>
+
+    </div>
+</div>

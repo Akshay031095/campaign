@@ -1,0 +1,168 @@
+.contact-text {
+  font-size: 17px !important;
+}
+.send-to h5 h4 .contact-count {
+  font-size: 19px;
+  font-weight: bold;
+  color: #22345b;
+  line-height: 1;
+}
+.contact-id .contact-id-textarea {
+  resize: none;
+  padding: 5px 35px;
+}
+.contact-id img {
+  position: absolute;
+  top: 13px;
+  width: 17px;
+  height: auto;
+  left: 10px;
+}
+.set-parameters .step-heading, .upload-contacts .step-heading, .create-message .step-heading, .send-sms .step-heading {
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.31;
+  letter-spacing: normal;
+  text-align: left;
+  color: #000;
+}
+.import-contact-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.import-contact-btn .import-btn {
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.36;
+  letter-spacing: normal;
+  text-align: center;
+  color: var(--primary-color);
+  box-shadow: 0 1.5px 5px 0 rgba(18, 121, 250, 0.36);
+  border: solid 0.5px var(--primary-color);
+  min-height: 38px;
+  width: 100%;
+  border-radius: 3px;
+}
+.send-to-contacts-box {
+  display: flex;
+  justify-content: flex-end;
+}
+.send-to-contacts-box .send-text {
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.36;
+  letter-spacing: normal;
+  color: #24253e;
+  margin: 0;
+}
+.count-and-remove-duplicate .contacts {
+  font-size: 22px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.36;
+  letter-spacing: normal;
+  color: #24253e;
+}
+.count-and-remove-duplicate .send-contact-text {
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.36;
+  letter-spacing: normal;
+  color: #24253e;
+}
+.copy-contacts .user-input-contacts textarea {
+  resize: none;
+  padding: 14px 14px 14px 35px;
+}
+.copy-contacts .user-input-contacts .msg-icon {
+  position: absolute;
+  top: 20px;
+  left: 10px;
+}
+.contacts-table {
+  position: relative;
+}
+.search-contact-btn {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+.search-contact-btn .btn {
+  width: 80px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.contact-counts-value p {
+  font-size: 10px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  color: #24253e;
+}
+.contact-counts-value {
+  height: 72px;
+  width: 72px;
+  background-color: #edeff4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: 450;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.19;
+  letter-spacing: normal;
+  text-align: left;
+  color: #223673;
+  margin-bottom: 1rem !important;
+}
+.contact-counts .count-text {
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  color: #24253e;
+  opacity: 0.5;
+}
+.total-contacts .contact-text, .invalid-contacts .contact-text, .duplicate-contacts .contact-text {
+  font-size: 14px !important;
+}
+.prevent-import-contacts-error {
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.36;
+  letter-spacing: normal;
+  text-align: left;
+  color: #626262;
+}
+.additional-configuration-wrapper .icon-Additional_config {
+  font-size: 14px;
+}
+.additional-configuration-wrapper a, .additional-configuration-wrapper a:hover {
+  text-decoration: none;
+}
+
+.freqCappingPostion{
+  position: relative;
+  left: 28px;
+}
+
+.freqCappingEmailPostion{
+  position: relative;
+  left: -8px;
+}

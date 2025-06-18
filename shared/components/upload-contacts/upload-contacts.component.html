@@ -1,0 +1,92 @@
+<form [formGroup]="uploadForm">
+  <div class="upload-contacts steps-frame mb-3">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="tick-box">
+          <ng-container *ngIf="!config?.voice && !config?.updatedStepCount">
+            <div [ngClass]="{'tick-mark': contactCount, 'step-count': !contactCount}">
+              <span *ngIf="!contactCount">{{isKsaUser ? 3 : 2}}</span>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="config?.voice || config?.updatedStepCount">
+          <div [ngClass]="(!contactCount) ? 'step-count':'tick-mark'">
+            <span *ngIf="!contactCount"> {{selectorData?.appUploadContacts?.stepCount}} </span>
+          </div>
+        </ng-container>
+        </div>
+        <h4 class="step-heading" *ngIf="config && !config.email">{{'campaign.create-campaign-upload-cont' | translate}}</h4>
+        <h4 class="step-heading" *ngIf="config && config.email">{{'campaign.email-create-campaign-upload-cont' | translate}}</h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 import-contact-box">
+        <div class="import-contact-btn">
+          <button class="btn import-btn text-capitalize"  (click)="import('import')"
+            [disabled]="(config?.campaignType && !messageType) || (config.email && emailCampaignApproval)">
+            {{'campaign.create-campaign-'+((config?.email)?'slct':'import')+'-cont' | translate}}
+          </button>
+        </div>
+      </div>
+      <div class="col-md-3 d-flex align-items-end">
+        <p class="mb-0 prevent-import-contacts-error" *ngIf="config?.campaignType && !messageType">
+          {{'campaign.no-campaign-type-selected-error'
+          | translate}}</p>
+      </div>
+      <div class="col-md-6 send-to-contacts-box">
+        <div>
+          <div class="additional-configuration-wrapper mb-2" *ngIf="config && config?.email" 
+           (click)="openSubsLimit('subscriber-limit')" [ngClass]="{'disabled': !contactCount || !importRecipientsFromList}">
+            <a class="d-flex align-items-center">
+              <span class="icon-Additional_config mr-2"><span class="path1"></span><span class="path2"></span><span
+                  class="path3"></span><span class="path4"></span></span>
+                  {{"campaign.create-campaign-subs-limit-and-excl" | translate}}
+            </a>
+          </div>
+          <h4 class="send-text">{{'campaign.create-campaign-send-to' | translate}}</h4>
+          <div class="count-and-remove-duplicate"
+            [ngStyle]="{'margin-bottom': !contactCount && sendCampaignData ? '5px' : 'auto'}"
+            [ngClass]="{'disabled': config.email && emailCampaignApproval}">
+            <div>
+              <h4 class="m-0">
+                <span class="contacts">{{contactCount ? contactCount : 0}}</span>
+                <span class="mr-3 send-contact-text">{{'campaign.create-campaign-'+((config?.email)?'rec':'cont') | translate}}</span>
+                <span class="d-inline-block send-remove-duplicate">
+                  <mat-checkbox class="d-block" formControlName="removeDuplicate">
+                    {{'campaign.create-campaign-remove-dup'+((config?.email)?'rec':'cont') | translate}}</mat-checkbox>
+                </span>
+              </h4>
+            </div>
+          </div>
+
+          
+          <!-- Exclude from Frequency Mapping Start -->
+          <div class="count-and-remove-duplicate" *ngIf="this.common.checkUserPermissionWithoutTeammate(permissions.permissionsTag['frequency_capping'], permissions.permissionName['exclude_from_frequency_capping'], true)">
+            <div>
+              <h4 class="m-0">
+                <div class="pull-right" *ngIf="!config?.truecaller" [ngClass]="{freqCappingEmailPostion : config?.email}">
+                  <mat-checkbox class="d-block" formControlName="removeFrequencyCapping" (change)="excludefreqMapping($event)">
+                    {{'campaign.create-campaign-remove-freq-capping' | translate}}</mat-checkbox>
+                  </div>
+              </h4>
+            </div>
+          </div>
+          <!-- Exclude from Frequency Mapping End -->
+          <div class="d-block position-relative">
+            <span class="error" *ngIf="!contactCount && sendCampaignData">
+              <small><img src="../../../assets/images/error.svg"></small>
+              {{'campaign.create-campaign-pl-import-'+((config?.email)?'rec':'cont') | translate}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- import -->
+<app-import-contacts [config]="config" (sendContactCount)="getContactCount($event)" (sendLoaderState)="receivedLoaderState($event)" [id]="'import'"
+  [existingFilesArray]="existingFilesArray" [campaignId]="campaignId" [messageType]="messageType"></app-import-contacts>
+
+<app-subscriber-limit id="subscriber-limit" [campaignId]="campaignId" *ngIf="config?.email" [subscriber_limit]="subscriber_limit"
+(getSubsLimitData)="getSubsLimitData($event)" [emailCampaignApproval]="emailCampaignApproval" [config]="config" 
+></app-subscriber-limit>

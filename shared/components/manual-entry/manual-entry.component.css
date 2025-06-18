@@ -1,0 +1,19 @@
+.container-fluid, .container-fluid form {
+    height: 100%;
+}
+.copy-contacts .user-input-contacts textarea {
+    resize: none;
+    padding: 14px;
+    /* padding: 14px 14px 14px 35px; */
+}
+.copy-contacts .user-input-contacts .msg-icon {
+    position: absolute;
+    top: 20px;
+    left: 10px;
+}
+.import-modal .inside-modal-content {
+    box-shadow: none;
+}
+.textarea-hasError {
+    border: solid 0.5px red !important;
+}

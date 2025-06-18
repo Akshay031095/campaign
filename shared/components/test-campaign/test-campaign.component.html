@@ -1,0 +1,68 @@
+<form [formGroup]="testCampaignForm">
+  <div class="test-sms-wrapper steps-frame mb-3">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="tick-box">
+          <div [ngClass]="{'tick-mark': hasTestData, 'step-count': !hasTestData}">
+            <span *ngIf="!hasTestData">
+              <ng-container *ngIf="!config?.voice && !config?.updatedStepCount">
+                {{(config && config.whatsapp) ?
+                (stepCount > 1 ? stepCount :
+                (common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['WhatsAppCampaigns'],
+                hasPermissions.permissionName['temporary_blacklist'], false) ? 5 : 4)) : config && config.rcs ?
+                (common.checkUserPermissionWithoutTeammate(this.hasPermissions.permissionsTag['RCS_Campaigns'],
+                this.hasPermissions.permissionName['sms_fallback'], false) ? (isKsaUser ? 5 : 6) : (isKsaUser ? 4 : 5))
+                : (config && !config.sms) ? (isKsaUser ? 4 : 5) : (isKsaUser &&
+                common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['SMSCampaigns'],
+                hasPermissions.permissionName['temporary_blacklist'], false) ? 6 : (!isKsaUser &&
+                common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['SMSCampaigns'],
+                hasPermissions.permissionName['temporary_blacklist'], false) ? 5 : (isKsaUser &&
+                !common.checkUserPermissionWithoutTeammate(hasPermissions.permissionsTag['SMSCampaigns'],
+                hasPermissions.permissionName['temporary_blacklist'], false)) ? 5 : 4 ))}}
+              </ng-container>
+              <ng-container *ngIf="config?.voice || config?.updatedStepCount">{{selectorData?.appTestCampaign?.stepCount}}</ng-container>
+            </span>
+          </div>
+        </div>
+        <h4 class="step-heading">{{'campaign.create-campaign-test-sms' | translate}}
+          <span>{{'campaign.create-campaign-test-sms-optional' | translate}}</span>
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <label class="label-text">{{'campaign.create-campaign-test-sms-label' | translate}}</label>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-8">
+        <textarea appNumberOnlyWithComma class="form-control test-sms-numbers-textarea" (input)="testCampaign($event)"
+          formControlName="typedContacts" placeholder="{{'campaign.create-campaign-test-sms-placeholder' | translate}}"
+          rows="5"
+          [ngClass]="{'hasError' : (showErrors('typedContacts', 'required', 'testCampaignForm')) || invalidTestSmsEntry || invalidTestSmsEntryInput}"
+          [ngStyle]="{'margin-bottom': ((showErrors('typedContacts', 'required', 'testCampaignForm')) || invalidTestSmsEntry || invalidTestSmsEntryInput) ? '5px' : 'auto'}"></textarea>
+        <div class="d-block position-relative">
+          <span class="error" *ngIf="showErrors('typedContacts','required', 'testCampaignForm')"><small><img
+                src="../../../assets/images/error.svg"></small>{{'campaign.test-sms-pl-type-cont-num' |
+            translate}}</span>
+          <span class="error"
+            *ngIf="invalidTestSmsEntry && !invalidTestSmsEntryInput && !showErrors('typedContacts','required', 'testCampaignForm')"><small><img
+                src="../../../assets/images/error.svg"></small>{{'campaign.test-sms-max-limit-message' |
+            translate}}</span>
+          <span class="error"
+            *ngIf="invalidTestSmsEntryInput && !showErrors('typedContacts','required', 'testCampaignForm')"><small><img
+                src="../../../assets/images/error.svg"></small>{{'campaign.test-sms-invalid-entry' | translate}}</span>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-4 mt-2">
+        <div class="test-btn-wrapper">
+          <button class="btn btn-design rtl-margin-placement"
+            (click)="sendTestCampaign()">{{'campaign.create-campaign-test-sms-test-btn' |
+            translate}}</button>
+          <p class="test-sms-message d-flex mb-0" *ngIf="testMessage">
+            <i class="fa fa-check-circle mr-1" aria-hidden="true"></i>
+            <span class="custom-placement-rtl">{{testMessage}}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,32 @@
+.no-campaigns-text {
+  font-size: 20px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 0.7;
+  letter-spacing: normal;
+  color: #000000;
+}
+.no-campaigns-wrapper {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+}
+.custom-width-toggle {
+  width: calc(100% - 90px);
+}
+.custom-width-non-toggle {
+  width: calc(100% - 235px);
+}
+.no-campaigns-img img {
+  width: 100%;
+  height: auto;
+}
+.custom-filter-spacing {
+  padding: 0 30px;
+}
+.campaign-add-button{
+  text-align: right;
+}

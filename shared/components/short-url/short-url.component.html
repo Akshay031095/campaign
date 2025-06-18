@@ -1,0 +1,210 @@
+<app-side-drawer id="insert-link" class="internal">
+    <div class="drawer global-drawer custom-drawer-width"
+        [ngClass]="{'hide-drawer-right': !showDrawer, 'show-drawer-right': showDrawer, 'custom-workflow-height': config?.workflow}">
+        <div class="drawer-heading custom-right-drawer-heading">
+            <h2 class="d-flex justify-content-between align-items-center">
+                <span>
+                    {{'campaign.insert-short-url-text' |
+                    translate}}
+                </span>
+                <span class="cursor-pointer" (click)="closeShortUrlModal();">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        style="fill: var(--primary-color)">
+                        <g id="prefix__Group_2783" data-name="Group 2783" transform="translate(-907 -297)">
+                            <g id="prefix__Path_2335" stroke="none" data-name="Path 2335">
+                                <path
+                                    d="M12 23.5c-3.072 0-5.96-1.196-8.132-3.368C1.696 17.96.5 15.072.5 12s1.196-5.96 3.368-8.132C6.04 1.696 8.928.5 12 .5s5.96 1.196 8.132 3.368C22.304 6.04 23.5 8.928 23.5 12s-1.196 5.96-3.368 8.132C17.96 22.304 15.072 23.5 12 23.5z"
+                                    transform="translate(907 297)" />
+                                <path
+                                    d="M12 1C9.062 1 6.3 2.144 4.222 4.222 2.144 6.299 1 9.062 1 12c0 2.938 1.144 5.7 3.222 7.778C6.299 21.856 9.062 23 12 23c2.938 0 5.7-1.144 7.778-3.222C21.856 17.701 23 14.938 23 12c0-2.938-1.144-5.7-3.222-7.778C17.701 2.144 14.938 1 12 1m0-1c6.627 0 12 5.373 12 12s-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0z"
+                                    transform="translate(907 297)" />
+                            </g>
+                            <g id="prefix__sign" transform="translate(915.148 305.227)">
+                                <g id="prefix__Group_2214" data-name="Group 2214">
+                                    <path id="prefix__Path_2030" fill="#fff"
+                                        d="M.191 8.72a.65.65 0 0 0 .92 0L4.1 5.729 7.094 8.72a.651.651 0 0 0 .92-.92L5.022 4.809 7.86 1.971a.651.651 0 0 0-.92-.92L4.1 3.888 1.264 1.05a.651.651 0 0 0-.92.92l2.838 2.839L.191 7.8a.65.65 0 0 0 0 .92z"
+                                        data-name="Path 2030" transform="translate(0 -.86)" />
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                </span>
+            </h2>
+        </div>
+        <div class="drawer-content custom-right-drawer custom-placement-rtl">
+            <div class="select-url-type">
+                <mat-tab-group (selectedTabChange)="linkTabChanged($event.index)" class="mb-3"
+                    [selectedIndex]="urlTabIndex">
+                    <mat-tab label="{{'campaign.short-url-from-text-label' | translate}}"></mat-tab>
+                    <mat-tab label="{{'campaign.short-url-from-column-label' | translate}}"
+                        *ngIf="campaignFormValue.messageType == 'Personalised' || (config && config.truecaller)"></mat-tab>
+                </mat-tab-group>
+            </div>
+            <form [formGroup]="urlForm" class="inside-wrapper-padding url-from-text">
+                <div class="row">
+                    <div class="col-md-6"
+                        *ngIf="(urlTabIndex === 1) && ((campaignFormValue.messageType == 'Personalised') || (config && config.truecaller))">
+                        <div class="original-url">
+                            <label class="label-text">{{'campaign.insert-URL-text' | translate}} </label>
+                            <app-custom-select [data]="personalizeUrlOptions" [config]="configPersonalizeUrlColumns"
+                                [value]="personalizeUrlSelectText"
+                                (clickElsewhere)="configPersonalizeUrlColumns.open = false"
+                                (selectAction)="selectActionRecive($event, 'urlFromColumn')"
+                                [errors]="showErrors('urlFromColumn', 'required', 'urlForm')"
+                                [ngClass]="{'internal-custom-select' : showErrors('urlFromColumn', 'required', 'urlForm'), 'custom-margin': !showErrors('urlFromColumn', 'required', 'urlForm')}"
+                                (showEmptyError)="showEmptyError($event)">
+                            </app-custom-select>
+
+                            <div class="d-block position-relative">
+                                <span class="error"
+                                    *ngIf="showErrors('urlFromColumn','required', 'urlForm')"><small><img
+                                            src="../../../assets/images/error.svg"></small>{{'campaign.insert-pl-sel-col'
+                                    | translate}}</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-12 personalise-url-textarea" *ngIf="urlTabIndex === 0">
+                        <label class="label-text"
+                            *ngIf="campaignFormValue.messageType == 'Personalised'|| (config && config.truecaller); else personaliseUrl">{{'campaign.insert-pers-url'
+                            | translate}}</label>
+                        <ng-template #personaliseUrl>
+                            <label class="label-text">{{'campaign.insert-URL-text' | translate}}</label>
+                        </ng-template>
+                        <textarea class="form-control prevent-resize-textarea"
+                            [ngClass]="{'personalise-area': campaignFormValue.messageType == 'Personalised'|| (config && config.truecaller), 'textarea-hasError': (showErrors('originalUrl', 'required', 'urlForm')), 'mb-3': campaignFormValue.messageType != 'Personalised'}"
+                            #textareaUrl formControlName="originalUrl" rows="4"
+                            [ngStyle]="{'margin-bottom': ((showErrors('originalUrl', 'required', 'urlForm') ? '5px' : 'auto'))}"
+                            (input)="checkTypedUrl($event.target.value)">
+
+                        </textarea>
+                        <div class="d-block position-relative">
+                            <span class="error" *ngIf="showErrors('originalUrl','required', 'urlForm')"><small><img
+                                        src="../../../assets/images/error.svg"></small>{{'campaign.insert-pl-sel-url' |
+                                translate}}</span>
+                        </div>
+                        <div class="url-personalise-icon"
+                            *ngIf="campaignFormValue.messageType == 'Personalised'|| (config && config.truecaller)"
+                            [ngClass]="{'mb-3': campaignFormValue.messageType == 'Personalised'|| (config && config.truecaller)}">
+                            <div id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false" class="personalisation-icon-wrapper"
+                                title="{{'common.personalize-text' | translate}}">
+                                <span class="icon-prsonlize font-size-18"></span>
+                            </div>
+                            <div class="dropdown-menu language-dropdown p-0" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" *ngFor="let data of personalizeUrlOptions; let i = index"
+                                    (click)="insertUrlColumn(textareaUrl, data)">{{data.headerName}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <ng-container>
+
+                        <div class="col-md-6">
+                            <label class="label-text">{{'campaign.insert-domain-text' | translate}} </label>
+                            <ng-container *ngIf="!hideDropdown; else noDropdown">
+                                <app-custom-select class="domain-dropdown" [data]="domainList"
+                                    [config]="configDomainList" [value]="domainSelectText"
+                                    (clickElsewhere)="configDomainList.open = false"
+                                    (selectAction)="selectActionRecive($event, 'domainName')"
+                                    [errors]="showErrors('domainName', 'required', 'urlForm')"
+                                    [ngClass]="{'internal-custom-select' : showErrors('domainName', 'required', 'urlForm'), 'custom-margin': !showErrors('domainName', 'required', 'urlForm')}">
+                                </app-custom-select>
+                            </ng-container>
+                            <ng-template #noDropdown>
+                                <input type="text" class="form-control custom-placement-rtl mb-3"
+                                    placeholder="Type here..." formControlName="domainName" readonly>
+                            </ng-template>
+
+                            <div class="d-block position-relative">
+                                <span class="error" *ngIf="showErrors('domainName','required', 'urlForm')"><small><img
+                                            src="../../../assets/images/error.svg"></small>{{'campaign.insert-pl-sel-domain'
+                                    | translate}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 set-validity-wrapper">
+                            <mat-checkbox class="d-block mb-2" formControlName="setValidity" class="rtl-right-align"
+                                (change)="validityCheck()">{{'campaign.insert-set-validity' | translate}}</mat-checkbox>
+
+
+                            <div class="date-time-zone mb-30px custom-datetime-picker"
+                                [ngClass]="{'date-selected': urlForm.get('urlDate').value, 'date-hasError' : showErrors('urlDate', 'required', 'urlForm'), 'disable': !urlForm.get('setValidity').value}"
+                                [ngStyle]="{'margin-bottom': showErrors('urlDate', 'required', 'urlForm') ? '5px' : 'auto'}">
+                                <app-datepicker [restrictActiveDateTime]="true" [config]="datePickerConfig"
+                                    [showDefaultDate]="datePickerObj"
+                                    (dateInOutObj)="receiveDate($event)"></app-datepicker>
+                            </div>
+
+                            <div class="d-block position-relative">
+                                <span class="error" *ngIf="showErrors('urlDate','required', 'urlForm')"><small><img
+                                            src="../../../assets/images/error.svg"></small>{{'campaign.insert-pl-sel-date'
+                                    |
+                                    translate}}</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 set-validity-wrapper" *ngIf="!config?.truecaller">
+                            <div class="mb-3" *ngIf="domainList && domainList.length && !hideForm">
+                                <mat-checkbox class="d-block" formControlName="addForm" class="rtl-right-align"
+                                    (change)="addForm()">{{'campaign.form-builder-add-form' | translate}}</mat-checkbox>
+                            </div>
+                            <div class="select-form-wrapper" *ngIf="showAddForm">
+                                <label class="label-text">{{'campaign.form-builder-select-form' | translate}} </label>
+
+                                <div class="dropdown-refresh d-flex justify-content-evenly align-items-center">
+                                    <div class="width-100 mr-3">
+                                        <app-custom-select-with-create [data]="formList" [config]="configFormList"
+                                            [value]="formSelectText" (clickElsewhere)="configFormList.open = false"
+                                            (selectAction)="selectActionRecive($event, 'selectedForm')"
+                                            [errors]="showErrors('selectedForm', 'required', 'urlForm')"
+                                            [ngClass]="{'internal-custom-select' : showErrors('selectedForm', 'required', 'urlForm')}">
+                                        </app-custom-select-with-create>
+                                        <div class="d-block position-relative">
+                                            <span class="error"
+                                                *ngIf="showErrors('selectedForm','required', 'urlForm')"><small><img
+                                                        src="../../../assets/images/error.svg"></small>{{'campaign.form-builder-form-required-error'
+                                                |
+                                                translate}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="refresh-icon-wrapper cursor-pointer" (click)="addForm('hasForm')">
+                                        <span class="icon-rfrsh"></span>
+                                    </div>
+                                </div>
+
+                                <label class="label-text form-or-seperator">{{'campaign.files-or' | translate}}</label>
+                                <button class="btn btn-white-with-blue-border"
+                                    [ngClass]="{'mb-3': urlForm.get('addForm').value, 'disabled': !createFormBtnPermission && isTeammate == 1}"
+                                    (click)="createForm('/forms/create')">{{'campaign.insert-create-from' |
+                                    translate}}</button>
+
+
+
+                            </div>
+
+
+                        </div>
+                    </ng-container>
+
+                    <div class="col-md-12 d-flex">
+                        <button class="btn process-file mr-3 btn-design d-inline-block custom-multiple-buttons-spacing"
+                            (click)="insertShortUrlData()">
+                            {{'campaign.insert-text' | translate}}</button>
+                        <button class="btn process-file btn-design-white d-inline-block" (click)="closeShortUrlModal()">
+                            {{'campaign.insert-cancel-text' | translate}}</button>
+                        <span *ngIf="authorizedForOtherShortUrl" class="short-url-caution">
+                            {{'campaign.short-url-caution-text' | translate}}
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="app-modal-background" [ngClass]="{'show-drawer-width': showDrawer, 'hide-drawer-width': !showDrawer}">
+    </div>
+</app-side-drawer>
+
+<div #actualText style="display: none;"></div>

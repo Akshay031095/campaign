@@ -1,0 +1,59 @@
+<app-side-drawer [id]="drawerId ? drawerId : 'insert-template'" class="internal">
+  <div class="drawer global-drawer custom-drawer-width"
+    [ngClass]="{'hide-drawer-right': !showDrawer, 'show-drawer-right': showDrawer, 'custom-workflow-height': config?.workflow}">
+    <div class="drawer-heading custom-right-drawer-heading">
+      <h2 class="d-flex justify-content-between align-items-center">{{'campaign.insert-temp-heading' | translate}}
+        <span  class="cursor-pointer" (click)="closeDrawer(drawerId ? drawerId : 'insert-template');">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: var(--primary-color)">
+            <g id="prefix__Group_2783" data-name="Group 2783" transform="translate(-907 -297)">
+              <g id="prefix__Path_2335" stroke="none" data-name="Path 2335">
+                <path
+                  d="M12 23.5c-3.072 0-5.96-1.196-8.132-3.368C1.696 17.96.5 15.072.5 12s1.196-5.96 3.368-8.132C6.04 1.696 8.928.5 12 .5s5.96 1.196 8.132 3.368C22.304 6.04 23.5 8.928 23.5 12s-1.196 5.96-3.368 8.132C17.96 22.304 15.072 23.5 12 23.5z"
+                  transform="translate(907 297)" />
+                <path
+                  d="M12 1C9.062 1 6.3 2.144 4.222 4.222 2.144 6.299 1 9.062 1 12c0 2.938 1.144 5.7 3.222 7.778C6.299 21.856 9.062 23 12 23c2.938 0 5.7-1.144 7.778-3.222C21.856 17.701 23 14.938 23 12c0-2.938-1.144-5.7-3.222-7.778C17.701 2.144 14.938 1 12 1m0-1c6.627 0 12 5.373 12 12s-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0z"
+                  transform="translate(907 297)" />
+              </g>
+              <g id="prefix__sign" transform="translate(915.148 305.227)">
+                <g id="prefix__Group_2214" data-name="Group 2214">
+                  <path id="prefix__Path_2030" fill="#fff"
+                    d="M.191 8.72a.65.65 0 0 0 .92 0L4.1 5.729 7.094 8.72a.651.651 0 0 0 .92-.92L5.022 4.809 7.86 1.971a.651.651 0 0 0-.92-.92L4.1 3.888 1.264 1.05a.651.651 0 0 0-.92.92l2.838 2.839L.191 7.8a.65.65 0 0 0 0 .92z"
+                    data-name="Path 2030" transform="translate(0 -.86)" />
+                </g>
+              </g>
+            </g>
+          </svg>
+        </span>
+      </h2>
+    </div>
+    <div class="drawer-content custom-right-drawer custom-placement-rtl">
+      <div class="row">
+        <div class="col-md-12 templates-table" *ngIf="tableData && (tableData.length >= 0)">
+
+          <div class="search-templates-wrapper text-right mb-3">
+            <input type="search" [(ngModel)]="search_text" class="form-control filter-search"
+              placeholder="{{'campaign.sms-campaign-search' | translate}}" (keyup)="applySearch($event)"
+            (search)="searchTemplate($event, 'search')">
+          </div>
+          <div class="custom-insert-template-table-wrapper">
+            <app-no-filter-table-view *ngIf="templateLoaded && templatesTableConfig.displayedColumns.length > 0"
+              [tableData]="tableData" [componentConfig]="config" [tableConfig]="templatesTableConfig"
+              (tableAction)="tableActionRecieve($event)" class="modal-table insert-template"
+              (selectedData)="getSelectedTemplate($event)"></app-no-filter-table-view>
+          </div>
+
+        </div>
+        <div class="col-md-12" *ngIf="tableData && (tableData.length > 0)">
+          <div class="import">
+            <button class="btn import-btn btn-design mr-3 custom-multiple-buttons-spacing"  (click)="insertTemplate()">
+              {{'shared.editable-table-save' | translate}}</button>
+            <button class="btn import-btn btn-design-white"  (click)="closeDrawer(drawerId ? drawerId : 'insert-template')">
+              {{'shared.editable-table-cancel' | translate}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="app-modal-background" [ngClass]="{'show-drawer-width': showDrawer, 'hide-drawer-width': !showDrawer}">
+  </div>
+</app-side-drawer>
